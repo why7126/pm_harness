@@ -1,0 +1,40 @@
+.env
+.env.local
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+build/
+.DS_Store
+*.sqlite3
+*.db
+.minio/
+coverage/
+.pytest_cache/
+
+# Runtime data: keep directory structure, ignore generated data and uploaded media
+/data/runtime/**
+/data/sqlite/*.db
+/data/sqlite/*.sqlite
+/data/sqlite/*.sqlite3
+/data/uploads/**
+/data/processed/**
+/data/tmp/**
+/data/minio/**
+
+# Keep placeholders and documentation
+!/data/**/.gitkeep
+!/data/README.md
+!/data/samples/**
+
+# Local environment
+.env
+
+# Runtime data
+data/sqlite/*
+data/minio/*
+data/uploads/*
+data/processed/*
+data/tmp/*
+!data/**/.gitkeep

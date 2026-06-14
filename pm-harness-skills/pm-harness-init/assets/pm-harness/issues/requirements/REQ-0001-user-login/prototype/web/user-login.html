@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>瓷砖信息管理平台 - 登录</title>
+  <style>
+    :root {
+      --page: #18160F;
+      --deep: #100F0A;
+      --card: #211E16;
+      --text: #EDE8DF;
+      --muted: rgba(237,232,223,.5);
+      --weak: rgba(237,232,223,.3);
+      --ghost: rgba(237,232,223,.25);
+      --gold: #C8A055;
+      --line: rgba(255,255,255,.07);
+      --line-strong: rgba(255,255,255,.1);
+      --line-hover: rgba(255,255,255,.18);
+      --green: #28C445;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--page);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .login-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(200,160,85,.12), transparent 28%),
+        linear-gradient(135deg, var(--page), var(--deep));
+    }
+    .brand-panel {
+      position: relative;
+      overflow: hidden;
+      padding: 56px;
+      border-right: .5px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), transparent 32%),
+        radial-gradient(circle at 74% 78%, rgba(200,160,85,.16), transparent 28%),
+        #18160F;
+    }
+    .brand-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.85), transparent 78%);
+    }
+    .brand-top, .brand-content, .brand-bottom { position: relative; z-index: 1; }
+    .logo {
+      letter-spacing: .16em;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 24px;
+      font-weight: 400;
+    }
+    .brand-kicker {
+      margin: 0 0 20px;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .brand-title {
+      max-width: 520px;
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.18;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+    .brand-desc {
+      max-width: 460px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.9;
+    }
+    .stats-card {
+      margin-top: 40px;
+      width: 460px;
+      border: .5px solid var(--line-strong);
+      background: rgba(33,30,22,.72);
+      backdrop-filter: blur(20px);
+      border-radius: 3px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .stat {
+      padding: 18px 20px;
+      border-right: .5px solid var(--line);
+    }
+    .stat:last-child { border-right: 0; }
+    .stat strong { display:block; font-size:22px; font-weight:500; color:var(--gold); }
+    .stat span { display:block; margin-top:6px; font-size:11px; color:var(--weak); }
+    .material-board {
+      position: absolute;
+      right: 48px;
+      bottom: 48px;
+      width: 320px;
+      height: 320px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 3px;
+      opacity: .96;
+      transform: rotate(-2deg);
+    }
+    .tile {
+      position: relative;
+      border-radius: 2px;
+      overflow: hidden;
+      border: .5px solid rgba(255,255,255,.12);
+      box-shadow: 0 24px 80px rgba(0,0,0,.28);
+    }
+    .tile.large { grid-row: span 2; background:
+      linear-gradient(120deg, rgba(255,255,255,.12), transparent 18%, rgba(255,255,255,.08) 28%, transparent 46%),
+      linear-gradient(45deg, #5a554b, #241f17 48%, #8c806c); }
+    .tile.dark { background:
+      linear-gradient(135deg, transparent 0 38%, rgba(255,255,255,.14) 39% 40%, transparent 41%),
+      linear-gradient(45deg, #1b1a17, #5f5b53); }
+    .tile.gold { background:
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,.35), transparent 10%),
+      linear-gradient(135deg, #a98748, #332719 52%, #c3a267); }
+    .tile label {
+      position: absolute;
+      left: 12px;
+      bottom: 10px;
+      font-size: 9px;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,.7);
+    }
+    .form-panel {
+      position: relative;
+      min-height: 100vh;
+      padding: 56px 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 88% 12%, rgba(200,160,85,.08), transparent 24%),
+        var(--page);
+    }
+    .language {
+      position: absolute;
+      right: 72px;
+      top: 36px;
+      border: .5px solid var(--line-strong);
+      border-radius: 2px;
+      padding: 9px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .02em;
+    }
+    .login-card { width: 100%; max-width: 420px; }
+    .eyebrow {
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: .18em;
+      margin-bottom: 16px;
+    }
+    h1 { margin: 0; font-size: 32px; line-height: 1.2; font-weight: 400; }
+    .sub { margin: 14px 0 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    form { margin-top: 48px; }
+    .field { margin-bottom: 28px; }
+    .label-row { display:flex; justify-content:space-between; margin-bottom: 10px; }
+    label { color: rgba(237,232,223,.72); font-size: 12px; letter-spacing: .08em; }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      height: 64px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+      background: transparent;
+      color: var(--text);
+      padding: 0 18px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .18s ease, background .18s ease;
+    }
+    input::placeholder { color: var(--ghost); }
+    input:focus { border-color: var(--gold); background: rgba(255,255,255,.015); }
+    .form-options { display:flex; justify-content:space-between; align-items:center; margin: -2px 0 28px; }
+    .check { display:flex; align-items:center; gap:10px; color:var(--muted); font-size:12px; }
+    .box {
+      width:18px; height:18px; border-radius:2px; border:1px solid var(--line-hover); display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(200,160,85,.12); color: var(--gold); font-size: 12px;
+    }
+    a { color: var(--gold); text-decoration:none; font-size:12px; }
+    .primary {
+      width:100%; height:56px; border:0; border-radius:2px; background:var(--gold); color:var(--page); font-size:14px; font-weight:600; letter-spacing:.08em; cursor:pointer;
+      transition: filter .18s ease, transform .18s ease;
+    }
+    .primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .third-party { padding-top:56px; }
+    .divider { display:flex; align-items:center; gap:14px; color:var(--weak); font-size:11px; }
+    .divider::before, .divider::after { content:""; flex:1; height:.5px; background:var(--line); }
+    .wecom {
+      margin-top: 22px;
+      width:100%; height:54px;
+      display:flex; align-items:center; justify-content:center; gap:12px;
+      background:transparent; border:1px solid var(--line-strong); border-radius:2px; color:var(--text); font-size:13px; cursor:pointer;
+    }
+    .wecom svg { width:22px; height:22px; }
+    .security { margin-top: 36px; color: var(--weak); font-size: 11px; line-height: 1.7; text-align:center; }
+    @media (max-width: 1023px) {
+      .login-shell { grid-template-columns: 1fr; }
+      .brand-panel { display:none; }
+      .form-panel { padding: 32px 24px; }
+      .language { right:24px; top:24px; }
+      .login-card { max-width:520px; }
+    }
+    @media (max-width: 639px) {
+      .form-panel { align-items:flex-start; padding-top: 96px; }
+      input[type="text"], input[type="password"] { height:52px; }
+      h1 { font-size:28px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="login-shell">
+    <section class="brand-panel" aria-label="品牌视觉区">
+      <div class="brand-top"><div class="logo">STONEX</div></div>
+      <div class="brand-content">
+        <p class="brand-kicker">TILE DATA OPERATING SYSTEM</p>
+        <h2 class="brand-title">瓷砖信息管理平台</h2>
+        <p class="brand-desc">面向企业内部员工的瓷砖数据维护后台，集中管理产品图册、规格参数、价格体系、上下架状态与门店展示信息。</p>
+        <div class="stats-card">
+          <div class="stat"><strong>12,860</strong><span>瓷砖 SKU</span></div>
+          <div class="stat"><strong>38,420</strong><span>高清纹理图</span></div>
+          <div class="stat"><strong>126</strong><span>门店同步</span></div>
+        </div>
+      </div>
+      <div class="brand-bottom"><p class="brand-kicker">PRECISION · MATERIAL · INVENTORY</p></div>
+      <div class="material-board" aria-hidden="true">
+        <div class="tile large"><label>CALACATTA / 900×1800</label></div>
+        <div class="tile dark"><label>BASALT / 600×1200</label></div>
+        <div class="tile gold"><label>TRAVERTINE / 750×1500</label></div>
+      </div>
+    </section>
+    <section class="form-panel" aria-label="登录表单区">
+      <div class="language">简体中文⌄</div>
+      <div class="login-card">
+        <div class="eyebrow">ADMIN PORTAL</div>
+        <h1>登录管理端</h1>
+        <p class="sub">仅限企业内部员工访问。登录后可维护瓷砖信息、图片素材、规格参数、价格和上下架状态。</p>
+        <form>
+          <div class="field">
+            <div class="label-row"><label for="account">账号</label></div>
+            <input id="account" type="text" placeholder="请输入手机号 / 邮箱 / 员工账号" />
+          </div>
+          <div class="field">
+            <div class="label-row"><label for="password">密码</label></div>
+            <input id="password" type="password" placeholder="请输入登录密码" />
+          </div>
+          <div class="form-options">
+            <span class="check"><span class="box">✓</span>记住登录状态</span>
+            <a href="#">忘记密码？</a>
+          </div>
+          <button class="primary" type="button">登录</button>
+          <div class="third-party">
+            <div class="divider">或使用企业身份登录</div>
+            <button class="wecom" type="button" aria-label="企业微信登录">
+              <svg viewBox="0 0 48 48" role="img" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#28C445"/><path d="M17.2 18.4h13.6c3.6 0 6.4 2.5 6.4 5.8s-2.8 5.8-6.4 5.8h-6.1l-5.1 4.2v-4.2h-2.4c-3.6 0-6.4-2.5-6.4-5.8s2.8-5.8 6.4-5.8Z" fill="white" opacity=".96"/><circle cx="19.4" cy="24" r="1.4" fill="#28C445"/><circle cx="28.2" cy="24" r="1.4" fill="#28C445"/></svg>
+              企业微信登录
+            </button>
+          </div>
+        </form>
+        <p class="security">登录即表示你已获得企业授权。系统会记录关键数据维护操作，用于安全审计与版本追踪。</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
