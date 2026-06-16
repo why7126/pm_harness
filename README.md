@@ -31,11 +31,13 @@ Project PM Harness 是一个面向产品经理的 AI Coding Harness 工程模板
 
 ```text
 pm-harness/
+├── deploy/              # 部署配置、部署脚本和环境编排文件
 ├── docs/                # 产品、架构、部署、接口、数据库、测试治理等项目文档
 ├── issues/
 │   ├── requirements/    # 需求管理
 │   └── bugs/            # Bug 管理
 ├── iterations/          # 迭代管理
+├── models/              # 模型文件、模型权重和模型相关资产
 ├── openspec/            # OpenSpec project、changes、specs、archive
 ├── rules/               # AI Agent 与工程协作规则
 ├── scripts/             # 工程脚本
