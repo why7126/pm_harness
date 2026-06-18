@@ -42,5 +42,5 @@
 - [x] 7.2 `vitest run` 全部通过
 - [x] 7.3 `vite build` + `docker compose build web` 通过
 - [x] 7.4 PNG 并排验收：diff checklist 全部 pass，记录于 trace.md
-- [x] 7.5 更新 `iterations/sprint-01/acceptance-report.md` 视觉项（通过后勾选）
+- [x] 7.5 更新 `iterations/sprint-001/acceptance-report.md` 视觉项（通过后勾选）
 - [x] 7.6 更新 `issues/requirements/REQ-0001-user-login/trace.md`

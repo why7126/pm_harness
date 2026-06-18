@@ -6,7 +6,7 @@
 
 - pytest.ini、tests/conftest.py、基线测试
 - 治理文档、validate-test-framework.py、GitHub Actions
-- Sprint-00 登记
+- Sprint-000 登记
 
 ## Impact
 

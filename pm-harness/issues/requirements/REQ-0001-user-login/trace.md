@@ -28,7 +28,7 @@ target_clients:
   - web_admin: 本期实现
   - web_catalog: 本期预留
   - wechat_miniapp: 本期预留
-iteration: sprint-01
+iteration: sprint-001
 change_id: add-user-login
 related_changes:
   - add-design-system
@@ -61,7 +61,7 @@ related_changes:
 | Change 追踪 — DS | `openspec/changes/add-design-system/trace.md` | 已创建 |
 | 目标 Spec | `openspec/specs/auth/`（归档后） | 未生效 |
 | 关联 Spec | `openspec/specs/web-client/spec.md`（归档后） | 未生效 |
-| 迭代 | `iterations/sprint-01/sprint.md` | 进行中（含 add-design-system） |
+| 迭代 | `iterations/sprint-001/sprint.md` | 进行中（含 add-design-system） |
 
 建议 Change 目录结构：
 
@@ -140,7 +140,7 @@ draft → approved → in_progress → resolved → closed
 | 日期 | 状态 | 说明 |
 |---|---|---|
 | 2026-06-13 | draft | 基于 PRD 与登录页原型补齐配套文档 |
-| 2026-06-13 | approved | 纳入 Sprint 01，OpenSpec add-user-login 规划完成 |
+| 2026-06-13 | approved | 纳入 Sprint 001，OpenSpec add-user-login 规划完成 |
 | 2026-06-13 | in_progress | add-user-login 实现完成，后端/前端/测试已交付 |
 | 2026-06-13 | in_progress | 同 Sprint 纳入 add-design-system；登录页 UI 对齐待 refactor-login-ui |
 | 2026-06-13 | in_progress | fix-login-pixel-fidelity 实现完成；视觉基准为 user-login.png |

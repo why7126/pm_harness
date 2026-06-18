@@ -38,7 +38,7 @@ AI 在执行以下任务前必须先阅读本文件：
 | `{REQ_ROOT_DIR}` | 需求根目录，例如 `issues/requirements/` |
 | `{REQ_ID_PATTERN}` | 需求编号规则，例如 `REQ-NNNN-slug` |
 | `{REQ_REGISTRY_FILE}` | 需求登记文件，例如 `_registry.yaml` |
-| `{REQ_COMMANDS}` | 需求命令族，例如捕获、探索、生成、补全、评审、转变更 |
+| 默认需求命令族 | `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx` |
 | `{REQ_STATUS_MACHINE}` | 需求状态机 |
 | `{REQ_PRIORITY_LEVELS}` | 需求优先级定义 |
 | `{REQ_TYPE_TAXONOMY}` | 需求类型分类 |
@@ -316,26 +316,24 @@ Readiness 规则为：`{REQ_READINESS_POLICY}`。
 | `deferred` | 写明延期原因、重评条件、目标时间 |
 | `needs_changes` | 写明需要补充的材料 |
 
-## 13. 命令族与阶段 `[个性化]`
+## 13. 命令族与阶段 `[通用]`
 
-需求命令族为：`{REQ_COMMANDS}`。
+需求命令族默认由 `.cursor`、`.claude`、`.codex`、`.kiro`、`.opencode` 同步支持，命令语义不得因工具不同而改变。
 
 推荐命令阶段：
 
-| 阶段 | 允许状态 | 产出 |
-| --- | --- | --- |
-| 捕获 | 任意新诉求 | `capture.md`、`trace.md` 初始壳 |
-| 探索 | `captured`、`exploring` | 澄清问题、影响分析、待确认项 |
-| 生成 | `captured`、`exploring` | `requirement.md`，进入 `draft` |
-| 补全 | `draft`、`enriching` | 六件套，进入 `pending_review` |
-| 评审 | `pending_review` | `review.md`，进入 `approved/rejected/deferred` |
-| 转变更 | `approved` | OpenSpec change、研发任务或迭代任务 |
-| 归档 | `done` | 交付追踪、发布说明、经验沉淀 |
+| 命令 | 阶段 | 输入 | 产出 | 是否生成文档 | 是否生成代码 |
+| --- | --- | --- | --- | --- | --- |
+| `/req-capture` | 需求记录 | 需求描述 | `capture.md`、`trace.md` | 是 | 否 |
+| `/req-explore` | 需求探索 | `REQ-ID` | 分析结论 | 默认否 | 否 |
+| `/req-generate` | PRD 生成 | `REQ-ID` | `requirement.md` | 是 | 否 |
+| `/req-complete` | 需求完善 | `REQ-ID` | 六件套补齐 | 是 | 否 |
+| `/req-review` | 需求评审 | `REQ-ID` | `review.md`、状态变更 | 是 | 否 |
+| `/req-opsx` | 转 OpenSpec | `REQ-ID` | OpenSpec Change | 是 | 否 |
 
 规则：
 
-- 命令名必须来自项目实际配置，不得在生成文档时编造不存在的命令。
-- 若项目尚无命令族，应保留阶段规范，并将命令列标记为 `待确认`。
+- 默认命令不得直接生成业务代码，除非后续进入 `/opsx-apply` 或 `/sprint-apply`。
 - 旧命令、迁移命令或团队别名必须写清楚当前有效入口。
 
 ## 14. OpenSpec 与迭代流转 `[条件启用]`
@@ -467,9 +465,9 @@ AI 处理需求时必须：
 
 用于工程初始化生成 `requirement-management.md` 时，建议按以下步骤处理：
 
-1. 根据用户输入替换 `{PRODUCT_NAME}`、`{REQ_ROOT_DIR}`、`{REQ_ID_PATTERN}`、`{REQ_COMMANDS}`、`{REQ_STATUS_MACHINE}`、优先级、评审门禁和 Readiness 策略。
+1. 根据用户输入替换 `{PRODUCT_NAME}`、`{REQ_ROOT_DIR}`、`{REQ_ID_PATTERN}`、`{REQ_STATUS_MACHINE}`、优先级、评审门禁和 Readiness 策略。
 2. 保留所有 `[通用]` 章节，并将模板语气改为项目确定性约束。
-3. 对 `[个性化]` 章节填入项目真实命令、目录、看板、迭代流转、原型策略和验收策略；信息不足时标记 `待确认`。
+3. 对 `[个性化]` 章节填入项目真实目录、看板、迭代流转、原型策略和验收策略；默认需求命令族保持 `/req-*`，信息不足时标记 `待确认`。
 4. 对 `[条件启用]` 章节按项目能力裁剪；未启用 OpenSpec、原型、外部看板、合规、客户工单等能力时删除或标记“不适用”。
 5. 不得保留其他项目的命令名、需求编号、业务模块、客户名称、原型路径或看板名称。
 6. 与 `document-governance.md`、`directory-structure.md`、`testing.md`、`bug-management.md`、`release.md` 保持一致。

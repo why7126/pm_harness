@@ -5,7 +5,7 @@ requirement_id: REQ-0000-build-test-standard
 requirement_name: 建设测试标准
 priority: P0
 status: completed
-iteration: sprint-00
+iteration: sprint-000
 change_id: build-test-framework
 ```
 

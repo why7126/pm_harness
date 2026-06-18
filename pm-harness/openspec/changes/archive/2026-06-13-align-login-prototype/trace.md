@@ -1,6 +1,6 @@
 ---
 title: Change 追踪
-purpose: 记录 align-login-prototype 与 Sprint 01、REQ-0001 的追踪关系
+purpose: 记录 align-login-prototype 与 Sprint 001、REQ-0001 的追踪关系
 source: 登录页与 user-login.png 视觉差距分析
 status: implemented
 ---
@@ -14,7 +14,7 @@ change_id: align-login-prototype
 requirement_id: REQ-0001
 priority: P0
 status: implemented
-iteration: sprint-01
+iteration: sprint-001
 depends_on:
   - add-design-system
   - refactor-login-ui
@@ -26,10 +26,10 @@ source: prototype/web/user-login.png 高保真还原
 ## 迭代关联
 
 ```yaml
-iteration: sprint-01
-sprint_doc: iterations/sprint-01/sprint.md
-release_note: iterations/sprint-01/release-note.md
-acceptance_report: iterations/sprint-01/acceptance-report.md
+iteration: sprint-001
+sprint_doc: iterations/sprint-001/sprint.md
+release_note: iterations/sprint-001/release-note.md
+acceptance_report: iterations/sprint-001/acceptance-report.md
 ```
 
 ## 与 refactor-login-ui 的关系
@@ -102,4 +102,4 @@ align-login-prototype → 像素级/高保真原型还原（已实现，待归�
 ## 下一步
 
 - `/opsx:archive align-login-prototype` 归档并合并 spec delta
-- Sprint 01 团队视觉 sign-off 后关闭 L-01
+- Sprint 001 团队视觉 sign-off 后关闭 L-01

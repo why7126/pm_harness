@@ -1,8 +1,8 @@
-# design-system Specification (Sprint-00 governance)
+# design-system Specification (Sprint-000 governance)
 
 ## Purpose
 
-登记 Sprint-00 Design System 治理补全；正式能力见 `openspec/specs/design-system/spec.md`。
+登记 Sprint-000 Design System 治理补全；正式能力见 `openspec/specs/design-system/spec.md`。
 
 ## Requirements
 

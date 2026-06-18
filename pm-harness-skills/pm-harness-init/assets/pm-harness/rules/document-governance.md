@@ -105,7 +105,7 @@ docs/
 规则：
 
 - `docs/` 根目录优先放长期主文档，推荐使用 `NN-topic.md` 编号。
-- 治理细则、错误码、测试标准、API 规则等专项标准应放入 `docs/standards/` 或项目约定目录。
+- 治理细则、错误码、测试标准、API 规则等专项标准统一放入 `docs/standards/`。
 - 需求、Bug、迭代不得放入 `docs/`，应分别放入 `{REQ_ROOT_DIR}`、`{BUG_ROOT_DIR}`、`iterations/`。
 - 故障复盘、事故沉淀、排查经验放入 `docs/knowledge-base/`，不得替代 Bug 目录。
 - 初始化生成时必须删除不适用的示例文档，不得保留其他项目的模块名、客户名、业务资源名。
@@ -122,9 +122,9 @@ docs/
 | 兼容性矩阵 | `docs/05-compatibility-matrix.md` | 随端、平台、数据库更新 | 必须保留或简化 |
 | 媒体/文件资产 | `docs/06-*-asset-management.md` | 按能力更新 | 有媒体/上传/算法时启用 |
 | 对象存储策略 | `docs/07-object-storage-strategy.md` | 按存储策略更新 | 有对象存储时启用 |
-| API 治理 | `docs/standards/api-governance.md` 或 `docs/api-governance.md` | 长期有效 | 有 API 时保留 |
-| 错误码 | `docs/standards/error-codes.md` 或 `docs/error-codes.md` | 随 API/业务错误更新 | 有 API 时保留 |
-| 测试治理 | `docs/standards/testing-governance.md` 或 `docs/testing-governance.md` | 随测试策略更新 | 必须保留 |
+| API 治理 | `docs/standards/api-governance.md` | 长期有效 | 有 API 时保留 |
+| 错误码 | `docs/standards/error-codes.md` | 随 API/业务错误更新 | 有 API 时保留 |
+| 测试治理 | `docs/standards/testing-governance.md` | 随测试策略更新 | 必须保留 |
 | 原始需求 | `{REQ_ROOT_DIR}` | 从提出到关闭 | 必须保留 |
 | Bug 池 | `{BUG_ROOT_DIR}` | 从发现到关闭 | 必须保留 |
 | 迭代记录 | `iterations/` | 阶段性有效，完成后只读 | 必须保留或按流程替换 |

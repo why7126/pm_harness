@@ -5,7 +5,7 @@ requirement_id: REQ-0000-build-design-system
 requirement_name: 建设 Design System
 priority: P0
 status: completed
-iteration: sprint-00
+iteration: sprint-000
 change_id: build-design-system
 related_changes:
   - add-design-system  # 已归档实现
@@ -16,7 +16,7 @@ related_changes:
 | 资产 | 路径 |
 |------|------|
 | OpenSpec（归档） | `openspec/changes/archive/2026-06-13-add-design-system/` |
-| OpenSpec（Sprint-00） | `openspec/changes/build-design-system/` |
+| OpenSpec（Sprint-000） | `openspec/changes/build-design-system/` |
 | 正式 Spec | `openspec/specs/design-system/spec.md` |
 
 ## 历史
@@ -24,4 +24,4 @@ related_changes:
 | 日期 | 事件 |
 |------|------|
 | 2026-06-13 | add-design-system 实现并归档 |
-| 2026-06-13 | initialize-project 补建 Sprint-00 登记 |
+| 2026-06-13 | initialize-project 补建 Sprint-000 登记 |

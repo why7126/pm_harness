@@ -1,6 +1,6 @@
 ---
 title: Change 追踪
-purpose: 记录 fix-login-pixel-fidelity 与 Sprint 01、REQ-0001 的追踪关系
+purpose: 记录 fix-login-pixel-fidelity 与 Sprint 001、REQ-0001 的追踪关系
 source: align-login-prototype 视觉差距分析
 status: implemented
 ---
@@ -14,7 +14,7 @@ change_id: fix-login-pixel-fidelity
 requirement_id: REQ-0001
 priority: P0
 status: implemented
-iteration: sprint-01
+iteration: sprint-001
 depends_on:
   - align-login-prototype
 source: user-login.png golden reference 像素级验收
@@ -68,4 +68,4 @@ source: user-login.png golden reference 像素级验收
 ## 下一步
 
 - `/opsx:archive fix-login-pixel-fidelity`
-- Sprint 01 团队 PNG sign-off
+- Sprint 001 团队 PNG sign-off

@@ -45,9 +45,9 @@ AGENTS.md 是 AI Agent 进入工程后的第一入口。它不是面向用户的
 | `{ALGORITHM_STACK}` | 算法、模型、AI 服务栈 | `[条件启用]` |
 | `{DEPLOYMENT_STACK}` | 部署方式，如 Docker Compose、Kubernetes、私有化部署 | `[个性化]` |
 | `{ENABLED_AGENT_TOOLS}` | 启用的 Agent 工具，如 Cursor、Claude Code、Codex、OpenCode、Kiro | `[条件启用]` |
-| `{REQ_COMMANDS}` | 需求治理命令集 | `[个性化]` |
-| `{BUG_COMMANDS}` | 缺陷治理命令集 | `[个性化]` |
-| `{SPRINT_COMMANDS}` | 迭代治理命令集 | `[个性化]` |
+| 默认需求命令集 | `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx` | `[通用]` |
+| 默认缺陷命令集 | `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx` | `[通用]` |
+| 默认迭代命令集 | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive` | `[通用]` |
 | `{PRIMARY_VERIFY_COMMAND}` | 项目统一验证命令 | `[个性化]` |
 
 ## 1. 项目定位 `[个性化]`
@@ -265,58 +265,58 @@ openspec archive / sprint archive
 
 轻量文档修订、注释修正、拼写修正、无行为变化的小改动可以不新建 OpenSpec Change；但如果改变业务能力、接口契约、数据结构、部署拓扑、权限边界、工作流语义或团队流程，必须走 OpenSpec Change。
 
-## 8. 推荐命令入口 `[个性化]`
+## 8. 默认自定义命令入口 `[通用]`
 
-初始化时必须根据项目实际命令生成本节，不得让 AGENTS.md 指向不存在的命令。
+除 OpenSpec 原生命令外，Harness 默认提供以下自定义命令。`.cursor`、`.claude`、`.codex`、`.kiro`、`.opencode` 均应支持同一组命令语义，只允许因工具目录结构差异调整文件路径，不允许改变命令输入、输出和是否开发的边界。
 
 ### 8.1 需求域 `req-*`
 
-| 阶段 | 命令 | 说明 |
-|---|---|---|
-| 记录 | `{REQ_CAPTURE_COMMAND}` | 轻量捕获需求，分配 REQ-ID |
-| 探索 | `{REQ_EXPLORE_COMMAND}` | 只思考和澄清，默认不写长期文档 |
-| 生成 PRD | `{REQ_GENERATE_COMMAND}` | 生成或更新 `requirement.md` |
-| 完善六件套 | `{REQ_COMPLETE_COMMAND}` | 补齐 user-stories、business-flow、acceptance、trace、prototype |
-| 评审 | `{REQ_REVIEW_COMMAND}` | 评审通过后进入 approved |
-| REQ -> Change | `{REQ_TO_CHANGE_COMMAND}` | 将 approved REQ 转为 OpenSpec Change |
+| 命令 | 阶段 | 输入 | 输出 | 是否生成文档 | 是否生成代码 |
+|---|---|---|---|---|---|
+| `/req-capture` | 需求记录 | 需求描述 | `capture.md`、`trace.md` | 是 | 否 |
+| `/req-explore` | 需求探索 | `REQ-ID` | 分析结论 | 默认否 | 否 |
+| `/req-generate` | PRD 生成 | `REQ-ID` | `requirement.md` | 是 | 否 |
+| `/req-complete` | 需求完善 | `REQ-ID` | 需求六件套补齐 | 是 | 否 |
+| `/req-review` | 需求评审 | `REQ-ID` | `review.md`、状态变更 | 是 | 否 |
+| `/req-opsx` | 转 OpenSpec | `REQ-ID` | OpenSpec Change | 是 | 否 |
 
 ### 8.2 缺陷域 `bug-*`
 
-| 阶段 | 命令 | 说明 |
-|---|---|---|
-| 记录 | `{BUG_CAPTURE_COMMAND}` | 捕获 BUG，分配 BUG-ID |
-| 探索 | `{BUG_EXPLORE_COMMAND}` | 澄清复现、影响面和可能原因 |
-| 生成 | `{BUG_GENERATE_COMMAND}` | 生成或更新 `bug.md` |
-| 完善 | `{BUG_COMPLETE_COMMAND}` | 补齐 root-cause、workaround、acceptance、trace、logs、screenshots |
-| 评审 | `{BUG_REVIEW_COMMAND}` | 评审通过后进入 approved |
-| BUG -> Change | `{BUG_TO_CHANGE_COMMAND}` | 将 approved BUG 转为 `fix-*` OpenSpec Change |
+| 命令 | 阶段 | 输入 | 输出 | 是否生成文档 | 是否生成代码 |
+|---|---|---|---|---|---|
+| `/bug-capture` | 缺陷记录 | 缺陷描述 | `capture.md`、`trace.md` | 是 | 否 |
+| `/bug-explore` | 缺陷分析 | `BUG-ID` | 分析结论 | 默认否 | 否 |
+| `/bug-generate` | 缺陷生成 | `BUG-ID` | `bug.md` | 是 | 否 |
+| `/bug-complete` | 缺陷完善 | `BUG-ID` | 根因分析包 | 是 | 否 |
+| `/bug-review` | 缺陷评审 | `BUG-ID` | `review.md`、状态变更 | 是 | 否 |
+| `/bug-opsx` | 转 OpenSpec | `BUG-ID` | `fix-*` Change | 是 | 否 |
 
 ### 8.3 Change 级 `opsx-*`
 
 | 阶段 | 命令 | 说明 |
 |---|---|---|
-| 探索策略 | `{OPSX_EXPLORE_COMMAND}` | UI、架构、算法或迁移策略未决时使用 |
-| 快速提案 | `{OPSX_PROPOSE_COMMAND}` | 无 REQ/BUG 的小型或探索性变更 |
-| 实现 | `{OPSX_APPLY_COMMAND}` | 按 tasks 实现并补测试 |
-| 归档 | `{OPSX_ARCHIVE_COMMAND}` | 变更完成后同步 specs 并归档 |
+| 探索策略 | `/opsx-explore` | UI、架构、算法或迁移策略未决时使用 |
+| 快速提案 | `/opsx-propose` | 无 REQ/BUG 的小型或探索性变更 |
+| 实现 | `/opsx-apply` | 按 tasks 实现并补测试 |
+| 归档 | `/opsx-archive` | 变更完成后同步 specs 并归档 |
 
 ### 8.4 Sprint 级 `sprint-*` `[条件启用]`
 
-| 阶段 | 命令 | 说明 |
-|---|---|---|
-| 创建 Sprint | `{SPRINT_PROPOSE_COMMAND}` | 生成迭代四件套，仅纳入 approved REQ/BUG |
-| 探讨 | `{SPRINT_EXPLORE_COMMAND}` | 讨论范围、依赖和容量 |
-| 开发 | `{SPRINT_APPLY_COMMAND}` | 排队执行相关 change，校验已评审 |
-| 归档 | `{SPRINT_ARCHIVE_COMMAND}` | 批量归档完成的 changes 和迭代记录 |
+| 命令 | 阶段 | 输入 | 输出 | 是否开发 |
+|---|---|---|---|---|
+| `/sprint-propose` | Sprint 规划 | `Sprint-ID` | Sprint 四件套 | 否 |
+| `/sprint-explore` | Sprint 分析 | `Sprint-ID` | 依赖分析、风险分析 | 否 |
+| `/sprint-apply` | Sprint 执行 | `Sprint-ID` | 自动编排开发 | 是 |
+| `/sprint-archive` | Sprint 归档 | `Sprint-ID` | 批量归档 | 否 |
 
 ### 8.5 基础设施 Bootstrap `[条件启用]`
 
-| 命令 | 说明 |
-|---|---|
-| `{INITIALIZE_PROJECT_COMMAND}` | 一次性初始化项目治理、规范、基础设施 |
-| `{BUILD_DESIGN_SYSTEM_COMMAND}` | 生成或更新 Design System 资产与校验 |
-| `{BUILD_API_STANDARD_COMMAND}` | 生成或更新 API 治理与客户端生成 |
-| `{BUILD_TEST_FRAMEWORK_COMMAND}` | 生成或更新测试治理与 CI |
+| 命令 | 作用 | 输出 |
+|---|---|---|
+| `/initialize-project` | 初始化项目 | 项目基线文档 |
+| `/build-design-system` | 建立 Design System | Design System Spec |
+| `/build-api-standard` | 建立 API 标准 | API Governance |
+| `/build-test-framework` | 建立测试体系 | Testing Governance |
 
 治理扩展应新建 REQ 或 OpenSpec Change；不得重复创建已经归档的 bootstrap change。
 
@@ -337,32 +337,32 @@ openspec archive / sprint archive
 AI 收到新需求时必须：
 
 1. 检查 `issues/requirements/` 是否已有相关需求。
-2. 如没有，使用 `{REQ_CAPTURE_COMMAND}` 创建 `REQ-xxxx-name/`。
-3. 可选使用 `{REQ_EXPLORE_COMMAND}` 澄清背景、角色、边界和风险。
-4. 使用 `{REQ_GENERATE_COMMAND}` 生成或更新 `requirement.md`。
-5. 使用 `{REQ_COMPLETE_COMMAND}` 补齐需求包：
+2. 如没有，使用 `/req-capture` 创建 `REQ-xxxx-name/`。
+3. 可选使用 `/req-explore` 澄清背景、角色、边界和风险。
+4. 使用 `/req-generate` 生成或更新 `requirement.md`。
+5. 使用 `/req-complete` 补齐需求包：
    - `requirement.md`
    - `user-stories.md`
    - `business-flow.md`
    - `acceptance.md`
    - `trace.md`
    - `prototype/`（涉及 UI、交互、页面、端能力时启用）
-6. 使用 `{REQ_REVIEW_COMMAND}` 完成评审；未 approved 的需求不得进入 Sprint 或正式开发。
-7. 使用 `{REQ_TO_CHANGE_COMMAND}` 或项目约定 OpenSpec CLI 创建 `openspec/changes/<change-id>/`。
-8. 使用 `{SPRINT_PROPOSE_COMMAND}` 纳入迭代；若项目不启用 Sprint，则在 change 中说明开发范围和验收方式。
-9. 使用 `{OPSX_APPLY_COMMAND}` 或 `{SPRINT_APPLY_COMMAND}` 实现。
+6. 使用 `/req-review` 完成评审；未 approved 的需求不得进入 Sprint 或正式开发。
+7. 使用 `/req-opsx` 或项目约定 OpenSpec CLI 创建 `openspec/changes/<change-id>/`。
+8. 使用 `/sprint-propose` 纳入迭代；若项目不启用 Sprint，则在 change 中说明开发范围和验收方式。
+9. 使用 `/opsx-apply` 或 `/sprint-apply` 实现。
 10. 完成验证后更新 `trace.md`、迭代状态、验收记录。
-11. 使用 `{OPSX_ARCHIVE_COMMAND}` 或 `{SPRINT_ARCHIVE_COMMAND}` 归档。
+11. 使用 `/opsx-archive` 或 `/sprint-archive` 归档。
 
 ## 11. BUG 处理流程 `[通用 + 个性化]`
 
 AI 收到 BUG 时必须：
 
 1. 检查 `issues/bugs/` 是否已有相关 BUG。
-2. 如没有，使用 `{BUG_CAPTURE_COMMAND}` 创建 `BUG-xxxx-name/`。
-3. 可选使用 `{BUG_EXPLORE_COMMAND}` 澄清复现、影响面、严重等级和风险。
-4. 使用 `{BUG_GENERATE_COMMAND}` 生成或更新 `bug.md`。
-5. 使用 `{BUG_COMPLETE_COMMAND}` 补齐缺陷包：
+2. 如没有，使用 `/bug-capture` 创建 `BUG-xxxx-name/`。
+3. 可选使用 `/bug-explore` 澄清复现、影响面、严重等级和风险。
+4. 使用 `/bug-generate` 生成或更新 `bug.md`。
+5. 使用 `/bug-complete` 补齐缺陷包：
    - `bug.md`
    - `root-cause.md`
    - `workaround.md`
@@ -370,10 +370,10 @@ AI 收到 BUG 时必须：
    - `trace.md`
    - `logs/`
    - `screenshots/`
-6. 使用 `{BUG_REVIEW_COMMAND}` 完成评审；未 approved 的 BUG 不得进入 Sprint 或正式开发。
-7. 使用 `{BUG_TO_CHANGE_COMMAND}` 创建 `openspec/changes/fix-*`。
-8. 使用 `{OPSX_APPLY_COMMAND}` 实现并补充回归测试。
-9. 使用 `{OPSX_ARCHIVE_COMMAND}` 归档。
+6. 使用 `/bug-review` 完成评审；未 approved 的 BUG 不得进入 Sprint 或正式开发。
+7. 使用 `/bug-opsx` 创建 `openspec/changes/fix-*`。
+8. 使用 `/opsx-apply` 实现并补充回归测试。
+9. 使用 `/opsx-archive` 归档。
 10. 如有知识沉淀价值，更新 `docs/knowledge-base/incidents/`。
 
 ## 12. OpenSpec 约束 `[通用]`

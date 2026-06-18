@@ -12,7 +12,7 @@ All public JSON APIs MUST return `{ code, message, data }`.
 
 ### Requirement: Error code registry
 
-Business and auth errors MUST use codes documented in `docs/error-codes.md`.
+Business and auth errors MUST use codes documented in `docs/standards/error-codes.md`.
 
 ### Requirement: OpenAPI metadata
 

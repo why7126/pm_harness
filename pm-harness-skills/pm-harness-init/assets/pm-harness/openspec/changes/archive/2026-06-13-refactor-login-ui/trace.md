@@ -1,6 +1,6 @@
 ---
 title: Change 追踪
-purpose: 记录 refactor-login-ui 与 Sprint 01、REQ-0001 的追踪关系
+purpose: 记录 refactor-login-ui 与 Sprint 001、REQ-0001 的追踪关系
 source: Path C Phase 2 登录页 UI 重构
 status: done
 ---
@@ -14,21 +14,21 @@ change_id: refactor-login-ui
 requirement_id: REQ-0001
 priority: P0
 status: done
-iteration: sprint-01
+iteration: sprint-001
 depends_on:
   - add-design-system
 related:
   - add-user-login
-source: prototype/web/user-login.md + Sprint 01 验收遗留 L-01
+source: prototype/web/user-login.md + Sprint 001 验收遗留 L-01
 ```
 
 ## 迭代关联
 
 ```yaml
-iteration: sprint-01
-sprint_doc: iterations/sprint-01/sprint.md
-release_note: iterations/sprint-01/release-note.md
-acceptance_report: iterations/sprint-01/acceptance-report.md
+iteration: sprint-001
+sprint_doc: iterations/sprint-001/sprint.md
+release_note: iterations/sprint-001/release-note.md
+acceptance_report: iterations/sprint-001/acceptance-report.md
 ```
 
 ## UI 差距清单（refactor 前 → 后）

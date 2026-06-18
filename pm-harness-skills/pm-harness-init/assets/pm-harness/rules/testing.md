@@ -156,7 +156,7 @@ def test_create_resource_success(service, current_user):
 | --- | --- |
 | `issues/requirements/*/acceptance.md` | 覆盖验收标准 |
 | `openspec/changes/*/specs/*/spec.md` | 覆盖 Given/When/Then |
-| `docs/api-governance.md` / OpenAPI | 覆盖请求、响应、错误码 |
+| `docs/standards/api-governance.md` / OpenAPI | 覆盖请求、响应、错误码 |
 | Bug 记录 | 覆盖复现用例和回归用例 |
 
 ## 8. Mock、Stub 与外部依赖 `[通用 + 个性化]`

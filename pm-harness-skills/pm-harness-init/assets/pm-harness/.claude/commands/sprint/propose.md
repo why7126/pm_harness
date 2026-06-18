@@ -9,7 +9,7 @@ tags: [workflow]
 
 **Input**：
 
-- `sprint-003` — 指定 Sprint ID（推荐）
+- `sprint-0003` — 指定 Sprint ID（推荐）
 - 或自然语言描述本迭代目标（如「下一 Sprint 做品牌+类目+登录增强」），由 Agent 推导 `sprint-xxx` 编号
 
 可选 flags：
@@ -87,7 +87,7 @@ issues/bugs/<BUG>/trace.md        → status ∈ { approved, in_sprint }
 
 **未评审**（`draft`、`pending_review`、`captured` 等）→ **不得**写入 `sprint.yaml`；记入 `sprint.md`「延后项」，提示 `/req-review` 或 `/bug-review`。
 
-**历史 Sprint 回填**（如 sprint-002 已含 draft REQ）：输出 **WARN**，建议补 `review.md` + `--approve`；不自动剔除。
+**历史 Sprint 回填**（如 sprint-0002 已含 draft REQ）：输出 **WARN**，建议补 `review.md` + `--approve`；不自动剔除。
 
 **优先级**：P0 BUG > P0 REQ > P1 …
 

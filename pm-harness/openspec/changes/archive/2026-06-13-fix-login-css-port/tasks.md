@@ -43,4 +43,4 @@
 
 - [x] 7.1 1280×1024 视口并排对比 `user-login.png` 与 `/admin/login`，填写 diff checklist（≥15 项）
 - [x] 7.2 记录验收结果至 `openspec/changes/fix-login-css-port/trace.md`
-- [x] 7.3 更新 `iterations/sprint-00/acceptance-report.md`（或当前 sprint）视觉项
+- [x] 7.3 更新 `iterations/sprint-000/acceptance-report.md`（或当前 sprint）视觉项

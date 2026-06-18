@@ -38,8 +38,8 @@ rules/media.md
 rules/object-storage.md
 rules/environment.md
 rules/compatibility.md
-docs/openapi-rules.md
-docs/api-governance.md
+docs/standards/openapi-rules.md
+docs/standards/api-governance.md
 ```
 
 初始化生成本文件时，必须替换占位符；缺失信息可以标记为 `待确认`，不得编造接口、服务地址或生成命令。
@@ -209,7 +209,7 @@ page_size  默认 20，最大值由项目配置决定
 项目错误码文档路径：
 
 ```text
-docs/error-codes.md
+docs/standards/error-codes.md
 ```
 
 新增错误码时必须同步：
@@ -218,7 +218,7 @@ docs/error-codes.md
 - API 文档或 OpenAPI 示例。
 - 前端错误处理映射。
 - 测试用例。
-- `docs/error-codes.md`。
+- `docs/standards/error-codes.md`。
 
 ## 6. 鉴权、权限与安全 [条件启用]
 
@@ -405,7 +405,7 @@ AI 新增或修改 API 时，必须按顺序处理：
 3. 更新后端路由、Schema、错误码和权限校验。
 4. 更新或生成 OpenAPI。
 5. 更新前端、SDK 或调用方客户端。
-6. 更新 `docs/03-api-index.md`、`docs/api-governance.md`、`docs/openapi-rules.md` 或相关契约文档。
+6. 更新 `docs/03-api-index.md`、`docs/standards/api-governance.md`、`docs/standards/openapi-rules.md` 或相关契约文档。
 7. 补充单元、集成、契约或 E2E 测试。
 8. 运行客户端生成、类型检查、接口测试和相关验证。
 9. 在回复中说明接口路径、请求、响应、错误码、兼容性和验证结果。

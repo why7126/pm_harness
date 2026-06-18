@@ -9,10 +9,10 @@
 
 ## 文档
 
-- [x] `docs/testing-governance.md`
-- [x] `docs/unit-test-standard.md`
-- [x] `docs/frontend-test-standard.md`
-- [x] `docs/test-coverage.md`
+- [x] `docs/standards/testing-governance.md`
+- [x] `docs/standards/unit-test-standard.md`
+- [x] `docs/standards/frontend-test-standard.md`
+- [x] `docs/standards/test-coverage.md`
 - [x] `openspec/testing-mapping.md`
 
 ## 基线测试

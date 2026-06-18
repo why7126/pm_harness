@@ -7,7 +7,7 @@
 ## 2. 目标
 
 - REST `/api/v1` 资源命名与统一返回结构
-- 错误码分段治理（`error_codes.py`、`docs/error-codes.md`）
+- 错误码分段治理（`error_codes.py`、`docs/standards/error-codes.md`）
 - FastAPI 分层：api / schemas / services / repositories
 - OpenAPI First + Orval 客户端
 
@@ -21,4 +21,4 @@
 
 ## 4. 状态
 
-`completed` — 认证与瓷砖/upload 路由已存在；Sprint-00 补全治理层。
+`completed` — 认证与瓷砖/upload 路由已存在；Sprint-000 补全治理层。

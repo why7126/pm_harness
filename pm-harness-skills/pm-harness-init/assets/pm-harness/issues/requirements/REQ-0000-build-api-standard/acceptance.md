@@ -2,11 +2,11 @@
 
 ## 治理文档
 
-- [x] `docs/api-governance.md`
-- [x] `docs/error-codes.md`
-- [x] `docs/openapi-rules.md`
-- [x] `docs/authentication.md`
-- [x] `docs/file-upload.md`
+- [x] `docs/standards/api-governance.md`
+- [x] `docs/standards/error-codes.md`
+- [x] `docs/standards/openapi-rules.md`
+- [x] `docs/standards/authentication.md`
+- [x] `docs/standards/file_upload.md`
 - [x] `docs/03-api-index.md`
 
 ## 代码

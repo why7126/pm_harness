@@ -26,4 +26,4 @@
 
 ## 5. 状态
 
-`completed` — 已通过 `add-design-system` Change 交付，Sprint-00 补登记。
+`completed` — 已通过 `add-design-system` Change 交付，Sprint-000 补登记。

@@ -57,8 +57,8 @@ def main() -> int:
             violations.append(f"{path.relative_to(ROOT)} — 语法错误: {e}")
 
     required_docs = [
-        "docs/api-governance.md",
-        "docs/error-codes.md",
+        "docs/standards/api-governance.md",
+        "docs/standards/error-codes.md",
         "src/backend/app/core/error_codes.py",
         "src/backend/app/schemas/common.py",
     ]

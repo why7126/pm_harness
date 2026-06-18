@@ -16,7 +16,7 @@ description: 按 Sprint 依赖与优先级编排 OpenSpec Change 开发，自动
 
 ---
 
-**Input**：`sprint-002` 或 `sprint-002` 省略前缀（默认当前唯一 `in_progress` Sprint 时可推断）
+**Input**：`sprint-0002` 或 `sprint-0002` 省略前缀（默认当前唯一 `in_progress` Sprint 时可推断）
 
 可选 flags（用户可在同一条消息中说明）：
 
@@ -183,7 +183,7 @@ changes:
 ```markdown
 ## Sprint Queue Report
 
-**Sprint:** sprint-002
+**Sprint:** sprint-0002
 **Status:** in_progress
 **Mode:** apply | dry-run
 
@@ -269,7 +269,7 @@ UI 类额外检查：`prototype/web/*.html` 存在但无 strategy 且 design 标
 ```text
 ## Sprint Apply — Paused / Progress
 
-**Sprint:** sprint-002
+**Sprint:** sprint-0002
 **Current change:** add-user-management
 **Change progress:** 34/36 tasks
 **Sprint progress:** 2/6 changes complete (1 archived, 1 in progress)
@@ -279,8 +279,8 @@ UI 类额外检查：`prototype/web/*.html` 存在但无 strategy 且 design 标
 - [x] 7.2 ...
 
 ### Next steps
-1. 继续：`/sprint-apply sprint-002` 或 `/opsx-apply add-user-management`
-2. 若 36/36： `/opsx-archive add-user-management` 后再 `/sprint-apply sprint-002`
+1. 继续：`/sprint-apply sprint-0002` 或 `/opsx-apply add-user-management`
+2. 若 36/36： `/opsx-archive add-user-management` 后再 `/sprint-apply sprint-0002`
 ```
 
 ### Sprint 全部 eligible 已处理
@@ -288,12 +288,12 @@ UI 类额外检查：`prototype/web/*.html` 存在但无 strategy 且 design 标
 ```text
 ## Sprint Apply — Queue Exhausted
 
-**Sprint:** sprint-002
+**Sprint:** sprint-0002
 **Archived / Done:** add-admin-home, add-user-management, ...
 **Waiting on deps:** fix-user-management-list-refine (needs add-user-management archive)
 **Blocked:** add-tile-category-management (REQ Partially Ready)
 
-Run `/sprint-apply sprint-002 --dry-run` to refresh queue.
+Run `/sprint-apply sprint-0002 --dry-run` to refresh queue.
 ```
 
 ---
@@ -313,10 +313,10 @@ Run `/sprint-apply sprint-002 --dry-run` to refresh queue.
 
 ---
 
-## 示例：sprint-002
+## 示例：sprint-0002
 
 ```text
-/sprint-apply sprint-002 --dry-run
+/sprint-apply sprint-0002 --dry-run
 ```
 
 期望 Queue（示意，以 CLI 实时为准）：
@@ -333,13 +333,13 @@ ELigible add-tile-category-management   (parallel, check REQ readiness)
 开始开发：
 
 ```text
-/sprint-apply sprint-002 --stop-after-one
+/sprint-apply sprint-0002 --stop-after-one
 ```
 
 仅收尾 user-management 后暂停 → archive → 再：
 
 ```text
-/sprint-apply sprint-002
+/sprint-apply sprint-0002
 ```
 
 ---

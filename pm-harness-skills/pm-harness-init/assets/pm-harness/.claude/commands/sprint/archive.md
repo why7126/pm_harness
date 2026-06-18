@@ -11,7 +11,7 @@ tags: [workflow]
 
 ---
 
-**Input**：`sprint-002`（必填或可推断唯一 `in_progress` Sprint）
+**Input**：`sprint-0002`（必填或可推断唯一 `in_progress` Sprint）
 
 可选 flags：
 
@@ -103,7 +103,7 @@ openspec list --json
 ```markdown
 ## Sprint Archive Queue Report
 
-**Sprint:** sprint-002
+**Sprint:** sprint-0002
 **Mode:** archive | dry-run
 
 | # | Change | Tasks | Artifacts | Delta Specs | Archived | Action |
@@ -169,7 +169,7 @@ openspec list --json
 ```text
 ## Sprint Archive Complete
 
-**Sprint:** sprint-002
+**Sprint:** sprint-0002
 **Changes archived:** 5/5
 **Specs synced:** 4（1 skipped: no delta）
 **Sprint status:** completed
@@ -180,8 +180,8 @@ openspec list --json
 ...
 
 ### Updated
-- iterations/sprint-002/sprint.yaml
-- iterations/sprint-002/acceptance-report.md
+- iterations/sprint-0002/sprint.yaml
+- iterations/sprint-0002/acceptance-report.md
 - issues/requirements/*/trace.md (N files)
 ```
 
@@ -195,8 +195,8 @@ openspec list --json
 **Failed:** fix-user-management-list-refine (MODIFIED title mismatch)
 
 **Next:**
-1. 完成剩余 tasks → /sprint-apply sprint-002
-2. 修复 delta spec → 重试 /sprint-archive sprint-002 --change fix-user-management-list-refine
+1. 完成剩余 tasks → /sprint-apply sprint-0002
+2. 修复 delta spec → 重试 /sprint-archive sprint-0002 --change fix-user-management-list-refine
 ```
 
 ---
@@ -218,10 +218,10 @@ openspec list --json
 ## 示例
 
 ```text
-/sprint-archive sprint-002 --dry-run
-/sprint-archive sprint-002
-/sprint-archive sprint-002 --change add-user-management
-/sprint-archive sprint-002 --force    # 仅在团队确认后
+/sprint-archive sprint-0002 --dry-run
+/sprint-archive sprint-0002
+/sprint-archive sprint-0002 --change add-user-management
+/sprint-archive sprint-0002 --force    # 仅在团队确认后
 ```
 
 ---

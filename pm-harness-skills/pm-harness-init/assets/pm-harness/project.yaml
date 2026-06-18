@@ -1,95 +1,293 @@
+# [通用] Harness 项目结构化元数据模板
+# [个性化] 初始化时必须基于用户输入替换 `{...}` 占位符
+# [条件启用] 未启用能力应保留 enabled=false 或删除对应强制配置
+
+schema:
+  # [通用] 用于后续模板升级和兼容性判断
+  name: pm-harness-project
+  version: "1.0"
+  metadata_style: yaml
+  template_scope: engineering_harness
+
 project:
-  name: 瓷砖信息管理平台
-  code: tile-info-platform
-  description: 面向瓷砖零售店店主和企业内部员工的瓷砖信息展示、维护、媒体资产管理平台。
+  # [个性化] 产品/项目基础信息
+  name: "{PRODUCT_NAME}"
+  code: "{PRODUCT_CODE}"
+  description: "{PRODUCT_DESCRIPTION}"
+  domain: "{BUSINESS_DOMAIN}"
+  lifecycle_stage: "{PROJECT_LIFECYCLE_STAGE}" # prototype | mvp | production | maintenance
+  owner: "{PROJECT_OWNER}"
+  repository: "{REPOSITORY_URL}"
 
 users:
-  - 瓷砖零售店店主
-  - 企业内部员工
+  # [个性化] 目标用户和角色，必须来自产品输入或 00-product-overview.md
+  target_users:
+    - name: "{TARGET_USER}"
+      role: "{TARGET_USER_ROLE}"
+      primary_goal: "{TARGET_USER_GOAL}"
+  internal_roles:
+    - name: "{INTERNAL_ROLE}"
+      responsibility: "{INTERNAL_ROLE_RESPONSIBILITY}"
 
-channels:
-  web_public: true
-  wechat_miniapp: true
-  web_admin: true
+product_forms:
+  # [通用 + 个性化] 产品形态开关；未启用端不得生成强制目录、文档或命令约束
+  web_public:
+    enabled: "{HAS_WEB_PUBLIC}"
+    description: "{WEB_PUBLIC_DESCRIPTION}"
+  web_admin:
+    enabled: "{HAS_WEB_ADMIN}"
+    description: "{WEB_ADMIN_DESCRIPTION}"
+  api_service:
+    enabled: "{HAS_API_SERVICE}"
+    description: "{API_SERVICE_DESCRIPTION}"
+  miniapp:
+    enabled: "{HAS_MINIAPP}"
+    platform: "{MINIAPP_PLATFORM}"
+  mobile:
+    enabled: "{HAS_MOBILE}"
+    platforms:
+      - "{MOBILE_PLATFORM}"
+  desktop:
+    enabled: "{HAS_DESKTOP}"
+    platforms:
+      - "{DESKTOP_PLATFORM}"
+  sdk:
+    enabled: "{HAS_SDK}"
+    languages:
+      - "{SDK_LANGUAGE}"
+  algorithm_service:
+    enabled: "{HAS_ALGORITHM}"
+    description: "{ALGORITHM_DESCRIPTION}"
 
-backend:
-  language: Python
-  version: "3.12"
-  framework: FastAPI
-  validation: Pydantic
-  package_manager: uv
-  database: SQLite
-  object_storage: MinIO
-
-frontend:
-  framework: React19
-  language: TypeScript
-  css: Tailwind
-  component_library: shadcn/ui
-  http_client: Axios
-  openapi_client: Orval
-  package_manager: pnpm
-
-media:
-  image_enabled: true
-  video_enabled: true
-  document_enabled: true
-  storage: MinIO
-  local_data_dir: data/
-  video:
-    upload: true
-    cover: true
-    transcode: optional
-    default_format: mp4
+technology:
+  # [个性化] 技术栈事实源，应与 AGENTS.md、README.md、docs/01-architecture.md、rules/* 保持一致
+  backend:
+    enabled: "{HAS_BACKEND}"
+    language: "{BACKEND_LANGUAGE}"
+    runtime_version: "{BACKEND_RUNTIME_VERSION}"
+    framework: "{BACKEND_FRAMEWORK}"
+    validation: "{BACKEND_VALIDATION_STACK}"
+    package_manager: "{BACKEND_PACKAGE_MANAGER}"
+    orm_or_repository: "{BACKEND_DATA_ACCESS_PATTERN}"
+    api_style: "{API_STYLE}"
+  frontend:
+    enabled: "{HAS_FRONTEND}"
+    language: "{FRONTEND_LANGUAGE}"
+    framework: "{FRONTEND_FRAMEWORK}"
+    css: "{FRONTEND_CSS_STACK}"
+    component_library: "{FRONTEND_COMPONENT_LIBRARY}"
+    state_management: "{FRONTEND_STATE_MANAGEMENT}"
+    http_client: "{FRONTEND_HTTP_CLIENT}"
+    api_client_generator: "{API_CLIENT_GENERATOR}"
+    package_manager: "{FRONTEND_PACKAGE_MANAGER}"
+  database:
+    enabled: "{DATABASE_ENABLED}"
+    primary: "{DATABASE_STACK}"
+    migration: "{MIGRATION_STRATEGY}"
+    schema_source: "{SCHEMA_SOURCE}"
+  object_storage:
+    enabled: "{OBJECT_STORAGE_ENABLED}"
+    provider: "{OBJECT_STORAGE_PROVIDER}"
+    mode: "{OBJECT_STORAGE_MODE}" # single_bucket_with_prefix | multi_bucket | local_filesystem | external_service
+  media:
+    enabled: "{MEDIA_ENABLED}"
+    types:
+      image: "{IMAGE_ENABLED}"
+      video: "{VIDEO_ENABLED}"
+      audio: "{AUDIO_ENABLED}"
+      document: "{DOCUMENT_ENABLED}"
+  async_task:
+    enabled: "{ASYNC_TASK_ENABLED}"
+    stack: "{ASYNC_TASK_STACK}"
+  cache:
+    enabled: "{CACHE_ENABLED}"
+    stack: "{CACHE_STACK}"
+  search:
+    enabled: "{SEARCH_ENABLED}"
+    stack: "{SEARCH_STACK}"
+  ai_or_algorithm:
+    enabled: "{AI_OR_ALGORITHM_ENABLED}"
+    stack: "{AI_OR_ALGORITHM_STACK}"
+    model_dir: "models/"
 
 deployment:
-  mode: docker-compose
+  # [通用 + 个性化] 部署事实源，应与 docs/02-deployment.md、docker-compose.yml、deploy/ 一致
+  mode: "{DEPLOYMENT_STACK}" # docker-compose | kubernetes | serverless | paas | static | manual
+  environments:
+    - name: local
+      purpose: 本地开发
+      enabled: true
+    - name: staging
+      purpose: 预发验证
+      enabled: "{STAGING_ENABLED}"
+    - name: production
+      purpose: 生产环境
+      enabled: "{PRODUCTION_ENABLED}"
   services:
-    - backend
-    - web
-    - minio
-
-ai:
-  coding_mode: OpenSpec
-  default_language: 中文
-  metadata_style: Obsidian YAML Frontmatter
-  rules_required: true
-  document_governance_required: true
-
-constraints:
-  - AI必须遵循当前目录结构
-  - 新增功能必须先进入issues和openspec/changes
-  - API变更必须同步Orval
-  - 媒体上传必须通过后端授权和MinIO
-  - .env.example必须与实际配置保持同步
-  - data目录不得提交真实客户数据或运行时数据库
-
-# object storage and ports
-object_storage:
-  strategy: single_bucket_with_prefix
-  bucket: tile-info-platform
-  prefixes:
-    original: original/
-    thumbnails: thumbnails/
-    processed: processed/
-    videos: videos/
-    video_covers: videos/covers/
-    video_transcoded: videos/transcoded/
+    - name: "{SERVICE_NAME}"
+      type: "{SERVICE_TYPE}" # backend | frontend | database | object_storage | worker | gateway | algorithm
+      enabled: "{SERVICE_ENABLED}"
+      source: "{SERVICE_SOURCE_PATH}"
+      internal_port: "{SERVICE_INTERNAL_PORT}"
+      healthcheck: "{SERVICE_HEALTHCHECK}"
+  docker_compose:
+    enabled: "{DOCKER_COMPOSE_ENABLED}"
+    file: "docker-compose.yml"
+  kubernetes:
+    enabled: "{KUBERNETES_ENABLED}"
+    manifest_dir: "deploy/"
 
 ports:
-  strategy: container_fixed_host_configurable
-  backend_container: 8000
-  web_container: 3000
-  backend_host_default: 8000
-  web_host_default: 3000
+  # [条件启用] 端口策略应与 rules/port-management.md 和 docs/02-deployment.md 一致
+  strategy: "{PORT_STRATEGY}" # container_fixed_host_configurable | fixed | platform_assigned
+  services:
+    - name: "{PORT_SERVICE_NAME}"
+      container_port: "{CONTAINER_PORT}"
+      host_default: "{HOST_PORT_DEFAULT}"
+      env_var: "{HOST_PORT_ENV_VAR}"
+
+object_storage:
+  # [条件启用] OBJECT_STORAGE_ENABLED=true 时启用；否则保留 enabled=false 并删除强制 bucket
+  enabled: "{OBJECT_STORAGE_ENABLED}"
+  strategy: "{OBJECT_STORAGE_MODE}"
+  default_bucket: "{DEFAULT_BUCKET}"
+  bucket_naming_rule: "{BUCKET_NAMING_RULE}"
+  key_pattern: "{OBJECT_KEY_PATTERN}"
+  public_access_policy: "{PUBLIC_ACCESS_POLICY}"
+  signed_url_ttl: "{SIGNED_URL_TTL}"
+  cdn_enabled: "{CDN_ENABLED}"
+  prefixes:
+    original: "original/"
+    thumbnails: "thumbnails/"
+    processed: "processed/"
+    tmp: "tmp/"
+    imports: "imports/"
+    exports: "exports/"
+    videos: "videos/"
+    video_covers: "videos/covers/"
+    video_transcoded: "videos/transcoded/"
+
+data_management:
+  # [通用 + 个性化] 数据和运行时文件边界
+  local_data_dir: "data/"
+  runtime_data_committed: false
+  seed_data_policy: "{SEED_DATA_POLICY}"
+  fixture_policy: "{FIXTURE_POLICY}"
+  sensitive_data_policy: "{SENSITIVE_DATA_POLICY}"
+
+ai:
+  # [通用] AI Agent 治理默认开启
+  coding_mode: OpenSpec + AI Agent
+  default_language: 中文
+  rules_required: true
+  document_governance_required: true
+  metadata_style: YAML Frontmatter
+  agent_tools:
+    cursor: true
+    claude: true
+    codex: true
+    kiro: true
+    opencode: true
+  default_commands:
+    requirements:
+      - /req-capture
+      - /req-explore
+      - /req-generate
+      - /req-complete
+      - /req-review
+      - /req-opsx
+    bugs:
+      - /bug-capture
+      - /bug-explore
+      - /bug-generate
+      - /bug-complete
+      - /bug-review
+      - /bug-opsx
+    sprint:
+      - /sprint-propose
+      - /sprint-explore
+      - /sprint-apply
+      - /sprint-archive
+    bootstrap:
+      - /initialize-project
+      - /build-design-system
+      - /build-api-standard
+      - /build-test-framework
+    openspec:
+      - /opsx-explore
+      - /opsx-propose
+      - /opsx-apply
+      - /opsx-archive
 
 governance:
-  requirement_source: issues/requirements
-  bug_source: issues/bugs
-  change_source: openspec/changes
-  iteration_source: iterations
+  # [通用 + 个性化] 文档、需求、缺陷、迭代和规格事实源
+  level: "{PROJECT_GOVERNANCE_LEVEL}" # prototype | solo | team | enterprise | regulated
+  requirement_source: "issues/requirements"
+  bug_source: "issues/bugs"
+  change_source: "openspec/changes"
+  spec_source: "openspec/specs"
+  iteration_source: "iterations"
+  docs_source: "docs"
+  rules_source: "rules"
+  standards_source: "docs/standards"
+  knowledge_base_source: "docs/knowledge-base"
+  review_required:
+    requirement: true
+    bug: true
+    openspec_change: true
+    release: true
   forbidden_dirs:
     - docs/product
     - docs/prd
     - docs/bugs
     - docs/iterations
+    - docs/requirements
+
+quality:
+  # [通用 + 个性化] 验证命令事实源
+  primary_verify_command: "{PRIMARY_VERIFY_COMMAND}"
+  test_command: "{TEST_COMMAND}"
+  lint_command: "{LINT_COMMAND}"
+  format_command: "{FORMAT_COMMAND}"
+  build_command: "{BUILD_COMMAND}"
+  coverage_target: "{COVERAGE_TARGET}"
+
+security:
+  # [条件启用 + 个性化]
+  auth_enabled: "{AUTH_ENABLED}"
+  auth_strategy: "{AUTH_STRATEGY}"
+  permission_model: "{PERMISSION_MODEL}"
+  sensitive_data_types:
+    - "{SENSITIVE_DATA_TYPE}"
+  secret_policy: "{SECRET_POLICY}"
+
+constraints:
+  # [通用] 所有初始化项目默认保留
+  - AI 必须遵循当前目录结构和 AGENTS.md。
+  - 正式需求和缺陷必须先进入 issues，再按规则进入 OpenSpec 或迭代。
+  - API 变更必须同步 docs/03-api-index.md、docs/standards/ 和客户端生成策略。
+  - 数据库变更必须同步 docs/04-database-design.md、迁移、模型和测试。
+  - 对象存储和媒体能力必须同步 rules/media.md、rules/object-storage.md、docs/06、docs/07。
+  - .env.example 必须与实际配置保持同步，且不得写入真实密钥。
+  - data/、models/、deploy/ 的用途必须与 rules/directory-structure.md 一致。
+
+initialization:
+  # [通用] 初始化器处理提示
+  replace_placeholders: true
+  remove_source_project_residue: true
+  remove_disabled_capabilities: true
+  keep_unknown_as: 待确认
+  sync_required_files:
+    - AGENTS.md
+    - README.md
+    - DOCUMENT_METADATA_INDEX.md
+    - docs/README.md
+    - docs/00-product-overview.md
+    - docs/01-architecture.md
+    - docs/02-deployment.md
+    - docs/03-api-index.md
+    - docs/04-database-design.md
+    - docs/05-compatibility-matrix.md
+    - rules/global.md
+    - rules/directory-structure.md
+    - rules/document-governance.md

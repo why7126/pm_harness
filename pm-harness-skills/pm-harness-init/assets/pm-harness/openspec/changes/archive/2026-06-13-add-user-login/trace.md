@@ -1,7 +1,7 @@
 ---
 title: Change 追踪
 purpose: 记录 add-user-login 与需求、迭代、实现的追踪关系
-content: 基于 REQ-0001 与 Sprint 01 规划
+content: 基于 REQ-0001 与 Sprint 001 规划
 source: AI根据 OpenSpec 与迭代规划生成
 update_method: 实现进度或迭代变更时更新
 owner: 项目负责人
@@ -19,7 +19,7 @@ requirement_id: REQ-0001
 requirement_name: 用户登录
 priority: P0
 status: implemented
-iteration: sprint-01
+iteration: sprint-001
 schema: spec-driven
 created: 2026-06-13
 ```
@@ -37,10 +37,10 @@ created: 2026-06-13
 ## 迭代关联
 
 ```yaml
-iteration: sprint-01
-sprint_doc: iterations/sprint-01/sprint.md
-release_note: iterations/sprint-01/release-note.md
-acceptance_report: iterations/sprint-01/acceptance-report.md
+iteration: sprint-001
+sprint_doc: iterations/sprint-001/sprint.md
+release_note: iterations/sprint-001/release-note.md
+acceptance_report: iterations/sprint-001/acceptance-report.md
 related_changes:
   - add-design-system
   - refactor-login-ui

@@ -10,4 +10,4 @@
 
 ## US-API-003 错误码可查
 
-作为排障人员，我希望在 `docs/error-codes.md` 查阅错误码含义。
+作为排障人员，我希望在 `docs/standards/error-codes.md` 查阅错误码含义。

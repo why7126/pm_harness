@@ -13,7 +13,7 @@ status: done
 change_id: add-design-system
 priority: P0
 status: done
-iteration: sprint-01
+iteration: sprint-001
 depends_on: []
 blocks:
   - refactor-login-ui
@@ -25,10 +25,10 @@ source: rules/ui-design.md + 登录页 UI 差距分析
 ## 迭代关联
 
 ```yaml
-iteration: sprint-01
-sprint_doc: iterations/sprint-01/sprint.md
-release_note: iterations/sprint-01/release-note.md
-acceptance_report: iterations/sprint-01/acceptance-report.md
+iteration: sprint-001
+sprint_doc: iterations/sprint-001/sprint.md
+release_note: iterations/sprint-001/release-note.md
+acceptance_report: iterations/sprint-001/acceptance-report.md
 ```
 
 ## 目标
@@ -57,5 +57,5 @@ add-design-system (Phase 1)  ✓ 完成
 | 日期 | 状态 | 说明 |
 |---|---|---|
 | 2026-06-13 | planned | OpenSpec artifacts 创建 |
-| 2026-06-13 | done | 全部 tasks 完成，纳入 Sprint 01 验收 |
-| 2026-06-13 | — | Sprint 01 迭代文档已同步 |
+| 2026-06-13 | done | 全部 tasks 完成，纳入 Sprint 001 验收 |
+| 2026-06-13 | — | Sprint 001 迭代文档已同步 |

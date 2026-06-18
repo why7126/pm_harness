@@ -1,10 +1,103 @@
-# purpose: OpenSpec配置
-# content: OpenSpec目录与校验规则
-# source: AI自动生成初稿，项目团队确认
-# update_method: OpenSpec工具规则变化时更新
-# note: YAML文件使用注释元数据避免破坏语法
-project: tile-info-platform
-spec_dir: openspec/specs
-change_dir: openspec/changes
-archive_dir: openspec/archive
-language: zh-CN
+# purpose: OpenSpec 配置
+# content: OpenSpec 项目标识、目录路径、语言、变更命名、校验命令、归档策略和条件启用配置
+# source: Harness openspec/config.yaml 抽象模板，初始化时基于用户输入和 OpenSpec 启用策略生成
+# update_method: OpenSpec 启用状态、目录结构、命名规则、校验命令、归档策略或语言策略变化时同步更新
+# owner: {PRODUCT_OWNER}
+# note: YAML 文件使用注释元数据避免破坏语法；初始化后必须删除或替换所有占位符
+
+# [个性化] 项目标识
+project: "{PRODUCT_CODE}"
+project_name: "{PRODUCT_NAME}"
+
+# [个性化] 是否启用 OpenSpec
+# true: 保留 changes/specs/archive/testing-mapping 等 OpenSpec 流程
+# false: 保留最小配置，并在 openspec/project.md 指向项目等价变更系统
+enabled: "{OPENSPEC_ENABLED}"
+
+# [通用 + 个性化] OpenSpec 目录
+spec_dir: "{OPENSPEC_SPEC_DIR}"
+change_dir: "{OPENSPEC_CHANGE_DIR}"
+archive_dir: "{OPENSPEC_ARCHIVE_DIR}"
+project_doc: "{OPENSPEC_PROJECT_DOC}"
+testing_mapping: "{OPENSPEC_TESTING_MAPPING}"
+
+# [个性化] 语言与文档策略
+language: "{OPENSPEC_LANGUAGE}"
+default_locale: "{DEFAULT_LOCALE}"
+documentation_language: "{DOCUMENTATION_LANGUAGE}"
+
+# [通用 + 个性化] Change 命名与状态策略
+change:
+  id_pattern: "{CHANGE_ID_PATTERN}"
+  allowed_prefixes:
+    - add
+    - change
+    - fix
+    - refactor
+    - remove
+  required_files:
+    - proposal.md
+    - design.md
+    - tasks.md
+  spec_delta_dir: specs
+  status_flow:
+    - draft
+    - proposed
+    - approved
+    - implemented
+    - archived
+
+# [通用 + 个性化] 规格目录策略
+spec:
+  modules: "{SPEC_MODULES}"
+  require_scenarios: true
+  require_acceptance: true
+  require_traceability: true
+  allow_unimplemented_in_specs: false
+
+# [通用 + 个性化] 校验与执行命令
+commands:
+  validate: "{OPENSPEC_VALIDATE_COMMAND}"
+  propose: "{OPSX_PROPOSE_COMMAND}"
+  apply: "{OPSX_APPLY_COMMAND}"
+  archive: "{OPSX_ARCHIVE_COMMAND}"
+  test_mapping_validate: "{OPENSPEC_TESTING_MAPPING_VALIDATE_COMMAND}"
+
+# [通用] 归档策略
+archive:
+  require_completed_tasks: true
+  require_tests_recorded: true
+  require_docs_synced: true
+  require_specs_updated: true
+
+# [通用] AI 执行约束
+ai_guardrails:
+  must_read:
+    - AGENTS.md
+    - openspec/project.md
+    - "{TARGET_CHANGE_PATH}"
+  must_sync_when_changed:
+    - README.md
+    - AGENTS.md
+    - project.yaml
+    - docs/README.md
+    - docs/00-product-overview.md
+    - docs/01-architecture.md
+    - docs/02-deployment.md
+    - docs/03-api-index.md
+    - docs/04-database-design.md
+    - rules/document-governance.md
+    - rules/testing.md
+  forbidden:
+    - "do_not_edit_code_without_reading_target_change"
+    - "do_not_modify_active_specs_without_change_trace"
+    - "do_not_archive_without_tests_and_docs_sync"
+    - "do_not_keep_source_project_assumptions"
+
+# [条件启用] 外部治理系统映射
+external_tracking:
+  enabled: "{EXTERNAL_TRACKING_ENABLED}"
+  system: "{TASK_TRACKING_SYSTEM}"
+  requirement_root: "{REQ_ROOT_DIR}"
+  bug_root: "{BUG_ROOT_DIR}"
+  sprint_root: "{SPRINT_ROOT_DIR}"

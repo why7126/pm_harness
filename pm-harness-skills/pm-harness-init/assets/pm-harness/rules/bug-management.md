@@ -38,7 +38,7 @@ AI 在执行以下任务前必须先阅读本文件：
 | `{BUG_ROOT_DIR}` | 缺陷根目录，例如 `issues/bugs/` |
 | `{BUG_ID_PATTERN}` | 缺陷编号规则，例如 `BUG-NNNN-slug` |
 | `{BUG_REGISTRY_FILE}` | 缺陷登记文件，例如 `_registry.yaml` |
-| `{BUG_COMMANDS}` | 缺陷命令族，例如捕获、探索、生成、补全、评审、转变更 |
+| 默认缺陷命令族 | `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx` |
 | `{BUG_STATUS_MACHINE}` | 缺陷状态机 |
 | `{BUG_SEVERITY_LEVELS}` | 严重等级定义 |
 | `{BUG_PRIORITY_LEVELS}` | 优先级定义 |
@@ -293,27 +293,24 @@ Bug
   -> Knowledge Base
 ```
 
-## 12. 命令族与阶段 `[个性化]`
+## 12. 命令族与阶段 `[通用]`
 
-缺陷命令族为：`{BUG_COMMANDS}`。
+缺陷命令族默认由 `.cursor`、`.claude`、`.codex`、`.kiro`、`.opencode` 同步支持，命令语义不得因工具不同而改变。
 
 推荐命令阶段：
 
-| 阶段 | 产出 |
-| --- | --- |
-| 捕获 | `capture.md`、`trace.md` 初始壳 |
-| 探索 | 复现结论、影响分析、证据补充 |
-| 生成 | `bug.md` |
-| 补全 | `root-cause.md`、`workaround.md`、`acceptance.md`、`trace.md` |
-| 评审 | `review.md`、状态变更 |
-| 转修复 | OpenSpec change、迭代任务或修复 PR |
-| 回归 | `regression.md`、测试记录、验收结论 |
-| 归档 | 状态关闭、知识库沉淀、发布说明同步 |
+| 命令 | 阶段 | 输入 | 产出 | 是否生成文档 | 是否生成代码 |
+| --- | --- | --- | --- | --- | --- |
+| `/bug-capture` | 缺陷记录 | 缺陷描述 | `capture.md`、`trace.md` | 是 | 否 |
+| `/bug-explore` | 缺陷分析 | `BUG-ID` | 分析结论 | 默认否 | 否 |
+| `/bug-generate` | 缺陷生成 | `BUG-ID` | `bug.md` | 是 | 否 |
+| `/bug-complete` | 缺陷完善 | `BUG-ID` | 根因分析包 | 是 | 否 |
+| `/bug-review` | 缺陷评审 | `BUG-ID` | `review.md`、状态变更 | 是 | 否 |
+| `/bug-opsx` | 转 OpenSpec | `BUG-ID` | `fix-*` Change | 是 | 否 |
 
 规则：
 
-- 命令名必须来自项目实际配置，不得在生成文档时编造不存在的命令。
-- 若项目尚无命令族，应保留阶段规范，并将命令列标记为 `待确认`。
+- 默认命令不得直接生成业务代码，除非后续进入 `/opsx-apply` 或 `/sprint-apply`。
 - 命令文档必须读取本文件、`rules/testing.md`、`rules/security.md`、相关 Bug 目录和项目约定上下文。
 
 ## 13. 验收与回归测试 `[通用 + 个性化]`
@@ -414,9 +411,9 @@ AI 处理 Bug 时必须：
 
 用于工程初始化生成 `bug-management.md` 时，建议按以下步骤处理：
 
-1. 根据用户输入替换 `{PRODUCT_NAME}`、`{BUG_ROOT_DIR}`、`{BUG_ID_PATTERN}`、`{BUG_COMMANDS}`、`{BUG_STATUS_MACHINE}`、严重等级、优先级和门禁策略。
+1. 根据用户输入替换 `{PRODUCT_NAME}`、`{BUG_ROOT_DIR}`、`{BUG_ID_PATTERN}`、`{BUG_STATUS_MACHINE}`、严重等级、优先级和门禁策略。
 2. 保留所有 `[通用]` 章节，并将模板语气改为项目确定性约束。
-3. 对 `[个性化]` 章节填入项目真实命令、目录、看板、迭代流转和修复策略；信息不足时标记 `待确认`。
+3. 对 `[个性化]` 章节填入项目真实目录、看板、迭代流转和修复策略；默认缺陷命令族保持 `/bug-*`，信息不足时标记 `待确认`。
 4. 对 `[条件启用]` 章节按项目能力裁剪；未启用 OpenSpec、SLA、事故、客户工单、移动端崩溃等能力时删除或标记“不适用”。
 5. 不得保留其他项目的命令名、缺陷编号、业务模块、客户名称、日志路径或截图路径。
 6. 与 `directory-structure.md`、`document-governance.md`、`testing.md`、`security.md`、`release.md` 保持一致。

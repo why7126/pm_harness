@@ -25,7 +25,7 @@ Project PM Harness 是一个面向产品经理的 AI Coding Harness 工程模板
 
 ### pm-harness
 
-`pm-harness/` 是标准 Harness 工程目录结构，包含需求、Bug、迭代、OpenSpec、规则、文档、源码和测试等模块。后续对 Harness 能力的增强，优先在这里沉淀。
+`pm-harness/` 是标准 Harness 工程目录结构，包含需求、Bug、迭代、OpenSpec、规则、文档、专项标准、源码、模型资产、部署配置和测试等模块。后续对 Harness 能力的增强，优先在这里沉淀。
 
 核心目录：
 
@@ -33,6 +33,7 @@ Project PM Harness 是一个面向产品经理的 AI Coding Harness 工程模板
 pm-harness/
 ├── deploy/              # 部署配置、部署脚本和环境编排文件
 ├── docs/                # 产品、架构、部署、接口、数据库、测试治理等项目文档
+│   └── standards/       # API、认证、错误码、上传、测试、覆盖率等专项标准
 ├── issues/
 │   ├── requirements/    # 需求管理
 │   └── bugs/            # Bug 管理
@@ -84,7 +85,7 @@ Project PM Harness 关注三个核心对象：
   ↓
 issues/requirements/REQ-xxxx/
   ↓ 关联 iteration 与 change_id
-iterations/sprint-xx/
+iterations/sprint-XXX/
   ↓ 纳入 changes 列表
 openspec/changes/{change-id}/
   ↓ 实现、验收、归档
@@ -170,7 +171,7 @@ issues/requirements/REQ-0001-user-login/prototype/
 每个迭代使用独立目录：
 
 ```text
-iterations/sprint-01/
+iterations/sprint-001/
 ├── sprint.md            # 迭代说明：目标、范围、需求、Change、风险、后续
 ├── sprint.yaml          # 结构化迭代元数据，便于脚本和 AI Agent 读取
 ├── acceptance-report.md # 迭代验收报告
@@ -204,7 +205,7 @@ planned → in_progress → acceptance → released → closed
 `sprint.yaml` 适合保存结构化状态，例如：
 
 ```yaml
-sprint_id: sprint-01
+sprint_id: sprint-001
 status: in_progress
 requirements:
   - REQ-0001-user-login
@@ -263,7 +264,7 @@ openspec/changes/add-user-login/
 2. 编写需求文档：补齐 `requirement.md`、`user-stories.md`、`business-flow.md`、`acceptance.md`。
 3. 补充产品原型：添加图片原型、原型上下文 Markdown 和 HTML 原型。
 4. 建立需求追踪：在 `trace.md` 中登记状态、优先级、目标端、迭代和候选 OpenSpec Change。
-5. 纳入迭代：在 `iterations/sprint-xx/` 中登记需求和计划交付范围。
+5. 纳入迭代：在 `iterations/sprint-XXX/` 中登记需求和计划交付范围，例如 `iterations/sprint-001/`。
 6. 创建 OpenSpec Change：在 `openspec/changes/` 下编写 proposal、design、tasks、test-plan、acceptance。
 7. 实现与验收：研发按 OpenSpec 和原型资产实现，测试按 acceptance 与 test-plan 验收。
 8. 状态回写：同步更新需求、迭代、OpenSpec Change 的状态。
@@ -277,7 +278,7 @@ openspec/changes/add-user-login/
 
 - 为一个新产品创建标准 PM Harness 工程。
 - 生成 OpenSpec + AI Agent 规范编程项目结构。
-- 根据产品名称、产品形态、数据库、技术栈等信息生成可复制的工程骨架。
+- 根据产品名称、项目代码、产品简介、产品形态、技术栈、能力开关、治理流程、部署方式、测试策略等信息生成可复制的工程骨架。
 
 Skill 位置：
 

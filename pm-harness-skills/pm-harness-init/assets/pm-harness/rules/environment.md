@@ -265,7 +265,7 @@ ALLOWED_FILE_TYPES=image/jpeg,image/png,application/pdf
 
 - Access Key / Secret Key 示例值必须明显不可用于生产。
 - Bucket 命名必须与 `{PRODUCT_CODE}` 或业务域一致。
-- 文件大小限制、类型白名单必须同步 `rules/data-management.md`、`rules/media.md`、`docs/file-upload.md`。
+- 文件大小限制、类型白名单必须同步 `rules/data-management.md`、`rules/media.md`、`docs/standards/file_upload.md`。
 - 模型文件下载地址、校验值、存储位置不得写入真实私有凭据。
 
 ## 10. Docker Compose 环境 [条件启用]

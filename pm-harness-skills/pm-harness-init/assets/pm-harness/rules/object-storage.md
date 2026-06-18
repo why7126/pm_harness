@@ -438,7 +438,7 @@ rules/data-management.md
 rules/environment.md
 rules/security.md
 docs/07-object-storage-strategy.md
-docs/file-upload.md
+docs/standards/file_upload.md
 docs/05-compatibility-matrix.md
 compatibility/object-storage/
 .env.example

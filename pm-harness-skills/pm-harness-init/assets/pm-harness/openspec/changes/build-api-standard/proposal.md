@@ -6,7 +6,7 @@
 
 - API 治理文档、error_codes.py、validate-api-standard.py
 - src/sdk README
-- Sprint-00 登记
+- Sprint-000 登记
 
 ## Impact
 

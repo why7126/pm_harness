@@ -1,165 +1,268 @@
 ---
-purpose: 项目说明
-content: 项目介绍、技术栈、启动方式
-source: AI自动生成初稿，项目团队确认
-update_method: 项目初始化后由人工确认；后续由AI辅助更新并经人工Review
-note: 适用于瓷砖信息管理平台项目模板
+purpose: 项目入口说明
+content: 产品简介、用户角色、核心能力、技术栈、快速启动、部署入口、目录导航、AI 约束、文档索引与初始化建议
+source: Harness README.md 抽象模板，初始化时基于用户输入生成
+update_method: 项目定位、技术栈、启动命令、部署方式、目录结构、端口策略或核心能力变化时同步更新
+owner: {PROJECT_OWNER}
+note: 适用于 {PRODUCT_NAME} 项目；本文档是工程根入口，详细规则见 AGENTS.md、rules/ 与 docs/
 ---
 
-# 瓷砖信息管理平台
+# {PRODUCT_NAME}
 
+## 0. 文档定位 `[通用]`
 
-## 项目简介
+本文档是 `{PRODUCT_NAME}` 的工程根入口，用于帮助新成员、AI Agent 和自动化初始化流程快速理解项目目标、使用方式、目录结构、运行入口、治理规则和后续文档导航。
 
-瓷砖信息管理平台用于帮助瓷砖零售店店主了解瓷砖产品信息，并帮助企业内部员工维护瓷砖资料、规格、分类和图片。
+根 README 只描述项目“如何被理解和启动”，详细规则不在此展开：
 
-## 用户角色
+- AI 协作与强制规则：`AGENTS.md`
+- 工程规则：`rules/`
+- 产品、架构、部署、API、数据库等长文档：`docs/`
+- 需求、缺陷、迭代与 OpenSpec：`issues/`、`iterations/`、`openspec/`
 
-| 用户 | 使用端 | 核心目标 |
+## 1. 生成参数 `[个性化]`
+
+| 参数 | 说明 | 示例 |
 |---|---|---|
-| 瓷砖零售店店主 | Web端、微信小程序 | 浏览、查询、了解瓷砖信息 |
-| 企业内部员工 | 管理端Web | 维护瓷砖信息、分类、规格、图片 |
+| `{PRODUCT_NAME}` | 产品名称 | 待确认 |
+| `{PRODUCT_CODE}` | 项目代码 | 待确认 |
+| `{PRODUCT_DESCRIPTION}` | 产品简介 | 待确认 |
+| `{BUSINESS_DOMAIN}` | 业务领域 | 待确认 |
+| `{TARGET_USERS}` | 目标用户 | 待确认 |
+| `{PRODUCT_FORMS}` | 产品形态 | Web / Admin / API / Mobile / Miniapp / Desktop |
+| `{CORE_CAPABILITIES}` | 核心能力 | 待确认 |
+| `{BACKEND_STACK}` | 后端技术栈 | 待确认 |
+| `{FRONTEND_STACK}` | 前端技术栈 | 待确认 |
+| `{DATABASE_STACK}` | 数据库技术栈 | 待确认 |
+| `{OBJECT_STORAGE_STACK}` | 对象存储技术栈 | 待确认 |
+| `{ASYNC_TASK_STACK}` | 异步任务技术栈 | 待确认 |
+| `{ALGORITHM_STACK}` | 算法/模型技术栈 | 待确认 |
+| `{DEPLOYMENT_STACK}` | 部署方式 | 待确认 |
+| `{LOCAL_SETUP_COMMANDS}` | 本地初始化命令 | 待确认 |
+| `{DEV_COMMANDS}` | 本地开发命令 | 待确认 |
+| `{TEST_COMMANDS}` | 测试命令 | 待确认 |
+| `{DOCKER_UP_COMMAND}` | Docker 启动命令 | 待确认 |
+| `{DOCKER_DOWN_COMMAND}` | Docker 停止命令 | 待确认 |
+| `{SERVICE_URLS}` | 本地服务地址 | 待确认 |
+| `{DIRECTORY_VALIDATE_COMMAND}` | 目录校验命令 | 待确认 |
+| `{PRIMARY_VERIFY_COMMAND}` | 主要验证命令 | 待确认 |
+| `{PROJECT_OWNER}` | 项目负责人 | 待确认 |
 
-## 技术栈
+## 2. 项目简介 `[个性化]`
 
-### 后端
-
-- Python3.12
-- FastAPI
-- Pydantic
-- uv
-- SQLite
-- MinIO
-
-### 前端
-
-- React19
-- TypeScript
-- Tailwind
-- shadcn/ui
-- Axios
-- Orval
-- pnpm
-
-## 快速启动
-
-```bash
-# 后端
-cd src/backend
-uv sync
-uv run fastapi dev app/main.py
-
-# 前端
-cd src/web
-pnpm install
-pnpm dev
-```
-
-## 目录说明
-
-- `openspec/`：需求与规格事实源
-- `src/backend/`：FastAPI后端
-- `src/web/`：Web展示端与管理端
-- `src/miniapp/`：微信小程序
-- `tests/`：测试目录
-
-## Docker Compose 启动
-
-本项目提供 Docker Compose 本地开发与演示部署方式。
-
-```bash
-./scripts/docker-up.sh
-```
-
-启动后访问：
-
-| 服务 | 地址 |
-|---|---|
-| Web展示端/管理端 | http://localhost:3000 |
-| 后端API文档 | http://localhost:8000/docs |
-| MinIO控制台 | http://localhost:9001 |
-
-停止服务：
-
-```bash
-./scripts/docker-down.sh
-```
-
-默认 MinIO 账号密码仅用于本地开发：
+`{PRODUCT_NAME}` 是面向 `{TARGET_USERS}` 的 `{BUSINESS_DOMAIN}` 项目。
 
 ```text
-账号：minioadmin
-密码：minioadmin123
+{PRODUCT_DESCRIPTION}
 ```
 
-生产环境必须修改默认账号密码，并使用独立环境变量管理。
+项目代码：
 
-## AI目录结构约束
+```text
+{PRODUCT_CODE}
+```
 
-本项目要求 AI Agent 严格遵循当前目录结构，不允许随意新增顶层目录或将文件放到错误位置。
+产品形态：
 
-目录约束规则见：
+```text
+{PRODUCT_FORMS}
+```
+
+## 3. 用户角色 `[个性化]`
+
+| 用户/角色 | 使用端 | 核心目标 | 关键能力 |
+|---|---|---|---|
+| `{USER_ROLE_1}` | `{CLIENT_1}` | `{USER_GOAL_1}` | `{ROLE_CAPABILITIES_1}` |
+| `{USER_ROLE_2}` | `{CLIENT_2}` | `{USER_GOAL_2}` | `{ROLE_CAPABILITIES_2}` |
+| `待确认` | `待确认` | `待确认` | `待确认` |
+
+初始化时应根据用户输入生成真实角色。无多角色项目可合并为单一“用户/操作者/系统调用方”。
+
+## 4. 核心能力 `[个性化]`
+
+```text
+{CORE_CAPABILITIES}
+```
+
+推荐按以下格式生成：
+
+| 能力 | 面向角色 | 所属端/服务 | 说明 | 状态 |
+|---|---|---|---|---|
+| `{CAPABILITY_NAME}` | `{ROLE}` | `{FORM_OR_SERVICE}` | `{CAPABILITY_DESCRIPTION}` | planned / active / deprecated |
+
+核心能力必须能追溯到 `docs/00-product-overview.md`、`issues/requirements/` 或 `openspec/changes/`。
+
+## 5. 技术栈 `[通用 + 个性化]`
+
+| 分层 | 技术栈 | 状态 | 说明 |
+|---|---|---|---|
+| 后端 | `{BACKEND_STACK}` | `{BACKEND_STATUS}` | `{BACKEND_NOTE}` |
+| 前端 | `{FRONTEND_STACK}` | `{FRONTEND_STATUS}` | `{FRONTEND_NOTE}` |
+| 数据库 | `{DATABASE_STACK}` | `{DATABASE_STATUS}` | `{DATABASE_NOTE}` |
+| 对象存储 | `{OBJECT_STORAGE_STACK}` | `{OBJECT_STORAGE_STATUS}` | `{OBJECT_STORAGE_NOTE}` |
+| 异步任务 | `{ASYNC_TASK_STACK}` | `{ASYNC_TASK_STATUS}` | `{ASYNC_TASK_NOTE}` |
+| 算法/模型 | `{ALGORITHM_STACK}` | `{ALGORITHM_STATUS}` | `{ALGORITHM_NOTE}` |
+| 部署 | `{DEPLOYMENT_STACK}` | `{DEPLOYMENT_STATUS}` | `{DEPLOYMENT_NOTE}` |
+
+规则：
+
+- 未启用的分层应标记为 `不适用` 或删除。
+- 不得保留来源项目技术栈、服务名、端口、依赖或工具链假设。
+- 技术栈必须与 `project.yaml`、`docs/01-architecture.md`、`docs/02-deployment.md`、`rules/environment.md` 一致。
+
+## 6. 快速启动 `[通用 + 个性化]`
+
+本地初始化：
+
+```bash
+{LOCAL_SETUP_COMMANDS}
+```
+
+本地开发：
+
+```bash
+{DEV_COMMANDS}
+```
+
+运行测试：
+
+```bash
+{TEST_COMMANDS}
+```
+
+主要验证：
+
+```bash
+{PRIMARY_VERIFY_COMMAND}
+```
+
+要求：
+
+- 命令必须来自实际脚本、包管理器、Makefile、Docker Compose 或项目文档。
+- 未确认命令必须标记为 `待确认`，不得编造。
+- 如果项目需要 `.env`，应从 `.env.example` 复制并按 `rules/environment.md` 配置。
+
+## 7. Docker / 部署入口 `[条件启用 + 个性化]`
+
+当 `{DEPLOYMENT_STACK}` 包含 Docker Compose、本地容器、Kubernetes、Helm、PaaS 或私有化部署时，保留本节；否则标记为“不适用”。
+
+启动：
+
+```bash
+{DOCKER_UP_COMMAND}
+```
+
+停止：
+
+```bash
+{DOCKER_DOWN_COMMAND}
+```
+
+本地服务地址：
+
+| 服务 | 地址 | 说明 |
+|---|---|---|
+| `{SERVICE_NAME}` | `{SERVICE_URL}` | `{SERVICE_NOTE}` |
+
+```text
+{SERVICE_URLS}
+```
+
+要求：
+
+- 服务名、端口和访问地址必须来自实际配置。
+- 不得在 README 中写入真实密码、Token、Access Key 或生产凭据。
+- 默认账号、默认密码只能用于本地开发，且必须明确生产环境禁止使用。
+- 端口策略必须与 `rules/port-management.md`、`docs/02-deployment.md` 一致。
+
+## 8. 目录说明 `[通用 + 个性化]`
+
+| 目录/文件 | 说明 | 初始化策略 |
+|---|---|---|
+| `AGENTS.md` | AI Agent 协作入口与强制规则 | 必须保留 |
+| `project.yaml` | 项目元数据与初始化参数 | 必须保留 |
+| `rules/` | 工程规则、编码、安全、测试、部署等约束 | 必须保留 |
+| `docs/` | 产品、架构、部署、API、数据库、标准文档 | 必须保留 |
+| `docs/standards/` | API、认证、错误码、测试、上传等专项标准 | 按能力保留 |
+| `issues/` | 需求与缺陷治理目录 | 必须保留 |
+| `iterations/` | Sprint 与迭代治理目录 | 条件启用 |
+| `openspec/` | OpenSpec 变更与规格事实源 | 条件启用 |
+| `src/` | 源码目录 | 按技术栈生成 |
+| `tests/` | 测试目录 | 按测试策略生成 |
+| `data/` | 本地运行时数据、样例数据或缓存 | 条件启用 |
+| `models/` | 模型文件、算法权重或模型资产 | 条件启用 |
+| `deploy/` | 部署配置、脚本与环境模板 | 条件启用 |
+
+目录约束见：
 
 ```text
 rules/directory-structure.md
 ```
 
-目录校验命令：
+目录校验：
 
 ```bash
-python scripts/validate-directory-structure.py
+{DIRECTORY_VALIDATE_COMMAND}
 ```
 
+## 9. AI 协作约束 `[通用]`
 
-## 新增能力
+AI Agent 修改本项目时必须：
 
-- 新增根目录 `.env.example`，统一管理本地开发、Docker Compose、MinIO、SQLite、图片/视频上传相关环境变量。
-- 新增 `data/` 目录，用于本地SQLite、上传缓存、视频处理产物、样例素材和运行时数据。
-- 新增 `rules/data-management.md`、`rules/environment.md`、`rules/media.md`。
-- 新增 `docs/06-video-asset-management.md`。
-- 新增 `openspec/specs/media-assets/spec.md`。
-- 新增后端 `src/backend/app/modules/media/` 和 `src/backend/app/video/` 模块边界。
+- 先阅读 `AGENTS.md`。
+- 遵守 `rules/` 下的工程规则。
+- 不随意新增顶层目录，不把需求、Bug、迭代、OpenSpec 文档放错位置。
+- 修改技术栈、目录、端口、部署、测试、API、数据库、对象存储或安全策略时，同步更新对应文档。
+- 不保留来源项目业务名、路径、端口、服务、账号、密码、bucket、表名、接口或测试示例。
+- 执行必要验证，并在无法验证时说明原因。
 
-## 初始化建议
+## 10. 文档导航 `[通用]`
 
-```bash
-cp .env.example .env
-./scripts/docker-up.sh
-```
+| 想了解 | 阅读 |
+|---|---|
+| AI 协作规则 | `AGENTS.md` |
+| 产品定位 | `docs/00-product-overview.md` |
+| 系统架构 | `docs/01-architecture.md` |
+| 部署方式 | `docs/02-deployment.md` |
+| API 总览 | `docs/03-api-index.md` |
+| 数据库设计 | `docs/04-database-design.md` |
+| 兼容矩阵 | `docs/05-compatibility-matrix.md` |
+| 媒体/视频资产 | `docs/06-video-asset-management.md` |
+| 对象存储策略 | `docs/07-object-storage-strategy.md` |
+| 文档目录说明 | `docs/README.md` |
+| API/认证/错误码/测试等标准 | `docs/standards/` |
 
-如果项目不需要视频能力，不建议直接删除目录，应先创建 OpenSpec Change 说明裁剪范围。
+## 11. 项目治理命令 `[通用 + 个性化]`
 
-## V5 更新说明
+默认支持以下自定义命令族，具体文件位于 `.cursor/`、`.claude/`、`.codex/`、`.kiro/`、`.opencode/`：
 
-### MinIO 单桶策略
+| 命令族 | 命令 |
+|---|---|
+| 需求治理 | `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx` |
+| 缺陷治理 | `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx` |
+| Sprint 治理 | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive` |
+| 项目基线 | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
+| OpenSpec | `/opsx-explore`、`/opsx-propose`、`/opsx-apply`、`/opsx-archive` |
 
-将 MinIO 从多 Bucket 策略调整为：
+项目可根据实际启用能力补充命令说明，但不得改变默认命令的阶段、输入、输出和是否生成代码边界。
 
-```text
-一个项目一个 Bucket
-桶内通过前缀区分图片、视频、缩略图、导入导出等资源
-```
+## 12. 初始化建议 `[通用]`
 
-默认：
+初始化生成 README 时应执行：
 
-```env
-MINIO_BUCKET=tile-info-platform
-```
+1. 替换 `{PRODUCT_NAME}`、`{PRODUCT_CODE}`、`{PRODUCT_DESCRIPTION}`、`{BUSINESS_DOMAIN}`、`{TARGET_USERS}`、`{PRODUCT_FORMS}`、`{CORE_CAPABILITIES}`。
+2. 根据项目能力生成技术栈、目录说明、服务地址和命令。
+3. 根据是否启用 Web、Admin、API、Mobile、Miniapp、Desktop、对象存储、媒体、算法/模型、Docker、Kubernetes 保留或删除 `[条件启用]` 内容。
+4. 命令、端口、URL、服务名必须来自真实配置；未知时标记 `待确认`。
+5. 不得保留来源项目产品名、用户角色、技术栈、端口、服务地址、默认账号密码、bucket、表名或业务能力。
+6. 保持 README 与 `AGENTS.md`、`project.yaml`、`docs/00-product-overview.md`、`docs/01-architecture.md`、`docs/02-deployment.md`、`rules/directory-structure.md`、`rules/environment.md`、`rules/port-management.md` 一致。
 
-### 端口策略
+## 13. 更新触发条件 `[通用]`
 
-保留开发常用端口：
+以下变化必须更新本文档：
 
-```text
-Backend: 8000
-Web: 3000
-```
-
-如果本机多个项目冲突，只需要在 `.env` 中修改宿主机端口：
-
-```env
-HOST_PORT_BACKEND=18080
-HOST_PORT_WEB=13000
-```
-
-容器内部端口保持不变。
+- 产品名称、定位、目标用户、核心能力或产品形态变化。
+- 技术栈、源码目录、测试目录、部署方式或服务地址变化。
+- 启动命令、测试命令、验证命令、Docker/部署命令变化。
+- 端口策略、环境变量、对象存储、模型文件、运行时数据或安全策略变化。
+- AI 协作规则、命令体系、目录治理或文档导航变化。

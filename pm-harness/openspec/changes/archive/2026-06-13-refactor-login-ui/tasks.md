@@ -44,4 +44,4 @@
 ## 8. 文档与 Sprint
 
 - [x] 8.1 更新 `openspec/changes/refactor-login-ui/trace.md`
-- [x] 8.2 确认 Sprint 01 acceptance-report 登录页 UI 验收项可勾选
+- [x] 8.2 确认 Sprint 001 acceptance-report 登录页 UI 验收项可勾选

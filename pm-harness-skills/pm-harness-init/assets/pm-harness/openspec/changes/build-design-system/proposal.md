@@ -5,7 +5,7 @@
 ## What Changes
 
 - 补全 `src/shared/design-system/` 文档、prompts、`validate-design-system.py`
-- 登记 Sprint-00 REQ-0000-build-design-system
+- 登记 Sprint-000 REQ-0000-build-design-system
 - 与已归档 `add-design-system` 实现对齐
 
 ## Capabilities

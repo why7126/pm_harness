@@ -1,6 +1,6 @@
 ## Why
 
-Sprint 01 已完成 `align-login-prototype`（23/23 任务），但 `/admin/login` 与 `user-login.png` 并排对比时，普通人仍可一眼识别差异：STONEX Logo 缺少品牌衬线气质、企业微信图标颜色/形态不对、右栏副标题金色范围不符、shadcn 默认 focus ring/ghost 按钮与原型控件形态不一致、占位交互弹出 notice 横幅破坏页面观感。根因是前序 Change 验收的是 **checklist（有无 JPG、spacing 数字）**，而非 **以 PNG 为 golden reference 的像素级 fidelity**。REQ-0001 验收项「页面视觉与原型一致」仍未真正通过，需在 Sprint 01 内做最后一轮视觉专项。
+Sprint 001 已完成 `align-login-prototype`（23/23 任务），但 `/admin/login` 与 `user-login.png` 并排对比时，普通人仍可一眼识别差异：STONEX Logo 缺少品牌衬线气质、企业微信图标颜色/形态不对、右栏副标题金色范围不符、shadcn 默认 focus ring/ghost 按钮与原型控件形态不一致、占位交互弹出 notice 横幅破坏页面观感。根因是前序 Change 验收的是 **checklist（有无 JPG、spacing 数字）**，而非 **以 PNG 为 golden reference 的像素级 fidelity**。REQ-0001 验收项「页面视觉与原型一致」仍未真正通过，需在 Sprint 001 内做最后一轮视觉专项。
 
 ## What Changes
 
@@ -32,5 +32,5 @@ Sprint 01 已完成 `align-login-prototype`（23/23 任务），但 `/admin/logi
 | 样式 | `globals.css` 登录页字体 token；登录页 scoped override（仍禁止裸 Hex） |
 | Auth 逻辑 | **无影响** |
 | 规范文档 | `rules/ui-design.md` 登录页专章 |
-| Sprint 01 | `iterations/sprint-01/sprint.md`、`acceptance-report.md` |
+| Sprint 001 | `iterations/sprint-001/sprint.md`、`acceptance-report.md` |
 | Docker | Web 镜像需包含更新静态资源 |

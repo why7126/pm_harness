@@ -5,7 +5,7 @@ requirement_id: REQ-0000-build-api-standard
 requirement_name: 建设 API 标准
 priority: P0
 status: completed
-iteration: sprint-00
+iteration: sprint-000
 change_id: build-api-standard
 ```
 

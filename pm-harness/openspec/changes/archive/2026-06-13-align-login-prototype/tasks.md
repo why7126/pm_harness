@@ -38,6 +38,6 @@
 ## 7. 视觉验收与文档
 
 - [x] 7.1 桌面端与 `user-login.png` 并排对比，记录于 trace.md
-- [x] 7.2 更新 `iterations/sprint-01/acceptance-report.md` 视觉项（通过后勾选）
+- [x] 7.2 更新 `iterations/sprint-001/acceptance-report.md` 视觉项（通过后勾选）
 - [x] 7.3 更新 `openspec/changes/align-login-prototype/trace.md`
 - [x] 7.4 更新 `issues/requirements/REQ-0001-user-login/trace.md`

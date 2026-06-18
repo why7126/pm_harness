@@ -15,9 +15,9 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     "pytest.ini",
     "tests/conftest.py",
-    "docs/testing-governance.md",
-    "docs/unit-test-standard.md",
-    "docs/frontend-test-standard.md",
+    "docs/standards/testing-governance.md",
+    "docs/standards/unit-test-standard.md",
+    "docs/standards/frontend-test-standard.md",
     ".coveragerc",
     "tests/unit",
     "tests/integration",

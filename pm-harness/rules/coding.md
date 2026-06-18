@@ -149,7 +149,7 @@ Infrastructure     Database / Object Storage / Queue / Filesystem / Third-party
 
 ```text
 rules/api.md
-docs/error-codes.md
+docs/standards/error-codes.md
 ```
 
 ## 6. 后端编码规范 [条件启用]

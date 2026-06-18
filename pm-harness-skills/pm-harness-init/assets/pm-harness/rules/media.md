@@ -400,7 +400,7 @@ rules/environment.md
 rules/security.md
 rules/api.md
 docs/06-*-asset-management.md
-docs/file-upload.md
+docs/standards/file_upload.md
 docs/04-database-design.md
 docs/05-compatibility-matrix.md
 openspec/changes/<change-id>/

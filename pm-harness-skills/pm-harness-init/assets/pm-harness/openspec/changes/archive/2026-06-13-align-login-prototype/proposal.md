@@ -1,6 +1,6 @@
 ## Why
 
-Sprint 01 已完成 `add-user-login`、`add-design-system`、`refactor-login-ui` 三阶段交付，但 `/admin/login` 与 `issues/requirements/REQ-0001-user-login/prototype/web/user-login.png` 仍存在明显视觉差距：左侧背景为抽象 SVG 占位而非展厅实拍、企业微信为「企」字占位、语言切换缺少下拉箭头、间距与原型 §4.4 未精修。`refactor-login-ui` 解决的是 Design Token + shadcn 组件化，**不是**像素级原型还原。REQ-0001 验收项「页面视觉与原型一致」尚未真正通过，需在 Sprint 01 内补齐高保真视觉层。
+Sprint 001 已完成 `add-user-login`、`add-design-system`、`refactor-login-ui` 三阶段交付，但 `/admin/login` 与 `issues/requirements/REQ-0001-user-login/prototype/web/user-login.png` 仍存在明显视觉差距：左侧背景为抽象 SVG 占位而非展厅实拍、企业微信为「企」字占位、语言切换缺少下拉箭头、间距与原型 §4.4 未精修。`refactor-login-ui` 解决的是 Design Token + shadcn 组件化，**不是**像素级原型还原。REQ-0001 验收项「页面视觉与原型一致」尚未真正通过，需在 Sprint 001 内补齐高保真视觉层。
 
 ## What Changes
 
@@ -31,4 +31,4 @@ Sprint 01 已完成 `add-user-login`、`add-design-system`、`refactor-login-ui`
 | 样例数据 | 可选 `data/samples/images/` 存放源图（遵循 data-management 规范） |
 | Auth 逻辑 | **无影响** |
 | Docker | Web 镜像需包含新静态资源 |
-| 文档 | Sprint 01 迭代文档、REQ-0001 acceptance |
+| 文档 | Sprint 001 迭代文档、REQ-0001 acceptance |

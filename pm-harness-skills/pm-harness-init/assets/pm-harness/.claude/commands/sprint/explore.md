@@ -15,8 +15,8 @@ tags: [workflow]
 
 **Input**（可选）：
 
-- `sprint-002` — 在已有 Sprint 上下文中探讨
-- 自然语言：「sprint-002 容量够不够」「品牌管理和类目能否并行」
+- `sprint-0002` — 在已有 Sprint 上下文中探讨
+- 自然语言：「sprint-0002 容量够不够」「品牌管理和类目能否并行」
 - 无参数 — 探讨「下一 Sprint 该做什么」
 
 ---
@@ -74,7 +74,7 @@ REQ-0001
 
 - `estimated_person_days` 是否 realistic？
 - 628 前能否全部 archive？
-- 是否应拆成 sprint-003？
+- 是否应拆成 sprint-0003？
 
 ### 对比方案
 
@@ -133,8 +133,8 @@ REQ-0001
 无强制输出。可能走向：
 
 - **更新 Sprint 文档**：「已更新 sprint.md 风险与依赖」
-- **进入 propose**：「范围定了，执行 `/sprint-propose sprint-003`」
-- **进入开发**：「顺序清晰了，执行 `/sprint-apply sprint-002 --dry-run`」
+- **进入 propose**：「范围定了，执行 `/sprint-propose sprint-0003`」
+- **进入开发**：「顺序清晰了，执行 `/sprint-apply sprint-0002 --dry-run`」
 - **仅澄清**：用户带走结论即可
 
 ---
