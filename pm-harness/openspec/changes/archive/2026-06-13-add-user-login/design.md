@@ -13,7 +13,7 @@
 - 后端提供 JWT Bearer Token 认证，前端封装独立 `auth` feature。
 - 登录页视觉与交互对齐原型 `prototype/web/user-login.png`。
 - 角色识别与基础路由权限：`admin` / `employee` 可进管理端；`store_owner` 拒绝。
-- 为后续小程序登录、企业微信 OAuth、RBAC 扩展预留接口与数据模型。
+- 为后续微信小程序登录、企业微信 OAuth、RBAC 扩展预留接口与数据模型。
 
 **Non-Goals:**
 

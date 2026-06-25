@@ -35,9 +35,9 @@ REQ-xxxx-name/
 └── prototype/            # 原型目录
     ├── web/              # Web 端原型
     │   ├── *.html        # HTML 原型（AI 开发优先参考）
-    │   ├── *.png         # 视觉稿（Golden Reference）
+    │   ├── *.png         # 可选视觉稿；提供时作为 Golden Reference，缺失不阻塞需求或开发
     │   └── *-context.md  # 原型说明
-    └── miniapp/          # 小程序端原型（如有）
+    └── wechat-miniapp/          # 微信小程序端原型（如有）
 ```
 
 ## 开发流程

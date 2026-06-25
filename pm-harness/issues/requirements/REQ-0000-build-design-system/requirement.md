@@ -2,7 +2,7 @@
 
 ## 1. 背景
 
-瓷砖信息管理平台包含 Web 店主端、管理端与小程序，需要统一的「工业石材 · 暗色旗舰风」视觉语言。项目初始化阶段必须先落地可执行的 Design System，作为后续业务页面的消费基础。
+瓷砖信息管理平台包含 Web 店主端、管理端与微信小程序，需要统一的「工业石材 · 暗色旗舰风」视觉语言。项目初始化阶段必须先落地可执行的 Design System，作为后续业务页面的消费基础。
 
 ## 2. 目标
 
@@ -15,7 +15,7 @@
 | 包含 | 不包含 |
 |------|--------|
 | Token、globals.css、tailwind | 具体业务页面数据对接 |
-| shadcn Button/Input/Checkbox 等 | 小程序端完整组件库 |
+| shadcn Button/Input/Checkbox 等 | 微信小程序端完整组件库 |
 | shared/ui、business、templates | 浅色主题完整验收 |
 
 ## 4. 验收概要

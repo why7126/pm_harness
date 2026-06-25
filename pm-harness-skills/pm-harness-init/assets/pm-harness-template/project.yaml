@@ -40,9 +40,9 @@ product_forms:
   api_service:
     enabled: "{HAS_API_SERVICE}"
     description: "{API_SERVICE_DESCRIPTION}"
-  miniapp:
-    enabled: "{HAS_MINIAPP}"
-    platform: "{MINIAPP_PLATFORM}"
+  wechat_miniapp:
+    enabled: "{HAS_WECHAT_MINIAPP}"
+    platform: "{WECHAT_MINIAPP_PLATFORM}"
   mobile:
     enabled: "{HAS_MOBILE}"
     platforms:

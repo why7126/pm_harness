@@ -25,7 +25,7 @@ template_scope: 可作为工程初始化的 environment.md 模块
 |---|---|---|
 | `{PRODUCT_NAME}` | 产品中文名 | 来自用户输入 |
 | `{PRODUCT_CODE}` | 项目代码名 | kebab-case |
-| `{PRODUCT_FORMS}` | 产品形态 | Web、小程序、移动端、桌面端、H5 等 |
+| `{PRODUCT_FORMS}` | 产品形态 | Web、微信小程序、移动端、桌面端、H5 等 |
 | `{BACKEND_STACK}` | 后端技术栈 | 决定配置加载方式 |
 | `{FRONTEND_STACK}` | 前端技术栈 | 决定前端环境变量前缀与构建方式 |
 | `{DATABASE_STACK}` | 数据库选型 | 决定 DB_* 或连接串变量 |
@@ -401,7 +401,7 @@ python scripts/check-env.py
 4. 根据 `{DATABASE_STACK}` 生成数据库变量，单数据库优先 `DATABASE_URL`，需要兼容时生成拆分变量。
 5. 根据 `{OBJECT_STORAGE_STACK}` 决定是否保留对象存储变量。
 6. 根据 `{DEPLOYMENT_STACK}` 决定 Docker Compose、Kubernetes、SaaS、私有化章节。
-7. 根据 `{PRODUCT_FORMS}` 删除不适用的前端、小程序、移动端配置要求。
+7. 根据 `{PRODUCT_FORMS}` 删除不适用的前端、微信小程序、移动端配置要求。
 8. 根据是否启用 Redis、异步任务、算法、License、第三方服务保留对应 `[条件启用]` 模块。
 9. 检查本文档与 `.env.example`、`docker-compose.yml`、`README.md`、`docs/02-deployment.md`、`rules/port-management.md`、`rules/security.md` 一致。
 

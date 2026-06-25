@@ -45,7 +45,7 @@ note: fix-login-pixel-fidelity 为 Sprint 001 视觉收尾（PNG golden referenc
 | 项目 | 延后原因 |
 |---|---|
 | 瓷砖目录/管理 | 依赖本 Sprint 完成 |
-| 企微 OAuth / 忘记密码 / 小程序登录 | REQ-0001 子项 P2+ |
+| 企微 OAuth / 忘记密码 / 微信小程序登录 | REQ-0001 子项 P2+ |
 
 ## Change 列表
 

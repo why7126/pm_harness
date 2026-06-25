@@ -47,7 +47,7 @@ note: 请将【占位内容】替换为实际内容
 |------|------|
 | 发现时间 | 【YYYY-MM-DD】 |
 | 发现人 | 【姓名】 |
-| 端 | 【Web / 小程序 / Android / iOS / 后端】 |
+| 端 | 【Web / 微信小程序 / Android / iOS / 后端】 |
 | 版本/分支 | 【版本号或 Git 分支】 |
 | 操作系统 | 【Windows / macOS / Linux / iOS / Android】 |
 | 浏览器/客户端 | 【Chrome xx / 微信 xx 等】 |

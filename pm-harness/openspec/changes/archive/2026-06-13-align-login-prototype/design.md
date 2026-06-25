@@ -18,7 +18,7 @@
 
 - 企业微信 OAuth、忘记密码、i18n 真实切换逻辑。
 - 修改 auth API / store / 路由守卫。
-- 小程序或店主端登录页。
+- 微信小程序或店主端登录页。
 - 引入 Storybook；沿用页面直验 + acceptance checklist。
 
 ## Decisions

@@ -19,7 +19,7 @@ REQUIRED_PATHS = [
     "openspec/project.md",
     "src/backend/app/main.py",
     "src/web/package.json",
-    "src/miniapp/app.json",
+    "src/wechat-miniapp/app.json",
     "docker-compose.yml",
     "src/backend/Dockerfile",
     "src/web/Dockerfile",

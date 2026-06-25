@@ -26,7 +26,7 @@ note: 适用于 {PRODUCT_NAME} 项目；作为 docs 目录的第一阅读入口
 | `{PRODUCT_NAME}` | 产品名称 | 待确认 |
 | `{PRODUCT_CODE}` | 项目代码 | 待确认 |
 | `{DOCS_OWNER}` | 文档负责人 | 待确认 |
-| `{PRODUCT_FORMS}` | 产品形态 | Web / 管理后台 / API / 小程序 / 移动端 / 桌面端 |
+| `{PRODUCT_FORMS}` | 产品形态 | Web / 管理后台 / API / 微信小程序 / 移动端 / 桌面端 |
 | `{BACKEND_STACK}` | 后端技术栈 | 待确认 |
 | `{FRONTEND_STACK}` | 前端技术栈 | 待确认 |
 | `{DATABASE_STACK}` | 数据库技术栈 | 待确认 |

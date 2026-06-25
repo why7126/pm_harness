@@ -28,7 +28,7 @@ AI 在新增、移动、删除文件或目录前必须先阅读本文档。
 
 - `[通用]`：所有项目默认保留的目录边界。
 - `[个性化]`：必须根据产品形态、技术栈、工具链、部署方式和团队流程替换的内容。
-- `[条件启用]`：仅在项目启用对应能力时保留，例如 Web、小程序、移动端、桌面端、算法、模型、对象存储、Kubernetes、私有化部署、外部 AI 工具目录等。
+- `[条件启用]`：仅在项目启用对应能力时保留，例如 Web、微信小程序、移动端、桌面端、算法、模型、对象存储、Kubernetes、私有化部署、外部 AI 工具目录等。
 
 推荐初始化参数：
 
@@ -36,7 +36,7 @@ AI 在新增、移动、删除文件或目录前必须先阅读本文档。
 | --- | --- |
 | `{PRODUCT_NAME}` | 项目或产品名称 |
 | `{PRODUCT_CODE}` | 项目标识、包名前缀或服务标识 |
-| `{PRODUCT_FORMS}` | 产品形态，例如 Web、小程序、移动端、桌面端、H5、API 服务 |
+| `{PRODUCT_FORMS}` | 产品形态，例如 Web、微信小程序、移动端、桌面端、H5、API 服务 |
 | `{BACKEND_STACK}` | 后端技术栈 |
 | `{FRONTEND_STACK}` | 前端技术栈 |
 | `{DATABASE_STACK}` | 数据库选型 |
@@ -49,7 +49,7 @@ AI 在新增、移动、删除文件或目录前必须先阅读本文档。
 | `{DOCS_STRUCTURE}` | docs 分层结构 |
 | `{GENERATED_CODE_DIRS}` | 生成代码目录 |
 | `{HAS_WEB}` | 是否启用 Web |
-| `{HAS_MINIAPP}` | 是否启用小程序 |
+| `{HAS_WECHAT_MINIAPP}` | 是否启用微信小程序 |
 | `{HAS_MOBILE}` | 是否启用移动端 |
 | `{HAS_DESKTOP}` | 是否启用桌面端 |
 | `{HAS_ALGORITHM}` | 是否包含算法模块 |
@@ -301,7 +301,7 @@ compatibility/
 生成规则：
 
 - 启用 Web 时生成 `compatibility/devices/web.md`。
-- 启用小程序时生成 `compatibility/devices/miniapp.md`。
+- 启用微信小程序时生成 `compatibility/devices/wechat-miniapp.md`。
 - 启用 Android、iOS、桌面端、H5 时生成对应设备文档。
 - 使用数据库时生成 `compatibility/database/{database}.md`、`migration-rules.md`、`test-matrix.md`。
 - 使用对象存储时生成 `compatibility/object-storage/{provider}.md`。
@@ -381,7 +381,7 @@ models/
 src/
 ├── backend/
 ├── web/
-├── miniapp/
+├── wechat-miniapp/
 ├── android/
 ├── ios/
 ├── desktop/
@@ -396,7 +396,7 @@ src/
 
 - 根据 `{BACKEND_STACK}` 生成 `src/backend/` 的入口、依赖文件、分层目录。
 - 根据 `{HAS_WEB}` 和 `{FRONTEND_STACK}` 生成 `src/web/`；无 Web 前端时删除 Web 强制规则。
-- 根据 `{HAS_MINIAPP}`、`{HAS_MOBILE}`、`{HAS_DESKTOP}` 生成对应端目录。
+- 根据 `{HAS_WECHAT_MINIAPP}`、`{HAS_MOBILE}`、`{HAS_DESKTOP}` 生成对应端目录。
 - 根据 `{HAS_ALGORITHM}` 生成 `src/algorithm/` 和 `models/` 规则。
 - 跨端共享定义放入 `src/shared/`，不得复制到多个端中。
 - SDK 不得反向依赖具体应用层。
@@ -449,10 +449,10 @@ src/web/
 
 `generated/` 目录只能由生成工具写入，AI 不得手工修改。前端 API 调用规则必须与 `rules/api.md` 一致，UI 组件归属必须与 `rules/ui-design.md` 一致。
 
-### 12.3 小程序、移动端、桌面端 `[条件启用]`
+### 12.3 微信小程序、移动端、桌面端 `[条件启用]`
 
 ```text
-src/miniapp/
+src/wechat-miniapp/
 src/android/
 src/ios/
 src/desktop/
@@ -490,7 +490,7 @@ tests/
 生成规则：
 
 - 有 Web 时可生成 `tests/e2e/web/` 或项目约定目录。
-- 有小程序、移动端、桌面端时生成对应兼容性测试占位。
+- 有微信小程序、移动端、桌面端时生成对应兼容性测试占位。
 - 有数据库兼容要求时生成 `tests/compatibility/{database}/`。
 - 有对象存储时生成 `tests/compatibility/object-storage/` 或 provider 子目录。
 - 测试数据必须遵循 `rules/data-management.md`。
@@ -525,7 +525,7 @@ tests/
 | --- | --- | --- |
 | 后端业务代码 | `src/backend/` | 根目录、`scripts/`、`docs/` |
 | 前端页面/组件 | `src/web/` 或对应端目录 | 根目录、`docs/` |
-| 小程序代码 | `src/miniapp/` | `src/web/`、根目录 |
+| 微信小程序代码 | `src/wechat-miniapp/` | `src/web/`、根目录 |
 | 移动端代码 | `src/android/`、`src/ios/` | 根目录 |
 | 算法推理代码 | `src/algorithm/` | `models/`、`data/` |
 | 共享类型/常量 | `src/shared/` | 多端重复复制 |
@@ -593,7 +593,7 @@ AI 在新增或移动文件前必须回答：
 用于工程初始化生成 `directory-structure.md` 时，建议按以下步骤处理：
 
 1. 根据 `{PRODUCT_NAME}`、`{PRODUCT_CODE}` 替换文档元数据与顶层目录。
-2. 根据 `{PRODUCT_FORMS}`、`{HAS_WEB}`、`{HAS_MINIAPP}`、`{HAS_MOBILE}`、`{HAS_DESKTOP}` 决定 `src/` 下端目录和 `compatibility/devices/` 文档。
+2. 根据 `{PRODUCT_FORMS}`、`{HAS_WEB}`、`{HAS_WECHAT_MINIAPP}`、`{HAS_MOBILE}`、`{HAS_DESKTOP}` 决定 `src/` 下端目录和 `compatibility/devices/` 文档。
 3. 根据 `{BACKEND_STACK}` 生成 `src/backend/` 的入口、依赖文件和分层描述。
 4. 根据 `{FRONTEND_STACK}` 生成 `src/web/` 或删除前端强制目录。
 5. 根据 `{DATABASE_STACK}` 生成数据库目录、迁移目录和兼容性文档。

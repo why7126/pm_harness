@@ -16,7 +16,7 @@ template_scope: 可作为工程初始化时的 docs/01-architecture.md 模块
 >
 > - **[通用]**：适用于大多数 Harness 工程，初始化时默认保留。
 > - **[个性化]**：必须根据用户项目输入生成，不能直接沿用模板默认值。
-> - **[条件启用]**：只有项目具备对应能力时才保留或展开，例如 Web、小程序、移动端、对象存储、媒体、算法模型、异步任务、外部集成、私有化部署。
+> - **[条件启用]**：只有项目具备对应能力时才保留或展开，例如 Web、微信小程序、移动端、对象存储、媒体、算法模型、异步任务、外部集成、私有化部署。
 
 ## 0. 文档定位 `[通用]`
 
@@ -47,7 +47,7 @@ template_scope: 可作为工程初始化时的 docs/01-architecture.md 模块
 |---|---|---|
 | `{PRODUCT_NAME}` | 产品或项目名称 | 待确认 |
 | `{PRODUCT_CODE}` | 项目代码，建议 kebab-case | 待确认 |
-| `{PRODUCT_FORMS}` | 产品形态，如 Web、管理后台、小程序、移动端、API 服务 | 待确认 |
+| `{PRODUCT_FORMS}` | 产品形态，如 Web、管理后台、微信小程序、移动端、API 服务 | 待确认 |
 | `{BACKEND_STACK}` | 后端技术栈 | 待确认 |
 | `{FRONTEND_STACK}` | 前端技术栈 | 待确认 |
 | `{DATABASE_STACK}` | 数据库与迁移方案 | 待确认 |
@@ -94,7 +94,7 @@ template_scope: 可作为工程初始化时的 docs/01-architecture.md 模块
 示例占位：
 
 ```text
-Web / Admin / Mobile / Miniapp / API Client
+Web / Admin / Mobile / WeChat Miniapp / API Client
         ↓
 Backend API / Gateway
         ↓
@@ -131,7 +131,7 @@ External Services / Algorithm Service / Model Runtime
 |---|---|---|---|---|---|---|
 | 后端 API | `src/backend/` | `{BACKEND_RESPONSIBILITY}` | `{BACKEND_INPUT}` | `{BACKEND_OUTPUT}` | `{BACKEND_DEPENDENCIES}` | `{BACKEND_STATUS}` |
 | Web 前端 | `src/web/` | `{WEB_RESPONSIBILITY}` | `{WEB_INPUT}` | `{WEB_OUTPUT}` | `{WEB_DEPENDENCIES}` | `{WEB_STATUS}` |
-| 小程序 | `src/miniapp/` | `{MINIAPP_RESPONSIBILITY}` | `{MINIAPP_INPUT}` | `{MINIAPP_OUTPUT}` | `{MINIAPP_DEPENDENCIES}` | `{MINIAPP_STATUS}` |
+| 微信小程序 | `src/wechat-miniapp/` | `{WECHAT_MINIAPP_RESPONSIBILITY}` | `{WECHAT_MINIAPP_INPUT}` | `{WECHAT_MINIAPP_OUTPUT}` | `{WECHAT_MINIAPP_DEPENDENCIES}` | `{WECHAT_MINIAPP_STATUS}` |
 | 移动端 | `src/mobile/`、`src/android/`、`src/ios/` | `{MOBILE_RESPONSIBILITY}` | `{MOBILE_INPUT}` | `{MOBILE_OUTPUT}` | `{MOBILE_DEPENDENCIES}` | `{MOBILE_STATUS}` |
 | 共享层 | `src/shared/` | `{SHARED_RESPONSIBILITY}` | `{SHARED_INPUT}` | `{SHARED_OUTPUT}` | `{SHARED_DEPENDENCIES}` | `{SHARED_STATUS}` |
 | SDK/客户端 | `src/sdk/` | `{SDK_RESPONSIBILITY}` | `{SDK_INPUT}` | `{SDK_OUTPUT}` | `{SDK_DEPENDENCIES}` | `{SDK_STATUS}` |
@@ -319,7 +319,7 @@ Worker 执行
 接口规则：
 
 - API 变更必须同步 `docs/03-api-index.md`、`rules/api.md`、OpenAPI 或项目约定契约文件。
-- 前端、移动端、小程序、SDK 或外部系统依赖的字段不得无兼容策略直接删除。
+- 前端、移动端、微信小程序、SDK 或外部系统依赖的字段不得无兼容策略直接删除。
 - Webhook、第三方集成和回调必须说明重试、签名、幂等和安全策略。
 
 ## 11. 安全与权限架构 `[通用 + 个性化]`

@@ -87,7 +87,7 @@ AI 在执行以下任务前必须先阅读本文件：
     ├── prototype/
     │   ├── web/
     │   ├── admin/
-    │   ├── miniapp/
+    │   ├── wechat-miniapp/
     │   ├── mobile/
     │   └── desktop/
     └── attachments/
@@ -242,7 +242,7 @@ requirements:
 
 当需求涉及 UI、交互、多端适配、流程重构、客户演示或视觉验收时启用本节。
 
-- 原型应放在 `prototype/` 下，并按端类型拆分，例如 `web/`、`admin/`、`miniapp/`、`mobile/`、`desktop/`。
+- 原型应放在 `prototype/` 下，并按端类型拆分，例如 `web/`、`admin/`、`wechat-miniapp/`、`mobile/`、`desktop/`。
 - 原型必须说明目标用户、核心路径、页面状态、异常状态和验收重点。
 - 有 Golden Reference、截图、HTML 原型或设计稿时，必须在 `trace.md` 中记录来源。
 - UI 需求必须与 `rules/ui-design.md`、`rules/compatibility.md`、`rules/testing.md` 保持一致。

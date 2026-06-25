@@ -31,7 +31,7 @@ note: 适用于 {PRODUCT_NAME} 项目；AI 执行 OpenSpec 变更前必须先阅
 | `{PRODUCT_DESCRIPTION}` | 产品简介 | 待确认 |
 | `{BUSINESS_DOMAIN}` | 业务领域 | 待确认 |
 | `{TARGET_USERS}` | 目标用户 | 待确认 |
-| `{PRODUCT_FORMS}` | 产品形态 | Web / Admin / API / Mobile / Miniapp / Desktop |
+| `{PRODUCT_FORMS}` | 产品形态 | Web / Admin / API / Mobile / WeChat Miniapp / Desktop |
 | `{CORE_CAPABILITIES}` | 核心能力 | 待确认 |
 | `{OUT_OF_SCOPE}` | 当前不做的范围 | 待确认 |
 | `{BACKEND_STACK}` | 后端技术栈 | 待确认 |

@@ -284,7 +284,7 @@ CI 测试门禁：
 2. 根据 BACKEND_STACK、FRONTEND_STACK、DATABASE_STACK、OBJECT_STORAGE_STACK、PRODUCT_FORMS 生成真实测试类型和目录职责。
 3. 根据实际脚本、测试框架和 CI 配置生成 `{UNIT_TEST_COMMAND}`、`{INTEGRATION_TEST_COMMAND}`、`{E2E_TEST_COMMAND}`、`{FULL_TEST_COMMAND}`、`{COVERAGE_COMMAND}`。
 4. 保留所有 `[通用]` 模块。
-5. 根据项目能力保留或删除 `[条件启用]` 内容，例如前端、E2E、对象存储、兼容性、安全测试、移动端、小程序、SDK、算法。
+5. 根据项目能力保留或删除 `[条件启用]` 内容，例如前端、E2E、对象存储、兼容性、安全测试、移动端、微信小程序、SDK、算法。
 6. 未确认的信息标记为 `待确认`，不得编造测试框架、命令、目录、报告路径或 CI 门禁。
 7. 不得保留来源项目测试命令、目录、服务名、技术栈或业务场景。
 8. 保持本文档与 `rules/testing.md`、`docs/standards/unit-test-standard.md`、`docs/standards/frontend-test-standard.md`、`docs/standards/test-coverage.md` 一致。
@@ -294,7 +294,7 @@ CI 测试门禁：
 以下变化必须更新本文档：
 
 - 测试框架、测试命令、测试目录或 CI 流程变化。
-- 新增或删除后端、前端、移动端、小程序、SDK、算法、对象存储、外部集成等项目能力。
+- 新增或删除后端、前端、移动端、微信小程序、SDK、算法、对象存储、外部集成等项目能力。
 - 覆盖率目标、测试门禁、发布准入或兼容性矩阵变化。
 - 新增高风险模块、认证授权、数据迁移、上传下载、支付计费、导入导出或安全要求。
 - OpenSpec、需求、Bug、Sprint 或发布流程中的测试责任变化。

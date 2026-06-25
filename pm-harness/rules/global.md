@@ -35,7 +35,7 @@ template_scope: 可作为工程初始化时的 rules/global.md 模块
 |---|---|---|
 | `{PRODUCT_NAME}` | 产品或项目名称 | [个性化] |
 | `{PRODUCT_CODE}` | 项目代码或仓库 slug | [个性化] |
-| `{PRODUCT_FORMS}` | 产品形态，如 Web、小程序、移动端、桌面端 | [个性化] |
+| `{PRODUCT_FORMS}` | 产品形态，如 Web、微信小程序、移动端、桌面端 | [个性化] |
 | `{MODULES}` | 项目模块列表 | [个性化] |
 | `{BACKEND_STACK}` | 后端技术栈 | [个性化] |
 | `{FRONTEND_STACK}` | 前端技术栈 | [个性化] |
@@ -81,7 +81,7 @@ AI Agent 在执行任何任务前，必须完成以下检查：
 | 全局治理 | `AGENTS.md`、`rules/`、`docs/`、`openspec/` | `AGENTS.md`、`rules/global.md`、`rules/document-governance.md` |
 | 后端 | `src/backend/` | `{BACKEND_CONTEXT}`、`rules/coding.md`、`rules/api.md`、`rules/database.md`、`rules/testing.md` |
 | 前端 | `src/web/` 或 `frontend/` | `{FRONTEND_CONTEXT}`、`rules/ui-design.md`、`rules/api.md`、`rules/testing.md` |
-| 小程序/移动端 | `{MOBILE_PATHS}` | `{MOBILE_CONTEXT}`、`rules/compatibility.md`、`rules/ui-design.md` |
+| 微信小程序/移动端 | `{MOBILE_PATHS}` | `{MOBILE_CONTEXT}`、`rules/compatibility.md`、`rules/ui-design.md` |
 | 算法/模型 | `src/algorithm/`、`models/` | `{ALGORITHM_CONTEXT}`、`rules/data-management.md`、相关契约文档 |
 | 部署 | `deploy/`、`docker-compose.yml`、`.env.example` | `rules/environment.md`、`rules/port-management.md`、部署文档 |
 | 数据与媒体 | `data/`、`models/`、对象存储配置 | `rules/data-management.md`、`rules/media.md`、`rules/object-storage.md` |

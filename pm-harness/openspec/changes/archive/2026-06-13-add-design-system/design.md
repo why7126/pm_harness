@@ -19,7 +19,7 @@
 
 - 登录页 UI 重构（属于 `refactor-login-ui`）。
 - 全站所有 shadcn 组件一次性安装（Table、Dialog 等留给后续 Change）。
-- 小程序 Design System。
+- 微信小程序 Design System。
 - 修改 auth API、路由或业务逻辑。
 - 替换现有登录页背景图为真实材质图（Phase 2）。
 

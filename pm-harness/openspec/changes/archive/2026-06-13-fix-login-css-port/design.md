@@ -21,7 +21,7 @@
 - 企微 OAuth、忘记密码、i18n 真实逻辑。
 - 修改 auth API / store / 路由守卫。
 - 自动化 Percy/Storybook 视觉回归（本期手工并排 + checklist）。
-- 店主端 / 小程序登录页。
+- 店主端 / 微信小程序登录页。
 
 ## Decisions
 
