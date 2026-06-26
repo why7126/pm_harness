@@ -14,22 +14,23 @@
 | 序号 | 输入项 | 变量 | 输入方式与引导 | 默认值 / 校验 |
 |---:|---|---|---|---|
 | 1 | 产品名称 | `PRODUCT_NAME` | 文本。提示：`请输入产品名称。` | 必填，非空。
-| 2 | 产品描述 | `PRODUCT_DESCRIPTION`、`TARGET_USERS`、`PROBLEM_STATEMENT` | 文本。提示：`请说明面向哪些用户群体，以及产品为该用户群体解决什么问题。` | 必填；内容必须同时覆盖用户群体和待解决问题。
-| 3 | 核心能力 | `CORE_CAPABILITIES` | 文本或分条。提示：`请填写产品的核心能力。` | 必填，至少一项明确能力。
-| 4 | 产品竞品 | `COMPETITORS` | 文本或分条。提示：`请填写竞品名称及其官网地址；如暂无竞品，可填写“暂无”。` | 必填；每个非“暂无”竞品须含名称和官网地址。
-| 5 | 核心竞争力 | `CORE_COMPETENCIES` | 文本或分条。提示：`请填写产品相对竞品的核心竞争力；如暂无，可填写“暂无”。` | 必填。
-| 6 | 产品形态 | `PRODUCT_FORMS` | 多选：`Web端`、`微信小程序`、`桌面端`、`移动端（H5）`、`移动端（iOS）`、`移动端（Android）`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；默认选中 `Web端`。
-| 7 | 管理后台 | `ADMIN_CONSOLE_INCLUDED` | 单选：`包含`、`不包含`。 | 必填；默认 `包含`。
-| 8 | 对象存储 | `OBJECT_STORAGE_TYPES` | 多选：`无`、`文档`、`图片`、`音频`、`视频`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；`无` 与 `文档/图片/音频/视频` 互斥。
-| 9 | 本地模型 | `LOCAL_MODEL_INCLUDED` | 单选：`包含`、`不包含`。 | 必填；默认 `不包含`。
-| 10 | 后端技术栈 | `BACKEND_STACK` | 单选：`Python + FastAPI + Pydantic + uv`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `Python + FastAPI + Pydantic + uv`。
-| 11 | 前端技术栈 | `FRONTEND_STACK` | 单选：`React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`。
-| 12 | 主关系型数据库 | `DB_PRIMARY`、`DATABASE_STACK` | 单选：`SQLite`、`MySQL`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `SQLite`。
-| 13 | 信创数据库 | `XINCHUANG_DATABASES` | 多选：`无`、`达梦`、`海量`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；`无` 与 `达梦/海量/Postgresql` 互斥。
-| 14 | 编码 Agent 工具 | `ENABLED_AGENT_TOOLS`、`PRIMARY_AGENT_TOOL` | 多选：`Codex`、`Claude Code`、`Cursor`、`OpenCode`、`Kiro`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；默认选中 `Codex`。`PRIMARY_AGENT_TOOL` 默认取第一个已选标准工具；仅选择“其他”时取其填写值。
-| 15 | UI 设计 | `UI_DESIGN_INPUT_MODE`、`UI_DESIGN_SOURCE_PATH`、`UI_DESIGN_SOURCE_CONTENT`、`UI_STYLE_BRIEF` | 二选一：`上传 ui-design.md` 或 `手工输入 UI 设计风格`。上传时读取完整文档；手工输入时显示下方的填写引导。 | 必填；两种方式必须且只能选择一种。
+| 2 | 产品编号 | `PRODUCT_CODE` | 文本。提示：`请输入产品编号，仅允许使用英文字母、下划线 _ 或连字符 -。` | 必填；必须匹配 `^[A-Za-z_-]+$`，不得包含中文、数字、空格或其他特殊字符。
+| 3 | 产品描述 | `PRODUCT_DESCRIPTION`、`TARGET_USERS`、`PROBLEM_STATEMENT` | 文本。提示：`请说明面向哪些用户群体，以及产品为该用户群体解决什么问题。` | 必填；内容必须同时覆盖用户群体和待解决问题。
+| 4 | 核心能力 | `CORE_CAPABILITIES` | 文本或分条。提示：`请填写产品的核心能力。` | 必填，至少一项明确能力。
+| 5 | 产品竞品 | `COMPETITORS` | 文本或分条。提示：`请填写竞品名称及其官网地址；如暂无竞品，可填写“暂无”。` | 必填；每个非“暂无”竞品须含名称和官网地址。
+| 6 | 核心竞争力 | `CORE_COMPETENCIES` | 文本或分条。提示：`请填写产品相对竞品的核心竞争力；如暂无，可填写“暂无”。` | 必填。
+| 7 | 产品形态 | `PRODUCT_FORMS` | 多选：`Web端`、`微信小程序`、`桌面端`、`移动端（H5）`、`移动端（iOS）`、`移动端（Android）`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；默认选中 `Web端`。
+| 8 | 管理后台 | `ADMIN_CONSOLE_INCLUDED` | 单选：`包含`、`不包含`。 | 必填；默认 `包含`。
+| 9 | 对象存储 | `OBJECT_STORAGE_TYPES` | 多选：`无`、`文档`、`图片`、`音频`、`视频`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；`无` 与 `文档/图片/音频/视频` 互斥。
+| 10 | 本地模型 | `LOCAL_MODEL_INCLUDED` | 单选：`包含`、`不包含`。 | 必填；默认 `不包含`。
+| 11 | 后端技术栈 | `BACKEND_STACK` | 单选：`Python + FastAPI + Pydantic + uv`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `Python + FastAPI + Pydantic + uv`。
+| 12 | 前端技术栈 | `FRONTEND_STACK` | 单选：`React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`。
+| 13 | 主关系型数据库 | `DB_PRIMARY`、`DATABASE_STACK` | 单选：`SQLite`、`MySQL`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `SQLite`。
+| 14 | 信创数据库 | `XINCHUANG_DATABASES` | 多选：`无`、`达梦`、`海量`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；`无` 与 `达梦/海量/Postgresql` 互斥。
+| 15 | 编码 Agent 工具 | `ENABLED_AGENT_TOOLS`、`PRIMARY_AGENT_TOOL` | 多选：`Codex`、`Claude Code`、`Cursor`、`OpenCode`、`Kiro`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；默认选中 `Codex`。`PRIMARY_AGENT_TOOL` 默认取第一个已选标准工具；仅选择“其他”时取其填写值。
+| 16 | UI 设计 | `UI_DESIGN_INPUT_MODE`、`UI_DESIGN_SOURCE_PATH`、`UI_DESIGN_SOURCE_CONTENT`、`UI_STYLE_BRIEF` | 二选一：`上传 ui-design.md` 或 `手工输入 UI 设计风格`。上传时读取完整文档；手工输入时显示下方的填写引导。 | 必填；两种方式必须且只能选择一种。
 
-> 用户原始编号中“核心能力”和“产品竞品”均标为 3。为保证问询顺序和变量可追踪性，schema 内将其连续编号为 3 与 4，后续各项顺延；加上新增 UI 设计，共 15 个输入步骤。
+> 用户原始编号中“核心能力”和“产品竞品”均标为 3。为保证问询顺序和变量可追踪性，schema 内连续编号；加上新增产品编号与 UI 设计，共 16 个输入步骤。
 
 ### UI 设计输入分支
 
@@ -100,7 +101,6 @@
 
 | 类型 | 变量/配置 | 派生规则 |
 |---|---|---|
-| 项目标识 | `PRODUCT_CODE` | 由产品名称生成英文 kebab-case；无法可靠转写时生成可编辑候选并标记 `待确认`。 |
 | 业务定位 | `BUSINESS_DOMAIN`、`OUT_OF_SCOPE`、`DOMAIN_TERMS` | 由产品描述、核心能力、竞品与核心竞争力推导；不确定部分标记 `待确认`。 |
 | 基础架构 | `HAS_BACKEND`、`HAS_API_SERVICE`、`API_ENABLED` | 默认启用后端与 REST API，以匹配默认后端栈；选择其它栈时仍保持 API 需求，框架细节待确认。 |
 | 前端能力与 UI | `HAS_FRONTEND`、`HAS_WEB`、`HAS_WECHAT_MINIAPP`、`HAS_MOBILE`、`HAS_DESKTOP`、`UI_STACK`、`DESIGN_SYSTEM_ENABLED` | 由产品形态、管理后台与 UI 设计输入分支派生。 |
@@ -111,13 +111,13 @@
 
 ## 推导配置摘要
 
-完成第 15 步后，先输出以下摘要供用户确认或修正，再生成工程：
+完成第 16 步后，先输出以下摘要供用户确认或修正，再生成工程：
 
-1. 产品定位：产品名称、用户群体、解决问题、核心能力、竞品、核心竞争力。
+1. 产品定位：产品名称、产品编号、用户群体、解决问题、核心能力、竞品、核心竞争力。
 2. 产品范围：产品形态、管理后台、对象存储类型、本地模型。
 3. 技术方案：后端、前端、主关系型数据库、信创数据库及其自动派生配置。
 4. Agent：已启用工具、主 Agent、命令同步策略。
 5. UI 设计：输入方式；上传模式展示严格遵循的文档来源，手工模式展示 AI 推导的设计方案摘要。
 6. AI 推导项与所有 `待确认` 项。
 
-用户未回复摘要时，按已收集的 15 项与摘要中的自动派生值继续生成；不得凭空新增业务需求。
+用户未回复摘要时，按已收集的 16 项与摘要中的自动派生值继续生成；不得凭空新增业务需求。

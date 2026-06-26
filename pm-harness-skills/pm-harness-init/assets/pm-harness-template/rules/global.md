@@ -136,8 +136,8 @@ AI Agent 不得执行以下行为：
 | 迭代 | `iterations/<sprint-id>/` | 范围、承诺、状态、验收、发布 |
 | 工程变更 | `openspec/changes/<change-id>/` | proposal、design、specs、tasks |
 | 已生效能力 | `openspec/specs/` | 归档后的正式规格 |
-| 架构与契约 | `docs/architecture/`、`docs/specs/` | 长期有效的跨模块知识 |
-| 验证结果 | `docs/reports/` 或 change/trace | 测试、构建、部署、验收证据 |
+| 架构与契约 | `docs/01-architecture.md` | 长期有效的跨模块知识 |
+| 验证结果 | change/trace | 测试、构建、部署、验收证据 |
 | 操作手册 | `docs/guides/` 或部署文档 | 可重复执行的步骤 |
 
 如果项目使用外部任务系统，应在本文件中声明 `{TASK_TRACKING_SYSTEM}`，并在仓库内保留可追踪引用。

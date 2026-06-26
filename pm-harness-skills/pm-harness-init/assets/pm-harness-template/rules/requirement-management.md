@@ -244,7 +244,6 @@ requirements:
 
 - 原型应放在 `prototype/` 下，并按端类型拆分，例如 `web/`、`admin/`、`wechat-miniapp/`、`mobile/`、`desktop/`。
 - 原型必须说明目标用户、核心路径、页面状态、异常状态和验收重点。
-- 原型 PNG、截图或 Golden Reference 属于可选增强项；未提供时不得阻塞需求 Ready、实现或验收，应以 `rules/ui-design.md`、验收标准和浏览器验证作为依据。
 - 有 Golden Reference、截图、HTML 原型或设计稿时，必须在 `trace.md` 中记录来源。
 - UI 需求必须与 `rules/ui-design.md`、`rules/compatibility.md`、`rules/testing.md` 保持一致。
 
@@ -398,12 +397,29 @@ test_artifacts: []
 release_notes: []
 ```
 
+`trace.md` 必须包含「关联缺陷」章节，用于记录需求与 BUG 的索引级关系：
+
+```markdown
+## 关联缺陷
+
+| BUG | 严重等级 | 状态 | 关联 Change | 说明 |
+|---|---|---|---|---|
+| BUG-0003-brand-image-display-layout-shift | high | done | fix-brand-image-display-layout-shift | 品牌 Logo 展示与提示布局修复 |
+```
+
+规则：
+
+- 本节只记录 BUG ID、严重等级、状态、关联 Change 和一句话说明，不重复 `bug.md`、`root-cause.md`、`regression.md`、日志、截图或验收全文。
+- 详细缺陷内容必须以 `{BUG_ROOT_DIR}/{BUG_ID}/` 为事实源。
+- 当 BUG 状态、严重等级、关联 Change 或修复结论变化时，必须同步更新相关需求的 `trace.md`。
+- 一个需求关联多个 BUG 时，每个 BUG 一行；一个 BUG 影响多个需求时，每个相关需求的 `trace.md` 都应保留索引级关联。
+
 每次命令或人工更新结束后，必须追加：
 
 ```markdown
 ## 变更记录
 
-- YYYY-MM-DD：变更内容、原因、操作者、影响范围。
+- YYYY-MM-DD HH:mm:ss：变更内容、原因、操作者、影响范围。
 ```
 
 ## 16. 需求变更控制 `[通用 + 个性化]`
@@ -460,7 +476,7 @@ AI 处理需求时必须：
 | 测试和验收 | `rules/testing.md`、测试计划、验收报告 |
 | 发布和回滚 | `rules/release.md`、发布说明、回滚策略 |
 | 文档治理 | `rules/document-governance.md`、目录和元数据 |
-| 缺陷转需求 | `rules/bug-management.md`、关联 Bug trace |
+| 缺陷转需求或需求关联缺陷 | `rules/bug-management.md`、需求 `trace.md` 的「关联缺陷」索引、关联 Bug trace |
 
 ## 20. 初始化生成建议 `[通用]`
 

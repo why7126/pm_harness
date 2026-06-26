@@ -12,7 +12,7 @@ note: 适用于所有 pm-harness 项目
 
 1. 复制本 `template/` 目录到 `issues/bugs/BUG-xxxx-bug描述/`
 2. 按照每个文件说明填写内容
-3. 执行 `/bug-to-change BUG-xxxx` 生成 OpenSpec Fix Change
+3. 执行 `/bug-opsx BUG-xxxx` 生成 OpenSpec Fix Change
 
 ## 命名规范
 
@@ -40,7 +40,7 @@ BUG-xxxx-name/
 ```
 1. 创建 issues/bugs/BUG-xxxx-name/
 2. 填写 bug.md（必须）
-3. 执行 /bug-to-change BUG-xxxx 生成 fix-* change
+3. 执行 /bug-opsx BUG-xxxx 生成 fix-* change
 4. 执行 /opsx-apply fix-xxxx 修复
 5. 执行 /opsx-archive fix-xxxx 归档
 6. 如有知识沉淀价值，更新 docs/knowledge-base/incidents/

@@ -108,6 +108,18 @@ docs/knowledge-base/
 
 知识库文档应按主题命名，不使用主文档编号。
 
+## 5.1 兼容性专项文档 `[通用 + 条件启用]`
+
+兼容性专项文档不放在 `docs/` 目录，而放在根目录 `compatibility/` 下，作为可独立测试和维护的适配事实源。
+
+| 目录 | 说明 | 启用条件 |
+|---|---|---|
+| `compatibility/database/` | 数据库迁移、数据库适配和兼容测试矩阵 | 使用数据库时 |
+| `compatibility/devices/` | Web、微信小程序、H5、桌面端、Android、iOS 等端兼容 | 启用对应产品形态时 |
+| `compatibility/object-storage/` | MinIO、S3、COS、OSS、OBS、RustFS 等对象存储适配 | 启用对象存储时 |
+
+新增或删除 compatibility 文档时，必须同步更新 `DOCUMENT_METADATA_INDEX.md`、`docs/05-compatibility-matrix.md` 和 `rules/compatibility.md`。
+
 ## 6. 不属于 docs 根目录的内容 `[通用]`
 
 以下内容不得放入 `docs/` 根目录：

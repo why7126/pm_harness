@@ -280,6 +280,7 @@ Bug 转修复变更规则为：`{BUG_TO_CHANGE_POLICY}`。
 - 进入 Sprint 的 Bug 必须至少达到 `approved` 或 `in_sprint`。
 - 转 OpenSpec change、修复任务或 PR 前，必须完成 Bug 完整性检查。
 - 修复任务必须能追踪回 Bug ID。
+- Bug 关联一个或多个需求时，必须在对应需求 `trace.md` 的「关联缺陷」章节维护索引级关联；不得把 Bug 全文复制进需求 trace。
 
 推荐追踪链路：
 
@@ -396,7 +397,7 @@ AI 处理 Bug 时必须：
 
 | 变更类型 | 必须同步 |
 | --- | --- |
-| Bug 转需求或变更 | OpenSpec change、`trace.md`、迭代任务 |
+| Bug 转需求或变更 | OpenSpec change、Bug `trace.md`、需求 `trace.md` 的「关联缺陷」、迭代任务 |
 | API 缺陷 | `rules/api.md`、接口测试、错误码文档 |
 | 数据库缺陷 | `rules/database.md`、迁移测试、数据修复记录 |
 | 安全缺陷 | `rules/security.md`、安全回归测试 |

@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""
-文档用途：校验项目目录结构
-文档内容：检查禁止的根目录文件、必需目录、Docker部署文件是否存在
-内容来源：AI自动生成，项目团队确认
-更新方式：目录规范变化时同步更新
-备注：该脚本可纳入CI，防止AI或开发人员随意破坏目录结构
-"""
+"""Validate the PM Harness template directory structure."""
 
 from pathlib import Path
 import sys
@@ -15,15 +9,67 @@ ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_PATHS = [
     "AGENTS.md",
     "README.md",
+    "project.yaml",
+    "DOCUMENT_METADATA_INDEX.md",
+    ".gitignore",
+    ".dockerignore",
+    ".env.example",
+    "pytest.ini",
     "rules/directory-structure.md",
+    "rules/global.md",
+    "rules/testing.md",
+    "docs/README.md",
+    "docs/00-product-overview.md",
+    "docs/01-architecture.md",
+    "docs/02-deployment.md",
+    "docs/03-api-index.md",
+    "docs/04-database-design.md",
+    "docs/05-compatibility-matrix.md",
     "openspec/project.md",
-    "src/backend/app/main.py",
-    "src/web/package.json",
-    "src/wechat-miniapp/app.json",
+    "openspec/config.yaml",
+    "openspec/testing-mapping.md",
     "docker-compose.yml",
-    "src/backend/Dockerfile",
-    "src/web/Dockerfile",
-    "src/web/nginx.conf",
+    "scripts/validate-directory-structure.py",
+]
+
+REQUIRED_DIRS = [
+    ".claude",
+    ".codex",
+    ".cursor",
+    ".kiro",
+    ".opencode",
+    "rules",
+    "docs",
+    "docs/standards",
+    "compatibility",
+    "compatibility/database",
+    "compatibility/devices",
+    "compatibility/object-storage",
+    "openspec",
+    "openspec/specs",
+    "openspec/changes",
+    "openspec/archive",
+    "issues",
+    "issues/requirements",
+    "issues/bugs",
+    "iterations",
+    "scripts",
+    "src",
+    "src/backend",
+    "src/web",
+    "src/wechat-miniapp",
+    "src/shared",
+    "src/sdk",
+    "src/infrastructure",
+    "tests",
+    "tests/unit",
+    "tests/integration",
+    "tests/integration/api",
+    "tests/e2e",
+    "tests/compatibility",
+    "data",
+    "models",
+    "deploy",
 ]
 
 ALLOWED_ROOT_FILES = {
@@ -31,9 +77,11 @@ ALLOWED_ROOT_FILES = {
     "README.md",
     ".gitignore",
     ".dockerignore",
+    ".env.example",
     "docker-compose.yml",
     "project.yaml",
     "DOCUMENT_METADATA_INDEX.md",
+    "pytest.ini",
 }
 
 ALLOWED_ROOT_DIRS = {
@@ -44,10 +92,16 @@ ALLOWED_ROOT_DIRS = {
     "iterations",
     "compatibility",
     ".claude",
+    ".codex",
+    ".cursor",
+    ".kiro",
+    ".opencode",
     "src",
     "tests",
     "scripts",
     "data",
+    "models",
+    "deploy",
 }
 
 errors = []
@@ -55,6 +109,10 @@ errors = []
 for item in REQUIRED_PATHS:
     if not (ROOT / item).exists():
         errors.append(f"缺少必需路径: {item}")
+
+for item in REQUIRED_DIRS:
+    if not (ROOT / item).is_dir():
+        errors.append(f"缺少必需目录: {item}")
 
 for child in ROOT.iterdir():
     if child.name.startswith(".git"):
