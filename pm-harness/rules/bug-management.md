@@ -290,7 +290,7 @@ Bug 转修复变更规则为：`{BUG_TO_CHANGE_POLICY}`。
 - P1 Bug 若阻塞发布，必须在发布前修复或获得明确风险接受。
 - 进入 Sprint 的 Bug 必须至少达到 `approved` 或 `in_sprint`。
 - 只有完成 `/bug-review` 且结论为 `approved` 的 Bug 可以执行 `/bug-opsx` 转 OpenSpec fix change；未完成评审或评审未通过的 Bug 不得进入 Sprint 规划、不得执行 `/sprint-apply`、`/opsx-apply` 或等价开发流程。
-- 发现未评审 Bug 被用户要求纳入 Sprint 时，只能在命令输出中列为 Blocked/Deferred，并提示 `/bug-review` 或 `/bug-complete`；不得写入 `iterations/<sprint-id>/sprint.yaml`、`sprint.md`、`release-note.md` 或 `acceptance-report.md`。
+- 发现未评审 Bug 被用户要求纳入 Sprint 时，只能在命令输出中列为 Blocked/Deferred，并提示 `/bug-review` 或 `/bug-complete`；不得写入 `iterations/change/<sprint-id>/sprint.yaml`、`sprint.md`、`release-note.md` 或 `acceptance-report.md`。
 - 转 OpenSpec change、修复任务或 PR 前，必须完成 Bug 完整性检查。
 - 修复任务必须能追踪回 Bug ID。
 - Bug 关联一个或多个需求时，必须在对应需求 `trace.md` 的「关联缺陷」章节维护索引级关联；不得把 Bug 全文复制进需求 trace。

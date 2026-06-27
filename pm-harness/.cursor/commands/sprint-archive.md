@@ -1,13 +1,10 @@
 ---
-name: /sprint-archive
-id: sprint-archive
-category: Workflow
 description: 批量归档 Sprint 内所有 OpenSpec Change，并关闭迭代（类似 /opsx-archive 面向整迭代）
 created_at: 2026-06-27 08:44:18
 updated_at: 2026-06-27 08:44:18
 ---
 
-对 `iterations/sprint-xxx/` 中 `sprint.yaml` 列出的 **全部 OpenSpec Change** 依次执行 `/opsx-archive` 等价流程：检查完成度、同步 delta spec、移入 `openspec/changes/archive/`。迭代验收文档一并收尾。
+对 `iterations/change/sprint-xxx/` 中 `sprint.yaml` 列出的 **全部 OpenSpec Change** 依次执行 `/opsx-archive` 等价流程：检查完成度、同步 delta spec、移入 `openspec/changes/archive/`。迭代验收文档一并收尾。
 
 与 `/opsx-archive` 对标：**单 Change** 用 opsx-archive，**整 Sprint** 用 sprint-archive。
 
@@ -53,9 +50,9 @@ rules/directory-structure.md
 ```
 
 ```text
-iterations/<sprint-id>/sprint.yaml
-iterations/<sprint-id>/sprint.md          # 依赖树 → 归档顺序
-iterations/<sprint-id>/acceptance-report.md
+iterations/change/<sprint-id>/sprint.yaml
+iterations/change/<sprint-id>/sprint.md          # 依赖树 → 归档顺序
+iterations/change/<sprint-id>/acceptance-report.md
 ```
 
 ```bash
@@ -159,6 +156,7 @@ openspec list --json
 2. **`acceptance-report.md`**：填写验收结论、日期、验收人（模板节）
 3. **`release-note.md`**：`status: published`（或 draft → published）
 4. **`sprint.md`**：note 更新为 Sprint 已关闭
+5. 将整个 `iterations/change/<sprint-id>/` 目录移动到 `iterations/archive/<sprint-id>/`
 
 若仍有 blocked change：**不得**自动标 completed；报告遗留清单。
 
@@ -182,8 +180,8 @@ openspec list --json
 ...
 
 ### Updated
-- iterations/sprint-0002/sprint.yaml
-- iterations/sprint-0002/acceptance-report.md
+- iterations/archive/sprint-0002/sprint.yaml
+- iterations/archive/sprint-0002/acceptance-report.md
 - issues/requirements/**/trace.md (N files)
 ```
 

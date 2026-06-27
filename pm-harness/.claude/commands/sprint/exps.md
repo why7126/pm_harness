@@ -41,10 +41,10 @@ rules/directory-structure.md
 Sprint 四件套：
 
 ```text
-iterations/<sprint-id>/sprint.yaml
-iterations/<sprint-id>/sprint.md
-iterations/<sprint-id>/acceptance-report.md
-iterations/<sprint-id>/release-note.md
+iterations/{change,archive}/<sprint-id>/sprint.yaml
+iterations/{change,archive}/<sprint-id>/sprint.md
+iterations/{change,archive}/<sprint-id>/acceptance-report.md
+iterations/{change,archive}/<sprint-id>/release-note.md
 ```
 
 关联材料（按 `sprint.yaml` 索引读取）：

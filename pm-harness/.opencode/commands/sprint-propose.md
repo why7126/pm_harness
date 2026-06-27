@@ -19,7 +19,7 @@ updated_at: 2026-06-27 09:56:14
 | `--duration 2w` | 迭代周期（默认 2 周） |
 | `--dry-run` | 只输出提议范围与估算，不写文件 |
 
-**Output**：`iterations/sprint-xxx/` 四件套 + 各 REQ/BUG/Change trace 更新 + 提示下一步 `/sprint-explore` 或 `/sprint-apply`。
+**Output**：`iterations/change/sprint-xxx/` 四件套 + 各 REQ/BUG/Change trace 更新 + 提示下一步 `/sprint-explore` 或 `/sprint-apply`。
 
 ---
 
@@ -66,8 +66,8 @@ iterations/**                   # 避免 sprint 编号冲突
 
 ## Step 1 — 输入与编号
 
-1. 若无 Sprint ID：扫描 `iterations/` 取最大编号 +1 → `sprint-xxx`。
-2. 若 `iterations/sprint-xxx/` 已存在：询问 **继续填充** 还是 **换编号**。
+1. 若无 Sprint ID：扫描 `iterations/change/` 取最大编号 +1 → `sprint-xxx`。
+2. 若 `iterations/change/sprint-xxx/` 已存在：询问 **继续填充** 还是 **换编号**。
 3. 若用户给自然语言目标：列出候选 REQ/BUG/Change，用 **AskUserQuestion** 确认纳入范围。
 
 ---
@@ -155,7 +155,7 @@ XS=0.5  S=1  M=3  L=5  XL=8  XXL=13 人天
 目录：
 
 ```text
-iterations/sprint-xxx/
+iterations/change/sprint-xxx/
 ├── sprint.yaml          # MUST 机器可读事实源
 ├── sprint.md            # 人类可读展开
 ├── release-note.md      # 发布说明初稿

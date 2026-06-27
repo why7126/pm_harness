@@ -177,7 +177,7 @@ def parse_sprint_yaml(path: Path) -> SprintState:
 def all_sprints(root: Path) -> list[SprintState]:
     return [
         parse_sprint_yaml(path)
-        for path in sorted((root / "iterations").glob("*/sprint.yaml"))
+        for path in sorted((root / "iterations").glob("**/sprint.yaml"))
     ]
 
 

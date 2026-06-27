@@ -360,7 +360,7 @@ Readiness 规则为：`{REQ_READINESS_POLICY}`。
 - 只有 `approved` 或 `in_sprint` 的需求可以进入 Sprint 或正式实现。
 - 只有完成 `/req-review` 且结论为 `approved` 的需求可以执行 `/req-opsx` 转 OpenSpec change，除非团队明确允许技术探索型 Spike。
 - 未完成评审或评审未通过的需求（如 `captured`、`draft`、`enriching`、`pending_review`、`rejected`、`deferred`）MUST 停止在评审前置步骤：不得执行 `/req-opsx`，不得被 `/sprint-propose` 写入 Sprint 规划文件，且不得被 `/sprint-apply`、`/opsx-apply` 或等价开发流程实现。
-- 发现未评审需求被用户要求纳入 Sprint 时，只能在命令输出中列为 Blocked/Deferred，并提示 `/req-review` 或 `/req-complete`；不得写入 `iterations/<sprint-id>/sprint.yaml`、`sprint.md`、`release-note.md` 或 `acceptance-report.md`。
+- 发现未评审需求被用户要求纳入 Sprint 时，只能在命令输出中列为 Blocked/Deferred，并提示 `/req-review` 或 `/req-complete`；不得写入 `iterations/change/<sprint-id>/sprint.yaml`、`sprint.md`、`release-note.md` 或 `acceptance-report.md`。
 - OpenSpec change 必须能追踪回 REQ ID。
 - Sprint 任务、PR、测试、发布说明必须能追踪回 REQ ID。
 - 需求拆分为多个 change 时，`trace.md` 必须列出全部关联。

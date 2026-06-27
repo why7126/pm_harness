@@ -135,7 +135,7 @@ note: 适用于 {PRODUCT_NAME} 项目；AI 执行 OpenSpec 变更前必须先阅
 | 测试上下文 | `rules/testing.md`、`docs/standards/testing-governance.md` | 测试分层和门禁 |
 | 需求来源 | `issues/requirements/` | 用户输入和 PRD |
 | 缺陷来源 | `issues/bugs/` | Bug 复现、根因和回归 |
-| 迭代来源 | `iterations/` | Sprint 计划和执行 |
+| 迭代来源 | `iterations/{change,archive}/` | Sprint 计划和执行 |
 | 正式规格 | `openspec/specs/` | 当前系统应满足的能力 |
 
 ## 7. Change ID 与状态规则 `[通用 + 个性化]`

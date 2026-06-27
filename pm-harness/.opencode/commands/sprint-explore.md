@@ -39,9 +39,9 @@ openspec list --json
 读取（若 Input 含 sprint-id 或存在唯一 in_progress Sprint）：
 
 ```text
-iterations/<sprint-id>/sprint.yaml
-iterations/<sprint-id>/sprint.md
-iterations/<sprint-id>/acceptance-report.md   # 进度参考
+iterations/change/<sprint-id>/sprint.yaml
+iterations/change/<sprint-id>/sprint.md
+iterations/change/<sprint-id>/acceptance-report.md   # 进度参考
 ```
 
 ---

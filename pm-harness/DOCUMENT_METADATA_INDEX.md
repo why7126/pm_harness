@@ -115,7 +115,7 @@ note: {适用范围或注意事项}
 | 兼容模块 | `compatibility/` | 端设备、数据库、对象存储等独立兼容适配说明 |
 | 需求治理 | `issues/requirements/` | 需求捕获、PRD、验收、追踪 |
 | 缺陷治理 | `issues/bugs/` | Bug 捕获、复现、根因、修复、回归 |
-| 迭代治理 | `iterations/` | Sprint 计划、执行、验收、归档 |
+| 迭代治理 | `iterations/{change,archive}/` | Sprint 计划、执行、验收、归档 |
 | OpenSpec | `openspec/` | Change、Spec、Archive、映射 |
 | 部署配置 | `deploy/`、`docker-compose.yml`、`.env.example` | 部署、环境变量、服务拓扑 |
 | 自动化脚本 | `scripts/` | 校验、启动、构建、生成脚本 |
@@ -190,6 +190,7 @@ note: {适用范围或注意事项}
 | `rules/directory-structure.md` | 目录边界和文件归属 | 目录结构变化时更新 |
 | `rules/document-governance.md` | 文档生命周期和同步规则 | 文档治理流程变化时更新 |
 | `rules/issues-lifecycle.md` | 需求与 BUG 三阶段目录生命周期规则 | issues 阶段目录、评审门禁或归档流程变化时更新 |
+| `rules/iterations-lifecycle.md` | Sprint 两阶段目录生命周期规则 | iterations 阶段目录、Sprint 状态或归档流程变化时更新 |
 | `rules/requirement-management.md` | 需求治理规则 | 需求流程或命令变化时更新 |
 | `rules/bug-management.md` | Bug 治理规则 | 缺陷流程或命令变化时更新 |
 | `rules/coding.md` | 编码、分层和模块边界 | 技术栈或代码规范变化时更新 |

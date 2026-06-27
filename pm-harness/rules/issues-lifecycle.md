@@ -174,7 +174,8 @@ updated_at: YYYY-MM-DD hh:mm:ss
 | `rules/bug-management.md` | 定义 BUG 状态机、复现、根因、回归和关闭规则；阶段目录映射引用本文 |
 | `rules/directory-structure.md` | 定义 `issues/` 的目录边界；阶段目录细则引用本文 |
 | `rules/document-governance.md` | 定义文档维护、归档和同步规则；issues 迁移规则引用本文 |
-| `iterations/` | 只能纳入 `review/` 中已 approved 的 REQ/BUG |
+| `rules/iterations-lifecycle.md` | 定义 Sprint 的 change、archive 阶段；Sprint 只能纳入 `review/` 中已 approved 的 REQ/BUG |
+| `iterations/{change,archive}/` | 迭代四件套位置；与 issues 阶段在 `/sprint-archive` 中同步闭环 |
 | `openspec/changes/` | 与 `review/` 阶段并行推进；归档后同步 Issue 进入 `archive/` |
 | `openspec/changes/archive/` | OpenSpec change 的归档位置，不替代 `issues/*/archive/` |
 

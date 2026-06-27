@@ -98,7 +98,7 @@ scripts/docker-down.sh
 
 ## Step 6 — Sprint-0000 与 REQ-0000 登记
 
-若 `iterations/sprint-0000/` 不存在：
+若 `iterations/change/sprint-0000/` 不存在：
 
 1. **`/sprint-propose sprint-0000`** — 纳入（须已 **approved** 或治理 REQ 标记 `done`）：
    - `REQ-0000-build-design-system`

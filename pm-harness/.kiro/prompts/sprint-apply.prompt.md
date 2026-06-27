@@ -4,7 +4,7 @@ created_at: 2026-06-27 08:44:18
 updated_at: 2026-06-27 08:44:18
 ---
 
-按 `iterations/sprint-xxx/` 索引，**依次**对 Sprint 内 OpenSpec Change 执行 `/opsx-apply` 等价流程：读取进度、跳过已完成、尊重依赖与优先级、blocked 时暂停并汇报。
+按 `iterations/change/sprint-xxx/` 索引，**依次**对 Sprint 内 OpenSpec Change 执行 `/opsx-apply` 等价流程：读取进度、跳过已完成、尊重依赖与优先级、blocked 时暂停并汇报。
 
 **本命令解决的核心问题**：
 
@@ -38,8 +38,8 @@ updated_at: 2026-06-27 08:44:18
 /sprint-propose [sprint-xxx]     ← 创建迭代四件套
         │
         ▼
-iterations/sprint-xxx/sprint.yaml   ← changes[] 机器索引
-iterations/sprint-xxx/sprint.md     ← 依赖树、优先级、里程碑
+iterations/change/sprint-xxx/sprint.yaml   ← changes[] 机器索引
+iterations/change/sprint-xxx/sprint.md     ← 依赖树、优先级、里程碑
         │
         ├─ /sprint-explore            ← 可选：范围/依赖/容量探讨
         ├─ /req-opsx / /bug-opsx       ← Change 未创建时先补
@@ -67,10 +67,10 @@ rules/directory-structure.md
 Sprint 目录（MUST 四件套齐全，缺一则 **Not Ready**，停止并提示 `/sprint-propose` 或补文件）：
 
 ```text
-iterations/<sprint-id>/sprint.yaml
-iterations/<sprint-id>/sprint.md
-iterations/<sprint-id>/release-note.md
-iterations/<sprint-id>/acceptance-report.md
+iterations/change/<sprint-id>/sprint.yaml
+iterations/change/<sprint-id>/sprint.md
+iterations/change/<sprint-id>/release-note.md
+iterations/change/<sprint-id>/acceptance-report.md
 ```
 
 CLI 现状：
@@ -224,7 +224,7 @@ changes:
 4. **本 change 全部 tasks `[x]`**：
    - 输出：建议 `/opsx-archive <change-id>` 或 Sprint 收尾时用 `/sprint-archive sprint-xxx`
    - **不自动 archive**（除非用户在同一条消息明确要求）
-   - 更新 `iterations/<sprint-id>/acceptance-report.md` 对应 change 任务组完成度
+   - 更新 `iterations/change/<sprint-id>/acceptance-report.md` 对应 change 任务组完成度
    - 若无 `--stop-after-one`，重新跑 Step 1–3，继续下一个 eligible change
 
 5. **Sprint 全部 change done/archived**：
@@ -256,7 +256,7 @@ UI 类额外检查：`prototype/web/*.html` 存在但无 strategy 且 design 标
 
 每完成一个 change 的 apply 阶段（非 archive）：
 
-- 更新 `iterations/<sprint-id>/acceptance-report.md` OpenSpec Tasks 表
+- 更新 `iterations/change/<sprint-id>/acceptance-report.md` OpenSpec Tasks 表
 - 若 REQ `trace.md` 含 `openspec_changes[].status`，改为 `applied`（archive 后改为 `archived`）
 
 ---

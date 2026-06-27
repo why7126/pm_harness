@@ -291,3 +291,4 @@ initialization:
     - rules/directory-structure.md
     - rules/document-governance.md
     - rules/issues-lifecycle.md
+    - rules/iterations-lifecycle.md

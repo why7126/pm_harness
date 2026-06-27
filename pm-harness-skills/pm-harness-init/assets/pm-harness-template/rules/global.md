@@ -135,7 +135,7 @@ AI Agent 不得执行以下行为：
 |---|---|---|
 | 产品需求 | `issues/requirements/{plan,review,archive}/REQ-xxxx/` | PRD、用户故事、验收标准、trace；按评审/归档状态分区 |
 | BUG | `issues/bugs/{plan,review,archive}/BUG-xxxx/` | 现象、根因、workaround、验收、证据；按评审/归档状态分区 |
-| 迭代 | `iterations/<sprint-id>/` | 范围、承诺、状态、验收、发布 |
+| 迭代 | `iterations/{change,archive}/<sprint-id>/` | 范围、承诺、状态、验收、发布；按归档状态分区 |
 | 工程变更 | `openspec/changes/<change-id>/` | proposal、design、specs、tasks |
 | 已生效能力 | `openspec/specs/` | 归档后的正式规格 |
 | 架构与契约 | `docs/01-architecture.md` | 长期有效的跨模块知识 |
