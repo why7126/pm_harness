@@ -1,5 +1,7 @@
 ---
 description: Propose a new change - create it and generate all artifacts in one step
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 Propose a new change - create the change and generate all artifacts in one step.

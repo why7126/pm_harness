@@ -1,5 +1,7 @@
 ---
 description: Implement tasks from an OpenSpec change (Experimental)
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 Implement tasks from an OpenSpec change.

@@ -3,6 +3,8 @@ purpose: API 治理体系
 content: API 设计原则、资源命名、URL/Method/版本、请求响应、错误码、认证授权、分页排序、幂等、OpenAPI、客户端生成、测试与维护规则
 source: Harness docs/standards/api-governance.md 抽象模板，初始化时基于用户输入生成
 update_method: API 风格、响应结构、认证、错误码、OpenAPI、客户端生成或兼容策略变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {API_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；无 API 项目可保留为未来启用规范并标记不适用
 ---

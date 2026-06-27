@@ -3,6 +3,8 @@ purpose: iOS 端兼容适配说明
 content: iOS 系统版本、设备范围、权限、网络、存储、媒体、推送、打包发布、测试矩阵和初始化生成规则
 source: Harness compatibility/devices/ios.md 抽象模板
 update_method: iOS 技术栈、最低系统版本、权限能力、打包方式或发布渠道变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {IOS_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

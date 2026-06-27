@@ -3,6 +3,8 @@ name: /sprint-archive
 id: sprint-archive
 category: Workflow
 description: 批量归档 Sprint 内所有 OpenSpec Change，并关闭迭代（类似 /opsx-archive 面向整迭代）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 对 `iterations/sprint-xxx/` 中 `sprint.yaml` 列出的 **全部 OpenSpec Change** 依次执行 `/opsx-archive` 等价流程：检查完成度、同步 delta spec、移入 `openspec/changes/archive/`。迭代验收文档一并收尾。
@@ -233,3 +235,13 @@ openspec list --json
 - Sprint 创建：`.cursor/commands/sprint-propose.md`
 - 治理：`rules/document-governance.md` §4.2
 - AGENTS.md §4.1 Sprint 命令族
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event sprint.archive --sprint "<sprint-id>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

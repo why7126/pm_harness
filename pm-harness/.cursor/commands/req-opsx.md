@@ -3,6 +3,8 @@ name: /req-opsx
 id: req-opsx
 category: Workflow
 description: 已评审需求 → OpenSpec Change（CLI 驱动）；原 /requirement-to-opsx
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 **`approved`** 的 `issues/requirements/REQ-*` 转为 `openspec/changes/<change-id>/`（proposal / design / specs / tasks）。**不写 `src/`**；实现用 `/opsx-apply`。
@@ -163,3 +165,13 @@ openspec_changes:
 - `.cursor/commands/req-complete.md`
 - `.cursor/commands/opsx-apply.md`、`opsx-archive.md`、`opsx-explore.md`
 - 归档样例：`openspec/changes/archive/`
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event req.opsx --req "<REQ-ID>" --change "<change-id>" --sprint auto
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

@@ -1,5 +1,7 @@
 ---
 description: 需求生成 - 仅生成 requirement.md（PRD）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`REQ-xxxx`（须存在 `capture.md`）

@@ -1,5 +1,7 @@
 ---
 description: 需求完善 - 基于 requirement.md 补齐六件套（不含 OpenSpec）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 替代原 `/requirement-to-change` 的**文档部分**。不创建 `openspec/changes/`。
@@ -58,3 +60,13 @@ issues/requirements/<REQ-ID>/capture.md
 
 - 不写 `src/`、不 `openspec new change`
 - 不替代 `/req-generate`（若无 requirement.md 先 generate）
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event req.complete --req "<REQ-ID>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

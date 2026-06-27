@@ -3,6 +3,8 @@ purpose: 发布规范
 content: 规范版本发布、准入检查、构建打包、部署验证、发布说明、回滚、归档和 AI 更新规则
 source: Harness release.md 抽象模板，基于多项目发布规则沉淀
 update_method: 项目初始化时按用户输入生成；发布流程、构建方式、部署方式、质量门禁、版本策略或回滚策略变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；发布前必须完成测试、OpenSpec 校验、接口同步、变更归档和发布说明
 template_scope: 可作为工程初始化的 release.md 模块
 ---

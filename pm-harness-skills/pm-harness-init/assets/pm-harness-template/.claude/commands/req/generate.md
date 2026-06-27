@@ -3,6 +3,8 @@ name: "REQ: Generate"
 description: 需求生成 - 仅生成 requirement.md（PRD）
 category: Workflow
 tags: [workflow]
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`REQ-xxxx`（须存在 `capture.md`）
@@ -29,6 +31,8 @@ status: draft
 owner: product
 source: capture.md
 priority: P1
+created_at: YYYY-MM-DD hh:mm:ss
+updated_at: YYYY-MM-DD hh:mm:ss
 parent_requirement:
 ---
 ```
@@ -40,3 +44,13 @@ parent_requirement:
 ## Next
 
 `/req-complete REQ-xxxx`
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event req.generate --req "<REQ-ID>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

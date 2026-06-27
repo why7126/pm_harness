@@ -1,5 +1,7 @@
 ---
 description: 按 Sprint 依赖与优先级编排 OpenSpec Change 开发，自动跳过已完成/已归档项
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 按 `iterations/sprint-xxx/` 索引，**依次**对 Sprint 内 OpenSpec Change 执行 `/opsx-apply` 等价流程：读取进度、跳过已完成、尊重依赖与优先级、blocked 时暂停并汇报。
@@ -351,3 +353,13 @@ ELigible add-tile-category-management   (parallel, check REQ readiness)
 - REQ → Change：`.cursor/commands/req-opsx.md`
 - Sprint 治理：`rules/document-governance.md` §4.1
 - 流程总览：`AGENTS.md` §4.1
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event sprint.apply --sprint "<sprint-id>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

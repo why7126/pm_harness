@@ -1,5 +1,7 @@
 ---
 description: 批量归档 Sprint 内所有 OpenSpec Change，并关闭迭代（类似 /opsx-archive 面向整迭代）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 对 `iterations/sprint-xxx/` 中 `sprint.yaml` 列出的 **全部 OpenSpec Change** 依次执行 `/opsx-archive` 等价流程：检查完成度、同步 delta spec、移入 `openspec/changes/archive/`。迭代验收文档一并收尾。

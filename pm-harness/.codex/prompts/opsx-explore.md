@@ -1,5 +1,7 @@
 ---
 description: "Enter explore mode - think through ideas, investigate problems, clarify requirements"
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.

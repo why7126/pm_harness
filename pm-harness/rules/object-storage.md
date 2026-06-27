@@ -3,6 +3,8 @@ purpose: 对象存储使用规范
 content: 规定对象存储启用条件、供应商适配、Bucket 策略、对象 Key、权限、签名 URL、生命周期、环境变量、兼容性与 AI 更新要求
 source: Harness object-storage.md 抽象模板，基于多项目对象存储规则沉淀
 update_method: 项目初始化时按用户输入生成；对象存储供应商、Bucket 策略、上传下载权限、生命周期、文件类型或部署方式变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；默认推荐一个项目一个 Bucket，桶内按对象前缀区分资源类型
 template_scope: 可作为工程初始化的 object-storage.md 模块
 ---

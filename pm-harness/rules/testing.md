@@ -3,6 +3,8 @@ purpose: 测试治理与质量门禁规范
 content: 规范测试分层、覆盖率目标、TDD、Mock、Fixture、接口测试、前端测试、E2E、外部服务、数据隔离、运行命令和 AI 测试行为
 source: Harness testing.md 抽象模板，基于多项目测试规则沉淀
 update_method: 项目初始化时按用户输入生成；新增模块、技术栈、接口、外部服务、数据存储、部署形态或质量门禁时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；AI 修改行为必须同步补充或更新测试
 template_scope: 可作为工程初始化的 testing.md 模块
 ---

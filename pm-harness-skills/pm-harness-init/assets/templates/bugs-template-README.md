@@ -3,6 +3,8 @@ purpose: Bug 模板说明
 content: 说明如何使用本模板创建规范的 Bug 记录
 source: pm-harness 项目模板
 update_method: 模板规范变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于所有 pm-harness 项目
 ---
 

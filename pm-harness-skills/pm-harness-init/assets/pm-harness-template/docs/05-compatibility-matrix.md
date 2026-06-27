@@ -3,6 +3,8 @@ purpose: 兼容性矩阵
 content: 产品形态兼容、能力覆盖、浏览器与设备、运行时、数据库、对象存储、部署环境、操作系统、CPU 架构、API 兼容和验证规则
 source: Harness docs/05-compatibility-matrix.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；产品形态、技术栈、部署环境、数据库、运行时或兼容策略变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {COMPATIBILITY_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

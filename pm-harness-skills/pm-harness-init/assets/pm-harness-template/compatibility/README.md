@@ -3,6 +3,8 @@ purpose: 兼容性目录入口
 content: 说明 compatibility 目录下数据库、设备端、对象存储等独立兼容模块的职责、生成规则和同步要求
 source: Harness compatibility/README.md 抽象模板
 update_method: 新增端形态、数据库、对象存储、运行环境或兼容目标时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {COMPATIBILITY_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

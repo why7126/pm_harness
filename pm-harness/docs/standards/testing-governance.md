@@ -3,6 +3,8 @@ purpose: 测试治理体系
 content: 测试目标、测试分层、目录职责、测试策略、AI 补测要求、CI 门禁、覆盖率治理、验收与维护规则
 source: Harness docs/standards/testing-governance.md 抽象模板，初始化时基于用户输入生成
 update_method: 测试策略、测试框架、目录结构、质量门禁、CI 流程或覆盖率目标变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {QA_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；本文档是测试体系总纲，专项规则见 unit/frontend/coverage 标准
 ---

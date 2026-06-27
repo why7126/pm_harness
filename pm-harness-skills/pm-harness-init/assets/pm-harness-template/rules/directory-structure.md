@@ -3,6 +3,8 @@ purpose: 目录结构与文件归属规范
 content: 约束 AI 与开发人员遵循项目目录边界、文件归属、生成代码边界、文档归属、新增目录流程和目录同步规则
 source: Harness directory-structure.md 抽象模板，基于项目目录规范沉淀
 update_method: 项目初始化时按用户输入生成；目录边界、产品形态、技术栈、文档治理、部署方式或模块职责变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；AGENTS.md 必须引用本文档，AI 新增文件前必须先确认目录归属
 template_scope: 可作为工程初始化的 directory-structure.md 模块
 ---

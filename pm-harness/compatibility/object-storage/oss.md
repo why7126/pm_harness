@@ -3,6 +3,8 @@ purpose: 阿里云 OSS 对象存储兼容适配说明
 content: OSS 使用范围、Bucket、Region、权限、签名 URL、生命周期、测试矩阵和初始化生成规则
 source: Harness compatibility/object-storage/oss.md 抽象模板
 update_method: OSS Region、Bucket、权限、生命周期或上传下载策略变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {OBJECT_STORAGE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

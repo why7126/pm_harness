@@ -3,6 +3,8 @@ purpose: Docker 基线说明
 content: Compose 服务、脚本与目录约定
 source: initialize-project / project.yaml
 update_method: 部署架构变更时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 # Docker 基线

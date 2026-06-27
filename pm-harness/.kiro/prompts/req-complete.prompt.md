@@ -1,5 +1,7 @@
 ---
 description: 需求完善 - 基于 requirement.md 补齐六件套（不含 OpenSpec）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 替代原 `/requirement-to-change` 的**文档部分**。不创建 `openspec/changes/`。

@@ -3,6 +3,8 @@ purpose: 测试覆盖率治理
 content: 覆盖率目标、分层门槛、统计范围、排除规则、测量命令、CI 门禁、例外审批与维护规则
 source: Harness docs/standards/test-coverage.md 抽象模板，初始化时基于用户输入生成
 update_method: 测试策略、覆盖率阈值、统计工具、CI 门禁、目录结构或排除规则变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {QA_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；覆盖率是质量信号，不得替代有意义的断言和验收测试
 ---

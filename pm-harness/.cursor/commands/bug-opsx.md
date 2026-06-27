@@ -3,6 +3,8 @@ name: /bug-opsx
 id: bug-opsx
 category: Workflow
 description: 已评审缺陷 → OpenSpec fix-* Change（CLI）；原 /bug-to-change
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 **`approved`** 的 `issues/bugs/BUG-*` 转为 `openspec/changes/fix-*/`。默认 **fix-***；不写 `src/`。
@@ -109,3 +111,13 @@ tasks 末项提醒：`docs/knowledge-base/incidents/`（若适用）
 
 - `.cursor/commands/req-opsx.md`（结构对照）
 - `.cursor/commands/opsx-apply.md`
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event bug.opsx --bug "<BUG-ID>" --change "<change-id>" --sprint auto
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

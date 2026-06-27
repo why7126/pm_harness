@@ -3,6 +3,8 @@ purpose: 端口管理规范
 content: 规范开发端口、Docker 端口、宿主机映射、环境变量、冲突处理、服务拓扑和 AI 更新规则
 source: Harness port-management.md 抽象模板，基于多项目端口治理规则沉淀
 update_method: 项目初始化时按用户输入生成；新增服务、修改监听端口、调整 Docker Compose、部署拓扑或网关路由时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；默认采用“容器内固定、宿主机可变”的端口策略
 template_scope: 可作为工程初始化的 port-management.md 模块
 ---

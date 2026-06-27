@@ -3,6 +3,8 @@ purpose: 微信小程序兼容适配说明
 content: 微信小程序支持范围、基础库版本、机型系统、分包体积、平台 API、网络域名、授权登录、上传下载、媒体、缓存、安全、审核、测试矩阵和初始化生成规则
 source: Harness compatibility/devices/wechat-miniapp.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；产品形态、微信基础库、端能力、平台 API、上传下载、登录授权或发布审核策略变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {WECHAT_MINIAPP_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

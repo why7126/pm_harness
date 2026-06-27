@@ -1,5 +1,7 @@
 ---
 description: 基于 rules/ui-design.md 建设可执行 Design System（Token / 组件 / 校验）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 `rules/ui-design.md` 落地为 Token、组件、模板、预览页与 `validate-design-system.py`。

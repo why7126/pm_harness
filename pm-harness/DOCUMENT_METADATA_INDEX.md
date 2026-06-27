@@ -3,6 +3,8 @@ purpose: 文档元数据索引
 content: 文档元数据字段规范、文档资产清单、配置/脚本元数据规则、初始化生成规则、同步关系与更新触发条件
 source: Harness DOCUMENT_METADATA_INDEX.md 抽象模板，初始化时基于用户输入和实际生成文件清单生成
 update_method: 新增、删除、迁移、重命名或调整文档/配置/脚本时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DOCS_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；本文档是文档资产登记入口，不替代具体文档内容
 ---
@@ -63,6 +65,8 @@ note: {适用范围或注意事项}
 | `content` | 是 | 文档覆盖的主要内容 | 产品简介、技术栈、启动方式 |
 | `source` | 是 | 内容来源 | 用户输入 / AI 生成 / OpenSpec / 代码扫描 |
 | `update_method` | 是 | 何时更新、如何更新 | 技术栈变化时同步更新 |
+| `created_at` | 是 | 文档创建时间 | `2026-06-27 08:44:18` |
+| `updated_at` | 是 | 文档最近更新时间 | `2026-06-27 08:44:18` |
 | `owner` | 建议 | 文档负责人或负责角色 | `{DOCS_OWNER}` |
 | `note` | 建议 | 适用范围、限制或重要提醒 | 适用于 `{PRODUCT_NAME}` 项目 |
 
@@ -71,7 +75,8 @@ note: {适用范围或注意事项}
 - `purpose` 和 `content` 应具体，不得只写“说明文档”。
 - `source` 必须能解释内容可信度，不得默认写“已确认”。
 - `update_method` 必须包含触发条件。
-- 文档中的时间记录必须精确到秒，统一使用 `YYYY-MM-DD HH:mm:ss`，例如 `2026-06-25 14:30:05`。
+- 所有自动生成的 Markdown 文档必须包含 `created_at` 和 `updated_at` 两个 Frontmatter 属性字段。
+- 文档中的时间记录必须精确到秒，统一使用 `YYYY-MM-DD hh:mm:ss`，例如 `2026-06-25 14:30:05`。
 - Frontmatter 或正文表格中的 `created_at`、`updated_at`、`reviewed_at`、`verified_at`、`archived_at`、`published_at`、`发生时间`、`创建时间`、`更新时间`、`评审时间`、`验证时间`、`归档时间` 等字段必须使用完整时间；无法确认时写 `待确认`。
 - 文件名、目录名和归档分组中的日期可以继续使用 `YYYY-MM-DD` 或 `YYYY-MM`。
 - 新增 Markdown 文档时必须同步登记到本文档。
@@ -249,7 +254,7 @@ AI 新增、删除、迁移或重命名文档时必须：
 1. 根据实际生成文件扫描 Markdown、配置和脚本清单。
 2. 用用户输入替换 `{PRODUCT_NAME}`、`{PRODUCT_CODE}`、`{DOCS_OWNER}`、`{DOCUMENT_SOURCE_POLICY}`、`{DOCUMENT_REVIEW_POLICY}`、`{DOCUMENT_UPDATE_POLICY}`。
 3. 根据项目能力保留或删除 `[条件启用]` 模块。
-4. 为每个 Markdown 文档生成 purpose、content、source、update_method、owner 和 note。
+4. 为每个 Markdown 文档生成 purpose、content、source、update_method、created_at、updated_at、owner 和 note。
 5. 为关键配置和脚本生成资产登记行。
 6. 删除来源项目历史版本编号、阶段说明和历史迁移记录。
 7. 不得保留来源项目业务名、技术栈、服务名、端口、bucket、表名、路径或默认账号。

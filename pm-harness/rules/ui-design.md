@@ -3,6 +3,8 @@ purpose: UI 设计系统与前端体验规范
 content: 规范产品设计定位、Design Token、组件体系、页面结构、交互状态、响应式、可访问性、内容呈现、视觉验收和 AI UI 修改边界
 source: Harness ui-design.md 抽象模板，基于多项目 UI 规则沉淀
 update_method: 项目初始化时按用户输入生成；新增产品形态、前端技术栈、设计系统、核心页面、品牌风格或组件库时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；AI 修改 UI 前必须先确认设计系统、复用组件和视觉验收要求
 template_scope: 可作为工程初始化的 ui-design.md 模块
 ---

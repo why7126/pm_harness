@@ -3,6 +3,8 @@ purpose: 对象存储策略说明
 content: 对象存储选型、桶/容器策略、目录前缀、资源类型、访问控制、生命周期、迁移、备份、测试和维护规范
 source: Harness docs/07-object-storage-strategy.md 抽象模板，初始化时基于用户输入生成
 update_method: 对象存储服务、桶策略、资源类型、访问控制、生命周期、备份或迁移策略变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {OBJECT_STORAGE_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；未启用对象存储时保留启用条件和替代方案说明
 ---

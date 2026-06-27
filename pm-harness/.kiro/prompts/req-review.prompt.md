@@ -1,5 +1,7 @@
 ---
 description: 需求评审 - 状态变更；仅 approved 可进 Sprint 与 req-opsx
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`REQ-xxxx`

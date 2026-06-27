@@ -7,6 +7,8 @@ metadata:
   author: openspec
   version: "1.0"
   generatedBy: "1.3.1"
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 Implement tasks from an OpenSpec change.

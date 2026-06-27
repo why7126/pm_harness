@@ -3,10 +3,11 @@ purpose: 文档治理与研发追溯规范
 content: 规范 docs、issues、requirements、bugs、iterations、openspec、compatibility、rules 的生成、更新、同步、评审与归档规则
 source: Harness document-governance.md 抽象模板，基于项目文档治理规则沉淀
 update_method: 项目初始化时按用户输入生成；研发流程、目录结构、需求/Bug 生命周期、OpenSpec 流程、迭代流程或文档分层变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 09:56:14
 note: 适用于 {PRODUCT_NAME} 项目；AI 执行需求、Bug、技术改造、架构调整前必须读取本文档
 template_scope: 可作为工程初始化的 document-governance.md 模块
 ---
-
 # 文档治理与研发追溯规范
 
 ## 0. 规则定位 `[通用]`
@@ -144,6 +145,8 @@ purpose: 文档用途
 content: 文档内容简述
 source: 信息来源
 update_method: 更新方式与责任
+created_at: YYYY-MM-DD hh:mm:ss
+updated_at: YYYY-MM-DD hh:mm:ss
 note: 使用说明或风险提示
 ---
 ```
@@ -152,13 +155,15 @@ note: 使用说明或风险提示
 
 - AI 更新文档时必须保留既有 Frontmatter。
 - 新建长期文档时必须补齐 Frontmatter。
+- 所有自动生成的 Markdown 文档 MUST 包含 `created_at` 和 `updated_at` 两个 Frontmatter 属性字段，字段值必须使用 `YYYY-MM-DD hh:mm:ss`。
+- 创建文档时 `created_at` 与 `updated_at` 均写创建时间；后续修改文档时只更新 `updated_at`，不得覆盖原始 `created_at`。
 - 临时草稿进入 `docs/`、`rules/`、`openspec/`、`iterations/`、`issues/` 后必须补齐元数据或项目约定字段。
 - 不确定内容必须标记 `待确认`，不得编造事实。
 - 涉及外部来源、用户访谈、截图、日志、生产问题时，必须说明来源和脱敏状态。
 
 ### 5.1 时间记录格式 `[通用]`
 
-所有文档中的时间记录必须精确到秒，统一格式为 `YYYY-MM-DD HH:mm:ss`（24 小时制）。
+所有文档中的时间记录必须精确到秒，统一格式为 `YYYY-MM-DD hh:mm:ss`（24 小时制）。
 
 适用范围：
 
@@ -169,7 +174,7 @@ note: 使用说明或风险提示
 例外：
 
 - 仅用于文件名、目录名、归档分组、版本分组的日期可以继续使用 `YYYY-MM-DD` 或 `YYYY-MM`。
-- 明确需要按 locale 展示给最终用户的产品文案，可按产品国际化规则展示，但治理文档中的原始记录仍需保留 `YYYY-MM-DD HH:mm:ss`。
+- 明确需要按 locale 展示给最终用户的产品文案，可按产品国际化规则展示，但治理文档中的原始记录仍需保留 `YYYY-MM-DD hh:mm:ss`。
 
 ## 6. docs/ 更新触发矩阵 `[通用 + 个性化]`
 
@@ -258,6 +263,15 @@ estimated_story_points: 0
 estimated_person_days: 0
 ```
 
+`sprint.md` 时间字段规则：
+
+- `sprint.md` 中所有表格或正文记录型时间 MUST 使用 `YYYY-MM-DD hh:mm:ss`。
+- Scope / 包含需求表的「说明」列如包含纳入时间、目标时间、确认时间，MUST 使用 `YYYY-MM-DD hh:mm:ss`。
+- Scope / 包含 BUG 表的「说明」列如包含发现时间、纳入时间、目标时间，MUST 使用 `YYYY-MM-DD hh:mm:ss`。
+- Scope / 包含 Change 表的「Sprint 目标」列如包含目标日期、目标时间、完成窗口，MUST 使用 `YYYY-MM-DD hh:mm:ss`。
+- 里程碑表的「目标日期」列 MUST 使用 `YYYY-MM-DD hh:mm:ss`，不得只写 `YYYY-MM-DD`。
+- `sprint.yaml` 的 `start_date` / `end_date` 是迭代日期范围，可继续使用 `YYYY-MM-DD`。
+
 更新时机：
 
 | 场景 | 必须更新 |
@@ -269,6 +283,25 @@ estimated_person_days: 0
 | Change 完成或归档 | `sprint.yaml`、`release-note.md`、`acceptance-report.md` |
 | 发现范围、排期、质量风险 | `sprint.md` 风险章节 |
 | Sprint 结束 | `sprint.yaml`、`acceptance-report.md` |
+
+### 8.1 Workflow 状态同步（MUST）
+
+执行 `req-*`、`bug-*`、`opsx-*`、`sprint-*` 命令后，MUST 运行统一同步脚本：
+
+```bash
+python scripts/sync-workflow-status.py --event <event> [--req REQ-xxxx] [--bug BUG-xxxx] [--change change-id] [--sprint sprint-xxx|auto]
+```
+
+命令不得仅依赖 Agent 记忆手工刷新 `sprint.md`、`acceptance-report.md`、`release-note.md` 或 issue `trace.md`。如脚本以 `--check` 报告 drift，当前命令视为未完成，必须修复漂移后重新执行同步。
+
+以下 marker 区块归 `sync-workflow-status.py` 维护，禁止手工改表格内容；如旧文档缺 marker，可先补 marker 后运行同步：
+
+- `<!-- workflow-sync:sprint-goals:start -->` / `end`
+- `<!-- workflow-sync:scope-requirements:start -->` / `end`
+- `<!-- workflow-sync:scope-bugs:start -->` / `end`
+- `<!-- workflow-sync:scope-changes:start -->` / `end`
+- `<!-- workflow-sync:openspec-tasks:start -->` / `end`
+- `<!-- workflow-sync:release-changes:start -->` / `end`
 
 如项目采用季度迭代、Kanban 或外部项目管理工具，应在初始化时替换 `{ITERATION_PATTERN}` 并保留本地追溯索引。
 

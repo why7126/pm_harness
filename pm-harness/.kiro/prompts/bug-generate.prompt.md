@@ -1,5 +1,7 @@
 ---
 description: 缺陷生成 - 仅生成 bug.md
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`BUG-xxxx`（须 `capture.md`）

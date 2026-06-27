@@ -1,5 +1,7 @@
 ---
 description: 已评审缺陷 → OpenSpec fix-* Change（CLI）；原 /bug-to-change
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 **`approved`** 的 `issues/bugs/BUG-*` 转为 `openspec/changes/fix-*/`。默认 **fix-***；不写 `src/`。

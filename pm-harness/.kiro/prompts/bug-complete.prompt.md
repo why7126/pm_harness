@@ -1,5 +1,7 @@
 ---
 description: 缺陷完善 - 补齐 root-cause、workaround、acceptance、trace
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`BUG-xxxx`（须 `bug.md`）

@@ -3,6 +3,8 @@ name: /bug-complete
 id: bug-complete
 category: Workflow
 description: 缺陷完善 - 补齐 root-cause、workaround、acceptance、trace
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`BUG-xxxx`（须 `bug.md`）
@@ -29,3 +31,13 @@ Ready：bug + root-cause + acceptance + trace
 ## Next
 
 `/bug-review BUG-xxxx --approve`
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event bug.complete --bug "<BUG-ID>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

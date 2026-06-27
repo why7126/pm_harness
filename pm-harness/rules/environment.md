@@ -3,6 +3,8 @@ purpose: 环境变量与运行环境规范
 content: 规范 .env.example、服务环境变量、运行时配置、密钥边界、Docker Compose 与部署环境同步规则
 source: Harness environment.md 抽象模板，基于多项目环境治理规则沉淀
 update_method: 项目初始化时按用户输入生成；新增服务、端口、密钥、数据库、对象存储、第三方服务、部署方式或运行参数时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；.env.example 可提交，真实 .env 和生产密钥禁止提交
 template_scope: 可作为工程初始化的 environment.md 模块
 ---

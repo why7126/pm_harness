@@ -3,6 +3,8 @@ purpose: 对象存储兼容模块入口
 content: 说明 object-storage 目录下各供应商适配文档的职责、启用条件、通用边界和初始化生成规则
 source: Harness compatibility/object-storage/README.md 抽象模板
 update_method: 新增对象存储供应商、上传下载策略、生命周期或部署模式时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {OBJECT_STORAGE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

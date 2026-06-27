@@ -3,6 +3,8 @@ name: "REQ: Explore"
 description: 需求探索 - 思考分析已记录需求，默认不写任何文档
 category: Workflow
 tags: [workflow]
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 对标 `/opsx-explore`，面向 **需求域**。探讨范围、用户、风险、与现有 REQ 重复、是否子需求。

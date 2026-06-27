@@ -3,6 +3,8 @@ purpose: 数据库迁移兼容规范
 content: 数据库迁移目标、事实源、命名规则、兼容策略、风险分级、执行流程、回滚策略、验证矩阵和初始化生成规则
 source: Harness compatibility/database/migration-rules.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；数据库、Schema、迁移工具、兼容目标或发布策略变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DATABASE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

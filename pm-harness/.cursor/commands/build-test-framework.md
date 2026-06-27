@@ -3,6 +3,8 @@ name: /build-test-framework
 id: build-test-framework
 category: Bootstrap
 description: 建立 Testing Governance（pytest / vitest / E2E / CI / 映射）
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 `rules/testing.md` 落地为测试目录、基线配置、覆盖率规则与 `validate-test-framework.py`。

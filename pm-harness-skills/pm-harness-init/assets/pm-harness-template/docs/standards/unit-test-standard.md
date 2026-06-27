@@ -3,6 +3,8 @@ purpose: 单元测试标准
 content: 单元测试范围、目录命名、断言质量、Mock 边界、测试数据、覆盖要求、AI 补测规则与维护规范
 source: Harness docs/standards/unit-test-standard.md 抽象模板，初始化时基于用户输入生成
 update_method: 单元测试框架、代码分层、测试目录、覆盖率目标或质量门禁变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {QA_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；本文档聚焦单元测试，测试治理总纲见 testing-governance
 ---

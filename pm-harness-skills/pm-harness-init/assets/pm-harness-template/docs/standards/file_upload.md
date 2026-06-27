@@ -3,6 +3,8 @@ purpose: 文件上传治理
 content: 文件上传入口、认证授权、格式大小限制、安全校验、对象存储、元数据、响应结构、错误码、测试与维护规则
 source: Harness docs/standards/file_upload.md 抽象模板，初始化时基于用户输入生成
 update_method: 上传类型、上传方式、对象存储、元数据、错误码、安全限制或前端上传流程变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {MEDIA_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；无文件上传能力时可保留为未来启用规范并标记不适用
 ---

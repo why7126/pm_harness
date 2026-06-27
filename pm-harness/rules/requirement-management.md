@@ -3,10 +3,11 @@ purpose: 需求管理与交付追踪规范
 content: 规范需求捕获、澄清、目录结构、状态机、命令阶段、评审门禁、Readiness、原型、验收标准、OpenSpec 转换、迭代流转、变更控制和 AI 处理边界
 source: Harness requirement-management.md 抽象模板，基于项目需求治理规则沉淀
 update_method: 项目初始化时按用户输入生成；需求命令族、状态机、目录结构、评审门禁、迭代流程或 OpenSpec 流程变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 09:02:51
 note: 适用于 {PRODUCT_NAME} 项目；AI 处理需求必须保留需求来源、决策链、验收链和交付追踪链
 template_scope: 可作为工程初始化的 requirement-management.md 模块
 ---
-
 # 需求管理与交付追踪规范
 
 ## 0. 规则定位 `[通用]`
@@ -112,6 +113,8 @@ AI 在执行以下任务前必须先阅读本文件：
 
 - 业务需求必须放在 `{REQ_ROOT_DIR}`，不得散落在 `docs/product/`、`docs/prd/`、聊天记录或临时文档中。
 - 每个需求目录必须能独立说明“为什么做、为谁做、做什么、不做什么、如何验收、何时交付”。
+- `/req-capture` 接收会议纪要、反馈原文或长文本时，MUST 先评估是否包含多个独立需求；若存在多个独立用户目标、业务价值、功能边界、验收标准、优先级或交付节奏，必须拆分为多个 REQ 分别登记。
+- 不应把多个可独立评审、独立排期或独立验收的需求塞进同一个 `capture.md`；同一目标下的字段、约束、边界条件和验收点可以保留在同一个 REQ 中。
 - 附件必须脱敏，不得提交真实密钥、客户隐私、生产数据原文。
 - 进入实现前，`requirement.md`、`user-stories.md`、`business-flow.md`、`acceptance.md`、`trace.md` 必须完整。
 
@@ -139,6 +142,7 @@ requirements:
 - 新增需求目录时必须同步登记表。
 - 状态、优先级、负责人、目标迭代、关联变更变化时必须同步登记表。
 - 登记表是索引，不替代需求目录中的详细材料。
+- 以上同步必须由 `python scripts/sync-workflow-status.py --event req.<action> --req <REQ-ID> ...` 执行或校验；命令不得跳过最终 Workflow Sync。
 
 ## 5. 状态机 `[通用 + 个性化]`
 
@@ -324,7 +328,7 @@ Readiness 规则为：`{REQ_READINESS_POLICY}`。
 
 | 命令 | 阶段 | 输入 | 产出 | 是否生成文档 | 是否生成代码 |
 | --- | --- | --- | --- | --- | --- |
-| `/req-capture` | 需求记录 | 需求描述 | `capture.md`、`trace.md` | 是 | 否 |
+| `/req-capture` | 需求记录与必要拆分 | 一个或多个需求描述 | 一个或多个 `capture.md`、`trace.md` | 是 | 否 |
 | `/req-explore` | 需求探索 | `REQ-ID` | 分析结论 | 默认否 | 否 |
 | `/req-generate` | PRD 生成 | `REQ-ID` | `requirement.md` | 是 | 否 |
 | `/req-complete` | 需求完善 | `REQ-ID` | 六件套补齐 | 是 | 否 |
@@ -419,7 +423,7 @@ release_notes: []
 ```markdown
 ## 变更记录
 
-- YYYY-MM-DD HH:mm:ss：变更内容、原因、操作者、影响范围。
+- YYYY-MM-DD hh:mm:ss：变更内容、原因、操作者、影响范围。
 ```
 
 ## 16. 需求变更控制 `[通用 + 个性化]`

@@ -3,6 +3,8 @@ purpose: 桌面端兼容适配说明
 content: 桌面端支持范围、操作系统、CPU 架构、运行时、文件系统、更新、权限、安全、测试矩阵和初始化生成规则
 source: Harness compatibility/devices/desktop.md 抽象模板
 update_method: 桌面端技术栈、操作系统、打包方式、更新策略或权限能力变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DESKTOP_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

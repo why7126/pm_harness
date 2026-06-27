@@ -3,6 +3,8 @@ purpose: OpenSpec 测试映射
 content: 需求、Bug、OpenSpec Change、验收项、测试用例、验证命令、测试证据和例外审批的追溯关系
 source: Harness openspec/testing-mapping.md 抽象模板，初始化时基于用户输入、需求治理、Bug 治理、OpenSpec Change 和测试策略生成
 update_method: 新增或调整需求、Bug、Change、验收标准、测试用例、测试命令、CI 门禁或例外审批时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {QA_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；本文档是测试追溯索引，不替代具体测试代码、验收文档或测试报告
 ---

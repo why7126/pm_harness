@@ -3,6 +3,8 @@ purpose: MySQL 数据库兼容适配说明
 content: MySQL 使用定位、版本驱动、字符集、Schema、迁移、类型映射、事务、索引、测试矩阵和初始化生成规则
 source: Harness compatibility/database/mysql.md 抽象模板
 update_method: MySQL 版本、驱动、字符集、ORM、迁移策略或部署方式变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DATABASE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

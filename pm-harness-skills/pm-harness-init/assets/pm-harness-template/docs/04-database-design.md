@@ -3,6 +3,8 @@ purpose: 数据库设计
 content: 数据库选型、Schema 来源、表清单、字段规范、关系约束、索引、迁移、种子数据、数据安全和维护规则
 source: Harness docs/04-database-design.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；Schema、迁移、ORM、Seed、数据对象或存储策略变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DATABASE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

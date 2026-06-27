@@ -3,6 +3,8 @@ purpose: OpenSpec 项目上下文
 content: 项目背景、产品范围、技术栈、变更流程、规格目录、AI 执行约束、测试映射和同步关系
 source: Harness openspec/project.md 抽象模板，初始化时基于用户输入、project.yaml、docs 与 rules 生成
 update_method: 项目定位、能力范围、技术栈、OpenSpec 流程、规格目录或 AI 执行规则变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {PRODUCT_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；AI 执行 OpenSpec 变更前必须先阅读本文档和目标 Change
 ---

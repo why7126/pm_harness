@@ -3,6 +3,8 @@ purpose: SQLite 数据库兼容适配说明
 content: SQLite 定位、适用场景、版本与驱动、连接配置、Schema 差异、类型映射、迁移策略、并发限制、测试矩阵和初始化生成规则
 source: Harness compatibility/database/sqlite.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；SQLite 版本、驱动、ORM、部署方式、迁移策略或数据库兼容目标变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DATABASE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

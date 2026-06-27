@@ -3,8 +3,9 @@ name: /sprint-propose
 id: sprint-propose
 category: Workflow
 description: 提议并创建新 Sprint 迭代规划（四件套），类似 /opsx-propose 面向整迭代
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 09:56:14
 ---
-
 根据当前项目中的需求（Requirement）、缺陷（Bug）和 OpenSpec Change，**提议并创建**新的 Sprint（迭代）规划。与 `/opsx-propose` 对标：单 Change 用 opsx，**整迭代**用 sprint。
 
 **Input**：
@@ -186,14 +187,54 @@ estimated_person_days: <number>
 
 ### sprint.md（MUST 含）
 
-- Sprint 目标
-- Scope 表（REQ / BUG / Change + 优先级 + 状态）
+- Sprint 目标（MUST 包含 `workflow-sync:sprint-goals` marker，REQ/BUG/Change 纳入 Sprint 后由同步脚本刷新）
+- Scope 表（MUST 包含 REQ / BUG / Change 三个 `workflow-sync:scope-*` marker）
 - 工作量估算表
-- 里程碑
+- 里程碑（「目标日期」列 MUST 使用 `YYYY-MM-DD hh:mm:ss`）
 - 风险
 - **依赖** ASCII 树
 - 发布计划
 - 关联文档链接
+
+`sprint.md` 初始模板片段 MUST 包含：
+
+```markdown
+## Sprint 目标
+
+<!-- workflow-sync:sprint-goals:start -->
+- 本 Sprint 当前包含 0 个需求、0 个 BUG、0 个 OpenSpec Change。
+- 时间记录：本模块由 workflow-sync 根据 sprint.yaml 刷新；目标日期字段统一使用 `YYYY-MM-DD hh:mm:ss`。
+<!-- workflow-sync:sprint-goals:end -->
+
+## Scope
+
+### 包含需求
+
+<!-- workflow-sync:scope-requirements:start -->
+| REQ ID | 说明 | 状态 |
+| --- | --- | --- |
+<!-- workflow-sync:scope-requirements:end -->
+
+### 包含 BUG
+
+<!-- workflow-sync:scope-bugs:start -->
+| BUG ID | 说明 | 状态 |
+| --- | --- | --- |
+<!-- workflow-sync:scope-bugs:end -->
+
+### 包含 Change
+
+<!-- workflow-sync:scope-changes:start -->
+| Change ID | Sprint 目标 | 状态 | Tasks | 路径 |
+| --- | --- | --- | --- | --- |
+<!-- workflow-sync:scope-changes:end -->
+
+## 里程碑
+
+| 里程碑 | 目标日期 | 说明 |
+| --- | --- | --- |
+| 待确认 | YYYY-MM-DD hh:mm:ss | 待确认 |
+```
 
 ### release-note.md / acceptance-report.md
 
@@ -258,3 +299,13 @@ openspec/changes/*/trace.md      # 若 change 已存在
 - 单 Change 提议：`/opsx-propose`
 - 开发编排：`/sprint-apply`
 - 批量归档：`/sprint-archive`
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event sprint.propose --sprint "<sprint-id>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

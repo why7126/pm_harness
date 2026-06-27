@@ -1,5 +1,7 @@
 ---
 description: 已评审需求 → OpenSpec Change（CLI 驱动）；原 /requirement-to-opsx
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 **`approved`** 的 `issues/requirements/REQ-*` 转为 `openspec/changes/<change-id>/`（proposal / design / specs / tasks）。**不写 `src/`**；实现用 `/opsx-apply`。

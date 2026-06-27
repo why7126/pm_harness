@@ -3,6 +3,8 @@ purpose: Web 端兼容适配说明
 content: Web 端支持范围、浏览器矩阵、响应式断点、Web API、构建目标、网络与弱网、上传下载、安全、可访问性、测试矩阵和初始化生成规则
 source: Harness compatibility/devices/web.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；产品形态、浏览器范围、前端技术栈、UI 规范、Web API 或部署策略变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {FRONTEND_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

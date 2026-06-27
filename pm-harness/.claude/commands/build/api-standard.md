@@ -3,6 +3,8 @@ name: "Build: API Standard"
 description: 建立 API Governance（统一响应 / 错误码 / OpenAPI / Orval）
 category: Bootstrap
 tags: [bootstrap, workflow]
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 将 `rules/api.md` 落地为可执行 API 治理：文档、Schema、校验脚本与 FastAPI 分层约定。

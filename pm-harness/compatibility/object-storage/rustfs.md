@@ -3,6 +3,8 @@ purpose: RustFS 对象存储兼容适配说明
 content: RustFS 使用范围、S3 兼容能力、Bucket、Key、权限、签名 URL、生命周期、测试矩阵和初始化生成规则
 source: Harness compatibility/object-storage/rustfs.md 抽象模板
 update_method: RustFS 版本、Endpoint、权限、生命周期或上传下载策略变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {OBJECT_STORAGE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

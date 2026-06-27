@@ -3,10 +3,11 @@ purpose: 缺陷管理与修复闭环规范
 content: 规范 Bug 捕获、分级、复现、根因分析、状态机、目录结构、评审门禁、OpenSpec 转换、回归测试、知识沉淀和 AI 处理边界
 source: Harness bug-management.md 抽象模板，基于项目缺陷治理规则沉淀
 update_method: 项目初始化时按用户输入生成；缺陷命令族、状态机、目录结构、迭代流程、评审门禁或测试策略变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 09:02:51
 note: 适用于 {PRODUCT_NAME} 项目；AI 处理缺陷必须保留证据链、根因链、修复链和回归验证链
 template_scope: 可作为工程初始化的 bug-management.md 模块
 ---
-
 # 缺陷管理与修复闭环规范
 
 ## 0. 规则定位 `[通用]`
@@ -109,6 +110,8 @@ AI 在执行以下任务前必须先阅读本文件：
 - 每个 Bug 目录必须可独立理解问题、原因、修复、验证和状态。
 - 附件必须脱敏，不得提交真实密钥、Token、客户隐私、生产数据原文。
 - 关闭 Bug 前，`bug.md`、`root-cause.md`、`acceptance.md`、`trace.md`、`regression.md` 必须完整。
+- `/bug-capture` 接收日志、反馈合集或长文本时，MUST 先评估是否包含多个独立缺陷；若存在多个独立现象、模块/页面/接口、触发路径、期望行为、严重等级，或可独立修复和验证，必须拆分为多个 BUG 分别登记。
+- 不应把多个可独立定位、独立修复或独立回归的缺陷塞进同一个 `capture.md`；同一根因、同一操作路径或同一修复点的多种表现可以保留在同一个 BUG 中并记录影响范围。
 
 ## 4. 缺陷登记表 `[条件启用]`
 
@@ -135,6 +138,7 @@ bugs:
 - 新增 Bug 目录时必须同步登记表。
 - 状态、严重等级、负责人、目标版本变更时必须同步登记表。
 - 登记表是索引，不替代 Bug 目录中的详细材料。
+- 以上同步必须由 `python scripts/sync-workflow-status.py --event bug.<action> --bug <BUG-ID> ...` 执行或校验；命令不得跳过最终 Workflow Sync。
 
 ## 5. 状态机 `[通用 + 个性化]`
 
@@ -302,7 +306,7 @@ Bug
 
 | 命令 | 阶段 | 输入 | 产出 | 是否生成文档 | 是否生成代码 |
 | --- | --- | --- | --- | --- | --- |
-| `/bug-capture` | 缺陷记录 | 缺陷描述 | `capture.md`、`trace.md` | 是 | 否 |
+| `/bug-capture` | 缺陷记录与必要拆分 | 一个或多个缺陷描述 | 一个或多个 `capture.md`、`trace.md` | 是 | 否 |
 | `/bug-explore` | 缺陷分析 | `BUG-ID` | 分析结论 | 默认否 | 否 |
 | `/bug-generate` | 缺陷生成 | `BUG-ID` | `bug.md` | 是 | 否 |
 | `/bug-complete` | 缺陷完善 | `BUG-ID` | 根因分析包 | 是 | 否 |

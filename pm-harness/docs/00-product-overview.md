@@ -3,6 +3,8 @@ purpose: 产品总览
 content: 产品定位、目标用户、核心场景、核心能力、产品形态、边界范围、成功指标、文档导航
 source: Harness docs/00-product-overview.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；初始化后由项目团队确认；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目
 template_scope: 可作为工程初始化时的 docs/00-product-overview.md 模块
 ---

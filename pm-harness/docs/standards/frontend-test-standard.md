@@ -3,6 +3,8 @@ purpose: 前端测试标准
 content: 前端测试栈、测试分层、组件测试、页面测试、交互测试、API Mock、可访问性、视觉回归、E2E 分工、运行命令与维护规则
 source: Harness docs/standards/frontend-test-standard.md 抽象模板，初始化时基于用户输入生成
 update_method: 前端技术栈、测试框架、目录结构、组件体系、关键流程或质量门禁变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {FRONTEND_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；无前端项目可保留为未来启用规范并标记不适用
 ---

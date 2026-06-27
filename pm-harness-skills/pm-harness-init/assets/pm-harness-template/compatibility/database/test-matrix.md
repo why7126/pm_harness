@@ -3,6 +3,8 @@ purpose: 数据库兼容测试矩阵
 content: 数据库兼容范围、测试环境、Schema/迁移验证、CRUD、查询、事务、类型映射、性能、安全、CI 门禁和初始化生成规则
 source: Harness compatibility/database/test-matrix.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；数据库类型、兼容目标、迁移策略、测试框架、部署环境或质量门禁变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DATABASE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

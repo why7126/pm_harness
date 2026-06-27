@@ -1,5 +1,7 @@
 ---
 description: Sprint 探索模式 - 探讨迭代范围、依赖、容量与风险，不做任何开发
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 进入 **Sprint 探索模式**。深入思考整迭代层面的问题；可阅读文件、搜索代码、对比方案，但 **MUST NOT** 编写业务代码或执行 `/sprint-apply` / `/opsx-apply` 实现。

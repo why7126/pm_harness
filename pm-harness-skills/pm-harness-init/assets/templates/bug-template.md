@@ -3,6 +3,8 @@ purpose: Bug 描述文档
 content: Bug 现象、复现步骤、期望行为、环境信息
 source: 发现人输入
 update_method: Bug 信息补充时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 请将【占位内容】替换为实际内容
 ---
 
@@ -45,7 +47,7 @@ note: 请将【占位内容】替换为实际内容
 
 | 项目 | 内容 |
 |------|------|
-| 发现时间 | 【YYYY-MM-DD】 |
+| 发现时间 | 【YYYY-MM-DD hh:mm:ss】 |
 | 发现人 | 【姓名】 |
 | 端 | 【Web / 微信小程序 / Android / iOS / 后端】 |
 | 版本/分支 | 【版本号或 Git 分支】 |

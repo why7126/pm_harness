@@ -3,6 +3,8 @@ purpose: 认证与授权规范
 content: 认证方式、登录登出、Token/Session、权限模型、受保护接口、前端登录态、错误码、安全测试与维护规则
 source: Harness docs/standards/authentication.md 抽象模板，初始化时基于用户输入生成
 update_method: 认证方案、权限模型、会话策略、前端登录态、公开端点或安全边界变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {SECURITY_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；无登录态项目可保留为未来启用规范并标记不适用
 ---

@@ -3,6 +3,8 @@ purpose: 项目入口说明
 content: 产品简介、用户角色、核心能力、技术栈、快速启动、部署入口、目录导航、AI 约束、文档索引与初始化建议
 source: Harness README.md 抽象模板，初始化时基于用户输入生成
 update_method: 项目定位、技术栈、启动命令、部署方式、目录结构、端口策略或核心能力变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {PROJECT_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；本文档是工程根入口，详细规则见 AGENTS.md、rules/ 与 docs/
 ---

@@ -3,6 +3,8 @@ purpose: API 接口索引
 content: API 分组、基础约定、认证授权、响应结构、错误码、OpenAPI、客户端生成、接口维护规则
 source: Harness docs/03-api-index.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；API 新增、变更、废弃、错误码调整或客户端生成规则变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {API_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

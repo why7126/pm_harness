@@ -3,6 +3,8 @@ purpose: OpenAPI 契约治理
 content: OpenAPI 契约来源、路由元数据、Schema、响应、错误码、安全声明、Tags、客户端生成、校验与兼容规则
 source: Harness docs/standards/openapi-rules.md 抽象模板，初始化时基于用户输入生成
 update_method: API 契约、接口分组、请求响应、错误码、认证、客户端生成或兼容策略变化时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {API_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；未启用 OpenAPI 时可保留为未来启用规范并标记不适用
 ---

@@ -3,6 +3,8 @@ purpose: 视频与富媒体资产管理说明
 content: 视频资产适用场景、端能力、上传、存储、封面、转码、播放、元数据、安全、测试和验收规则
 source: Harness docs/06-video-asset-management.md 抽象模板，初始化时基于用户输入生成
 update_method: 视频需求、媒体类型、对象存储、转码服务、播放策略、端能力或验收规则变化时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {MEDIA_ASSET_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；未启用视频能力时保留启用条件与初始化建议即可
 ---

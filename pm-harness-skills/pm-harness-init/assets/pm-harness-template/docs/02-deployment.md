@@ -3,6 +3,8 @@ purpose: 部署文档
 content: 部署目标、部署组件、环境变量、端口策略、运行方式、数据持久化、安全要求、验证与回滚
 source: Harness docs/02-deployment.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；部署组件、环境变量、端口、镜像、数据卷或发布方式变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DEPLOYMENT_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

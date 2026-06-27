@@ -3,6 +3,8 @@ purpose: docs 目录总索引
 content: 项目主文档、专项治理文档、知识库、需求/缺陷/迭代边界、文档维护规则和初始化生成说明
 source: Harness docs/README.md 抽象模板，初始化时基于用户输入生成
 update_method: 新增、删除、移动 docs 文档，或调整文档分层、命名、治理规则时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {DOCS_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；作为 docs 目录的第一阅读入口
 ---

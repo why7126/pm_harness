@@ -3,6 +3,8 @@ purpose: MinIO 对象存储兼容适配说明
 content: MinIO 适用范围、版本与部署、Bucket 策略、对象 Key、S3 兼容能力、上传下载、签名 URL、安全权限、生命周期、备份迁移、测试矩阵和初始化生成规则
 source: Harness compatibility/object-storage/minio.md 抽象模板，基于项目实践沉淀
 update_method: 项目初始化时由用户输入参数生成；对象存储启用状态、MinIO 版本、部署方式、Bucket 策略、上传下载、签名 URL 或生命周期策略变化时更新；后续由 AI 辅助更新并经人工 Review
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {OBJECT_STORAGE_OWNER}
 status: draft
 note: 适用于 {PRODUCT_NAME} 项目

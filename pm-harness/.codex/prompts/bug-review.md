@@ -1,5 +1,7 @@
 ---
 description: 缺陷评审 - 确认是否修复；仅 approved 可 bug-opsx 与进 Sprint
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 ---
 
 **Input**：`BUG-xxxx`
@@ -22,3 +24,13 @@ Flags：`--approve` | `--reject` | `--defer` | `--wont-fix`
 ## Next
 
 `/bug-opsx BUG-xxxx`
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event bug.review --bug "<BUG-ID>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

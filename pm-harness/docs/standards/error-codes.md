@@ -3,6 +3,8 @@ purpose: API 错误码治理
 content: 错误码分段、命名、HTTP 映射、响应结构、登记流程、实现同步、测试与维护规则
 source: Harness docs/standards/error-codes.md 抽象模板，初始化时基于用户输入生成
 update_method: 新增、删除、调整错误码或响应结构时同步更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 owner: {API_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；错误码必须与 API、认证、安全、前端处理和测试保持一致
 ---

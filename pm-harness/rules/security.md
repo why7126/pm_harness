@@ -3,6 +3,8 @@ purpose: 安全开发与运行规范
 content: 规范敏感信息、认证授权、输入校验、上传与对象存储、外部服务、日志脱敏、部署安全、License、Guard 与 AI 安全边界
 source: Harness security.md 抽象模板，基于多项目安全规则沉淀
 update_method: 项目初始化时按用户输入生成；新增认证、权限、上传、对象存储、外部服务、部署、License、密钥或数据处理能力时更新
+created_at: 2026-06-27 08:44:18
+updated_at: 2026-06-27 08:44:18
 note: 适用于 {PRODUCT_NAME} 项目；AI 不得放宽本规范或绕过安全校验
 template_scope: 可作为工程初始化的 security.md 模块
 ---
