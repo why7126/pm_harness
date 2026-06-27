@@ -8,7 +8,7 @@ updated_at: 2026-06-27 08:44:18
 
 Flags：`--approve` | `--reject` | `--defer`（无 flag 时输出评审检查清单并 AskUserQuestion）
 
-**Output**：`review.md`；`trace.md` + `requirement.md` → `status: approved|rejected|deferred`
+**Output**：`review.md`；`trace.md` + `requirement.md` → `status: approved|rejected|deferred`；按结果将整个 REQ 目录从 `issues/requirements/plan/` 移动到 `review/` 或 `archive/`
 
 ---
 
@@ -53,6 +53,17 @@ result: approved | rejected | deferred
 | defer | `deferred` |
 
 填写 `lifecycle.reviewed`、`lifecycle.approved`（若 approve），时间值使用 `YYYY-MM-DD hh:mm:ss`
+
+## Step 5 — 移动目录
+
+| result | 目标目录 |
+|--------|----------|
+| approve | `issues/requirements/review/<REQ-ID>/` |
+| reject / defer | `issues/requirements/archive/<REQ-ID>/` |
+
+移动整个 REQ 目录后，更新 `_registry.yaml` 中路径或分区字段；`trace.md` 中保留完整生命周期时间。
+
+
 
 ## 门禁
 

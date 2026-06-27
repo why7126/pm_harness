@@ -7,7 +7,7 @@ created_at: 2026-06-27 08:44:18
 updated_at: 2026-06-27 08:44:18
 ---
 
-将 **`approved`** 的 `issues/bugs/BUG-*` 转为 `openspec/changes/fix-*/`。默认 **fix-***；不写 `src/`。
+将 **`approved`** 的 `issues/bugs/review/BUG-*` 转为 `openspec/changes/fix-*/`。默认 **fix-***；不写 `src/`。
 
 **Input**：`BUG-xxxx`
 
@@ -28,7 +28,7 @@ rules/api.md
 openspec/project.md
 ```
 
-BUG 目录：bug.md、root-cause.md、workaround.md、acceptance.md、trace.md、logs/、screenshots/
+BUG 目录（优先在 `issues/bugs/review/` 查找）：bug.md、root-cause.md、workaround.md、acceptance.md、trace.md、logs/、screenshots/
 
 ```bash
 openspec list --json
@@ -102,7 +102,7 @@ tasks 末项提醒：`docs/knowledge-base/incidents/`（若适用）
 
 ## Guardrails
 
-- 仅 approved
+- 仅 approved；未评审不得 opsx，不得写 Sprint 规划，不得进入开发
 - 默认 fix-*，非 add
 - 不跳过 CLI
 - 不写 src

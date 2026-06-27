@@ -112,11 +112,12 @@ bucket: {PRODUCT_CODE}
 对象 Key 必须由服务端生成，推荐结构：
 
 ```text
-{domain}/{entity_id}/{media_type}/{media_id}/original.{ext}
-{domain}/{entity_id}/{media_type}/{media_id}/thumbnail.{ext}
-{domain}/{entity_id}/{media_type}/{media_id}/cover.{ext}
-{domain}/{entity_id}/{media_type}/{media_id}/processed/{variant}.{ext}
-exports/{job_id}/{filename}.{ext}
+{prefix}/default/{resource_type}/{uuid}.{ext}
+images/default/user/avatars/{uuid}.{ext}
+images/default/brands/logos/{uuid}.{ext}
+videos/default/products/videos/{uuid}.{ext}
+audios/default/meetings/recordings/{uuid}.{ext}
+files/default/exports/reports/{uuid}.{ext}
 tmp/{job_id}/{filename}.{ext}
 ```
 
@@ -182,9 +183,9 @@ ALLOWED_VIDEO_TYPES=video/mp4,video/webm
 推荐对象前缀：
 
 ```text
-images/{entity_id}/original/{image_id}.{ext}
-images/{entity_id}/thumbnails/{image_id}.{ext}
-images/{entity_id}/processed/{image_id}-{variant}.{ext}
+images/default/user/avatars/{uuid}.{ext}
+images/default/brands/logos/{uuid}.{ext}
+images/default/products/images/{uuid}.{ext}
 ```
 
 ## 6. 音频与录音规范 [条件启用]
@@ -201,10 +202,9 @@ images/{entity_id}/processed/{image_id}-{variant}.{ext}
 推荐对象前缀：
 
 ```text
-audio/{entity_id}/original/{audio_id}.{ext}
-audio/{entity_id}/segments/{segment_id}.wav
-audio/{entity_id}/transcoded/{audio_id}.wav
-voice/{user_id}/samples/{sample_id}.wav
+audios/default/meetings/recordings/{uuid}.{ext}
+audios/default/meetings/segments/{uuid}.wav
+audios/default/voice/samples/{uuid}.wav
 ```
 
 ## 7. 视频规范 [条件启用]
@@ -221,10 +221,10 @@ voice/{user_id}/samples/{sample_id}.wav
 推荐对象前缀：
 
 ```text
-videos/{entity_id}/{video_id}/source.{ext}
-videos/{entity_id}/{video_id}/cover.{ext}
-videos/{entity_id}/{video_id}/transcoded/{profile}.{ext}
-videos/{entity_id}/{video_id}/thumbnails/{timestamp}.jpg
+videos/default/products/videos/{uuid}.{ext}
+images/default/videos/covers/{uuid}.{ext}
+videos/default/videos/transcoded/{uuid}.{ext}
+images/default/videos/thumbnails/{uuid}.jpg
 ```
 
 推荐阶段：
@@ -246,10 +246,10 @@ videos/{entity_id}/{video_id}/thumbnails/{timestamp}.jpg
 推荐对象前缀：
 
 ```text
-documents/{entity_id}/{document_id}.{ext}
-imports/{job_id}/source.{ext}
-exports/{job_id}/result.{ext}
-exports/{job_id}/preview/{page}.png
+files/default/documents/attachments/{uuid}.{ext}
+files/default/imports/source/{uuid}.{ext}
+files/default/exports/result/{uuid}.{ext}
+images/default/exports/previews/{uuid}.png
 ```
 
 ## 9. 媒体处理流水线 [条件启用]

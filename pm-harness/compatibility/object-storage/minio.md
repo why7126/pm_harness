@@ -60,7 +60,7 @@ template_scope: 可作为工程初始化时的 compatibility/object-storage/mini
 | `{MINIO_REGION}` | Region | `us-east-1` / 待确认 |
 | `{MINIO_BUCKET}` | 默认 Bucket | `{PRODUCT_CODE}` |
 | `{BUCKET_POLICY}` | Bucket 策略 | 单 Bucket + 前缀 / 多 Bucket / 租户隔离 |
-| `{OBJECT_KEY_PREFIXES}` | 对象 Key 前缀 | images/ documents/ exports/ tmp/ |
+| `{OBJECT_KEY_PREFIXES}` | 对象 Key 前缀 | images/ videos/ files/ audios/ tmp/ |
 | `{MEDIA_TYPES}` | 存储资源类型 | 图片 / 视频 / 文档 / 导入导出 |
 | `{SIGNED_URL_POLICY}` | 签名 URL 策略 | 私有读写 + 短期 URL |
 | `{UPLOAD_STRATEGY}` | 上传策略 | 后端中转 / 预签名直传 / 分片上传 |
@@ -190,22 +190,19 @@ bucket: {MINIO_BUCKET}
 | 前缀 | 资源类型 | 生命周期 | 是否条件启用 |
 |---|---|---|---|
 | `images/` | 图片 | 长期/业务删除 | 按需 |
-| `videos/` | 视频源文件 | 长期/业务删除 | 按需 |
-| `videos/covers/` | 视频封面 | 跟随视频 | 按需 |
-| `documents/` | 文档附件 | 跟随业务对象 | 按需 |
-| `imports/` | 导入文件 | 短期/审计保留 | 按需 |
-| `exports/` | 导出文件 | 短期清理 | 按需 |
+| `videos/` | 视频 | 长期/业务删除 | 按需 |
+| `audios/` | 音频 | 长期/业务删除 | 按需 |
+| `files/` | 文档、导入、导出、模型、附件等通用文件 | 跟随业务对象或任务策略 | 按需 |
 | `tmp/` | 临时文件 | 自动清理 | 按需 |
-| `processed/` | 处理产物 | 跟随原始资源 | 按需 |
-| `models/` | 模型文件 | 版本化管理 | 条件启用 |
 
 推荐 Key 结构：
 
 ```text
-{prefix}/{business_type}/{business_id}/{object_id}/original.{ext}
-{prefix}/{business_type}/{business_id}/{object_id}/{variant}.{ext}
+{prefix}/default/{resource_type}/{uuid}.{ext}
+images/default/user/avatars/{uuid}.{ext}
+images/default/brands/logos/{uuid}.{ext}
+files/default/imports/source/{uuid}.{ext}
 tmp/{upload_session_id}/{part_id}
-exports/{job_id}/{file_id}.{ext}
 ```
 
 规则：
@@ -277,7 +274,7 @@ MinIO 保存文件本体，数据库保存元数据和业务关系。
 | `id` | 文件或媒体 ID |
 | `bucket` | Bucket 名称 |
 | `object_key` | 对象 Key |
-| `resource_type` | 图片、视频、文档、导入、导出等 |
+| `resource_type` | 业务资源路径，如 `user/avatars`、`brands/logos`、`imports/source`、`exports/reports` |
 | `business_type` | 关联业务类型 |
 | `business_id` | 关联业务对象 |
 | `mime_type` | MIME 类型 |
@@ -318,10 +315,10 @@ MinIO 保存文件本体，数据库保存元数据和业务关系。
 | 对象类型 | 清理策略 | 说明 |
 |---|---|---|
 | `tmp/` | 短期自动清理 | 上传会话、处理中间文件 |
-| `exports/` | 过期清理 | 导出结果短期可下载 |
-| `imports/` | 按审计要求保留 | 导入源文件可能需追溯 |
-| `processed/` | 跟随原始文件 | 缩略图、转码产物 |
-| `models/` | 版本化保留 | 本地模型启用时 |
+| `images/` | 跟随业务对象 | 图片、缩略图、封面等通过 `resource_type` 区分 |
+| `videos/` | 跟随业务对象 | 视频源文件和转码产物通过 `resource_type` 区分 |
+| `audios/` | 跟随业务对象 | 音频、录音、语音样本 |
+| `files/` | 按 `resource_type` 策略 | 导入、导出、文档、模型等通用文件 |
 
 规则：
 

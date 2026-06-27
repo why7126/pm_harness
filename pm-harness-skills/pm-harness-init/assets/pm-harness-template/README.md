@@ -240,9 +240,10 @@ AI Agent 修改本项目时必须：
 
 | 命令族 | 命令 |
 |---|---|
+| 综合捕获 | `/capture` |
 | 需求治理 | `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx` |
 | 缺陷治理 | `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx` |
-| Sprint 治理 | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive` |
+| Sprint 治理 | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-exps`、`/sprint-archive` |
 | 项目基线 | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
 | OpenSpec | `/opsx-explore`、`/opsx-propose`、`/opsx-apply`、`/opsx-archive` |
 

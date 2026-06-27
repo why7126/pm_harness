@@ -143,13 +143,11 @@ bucket: {BUCKET_NAME}
 
 ```text
 {BUCKET_NAME}/
-├── original/
-├── thumbnails/
-├── processed/
-├── imports/
-├── exports/
-├── tmp/
-└── models/
+├── images/
+├── videos/
+├── audios/
+├── files/
+└── tmp/
 ```
 
 优点：
@@ -180,33 +178,27 @@ bucket: {BUCKET_NAME}
 推荐默认：
 
 ```text
-original/              原始上传文件
-thumbnails/            缩略图
-processed/             处理后的图片、音频、视频或文件
+images/                图片类对象
+videos/                视频类对象
+audios/                音频类对象
+files/                 文档、导入、导出、模型等通用文件
 tmp/                   临时处理文件
-imports/               批量导入文件
-exports/               导出文件
-documents/             文档附件
-media/images/          图片
-media/audio/           音频
-media/videos/          视频
-media/videos/covers/   视频封面
-media/videos/transcoded/ 转码后视频
-models/                模型文件说明或小体积模型
 ```
 
 对象 Key 推荐结构：
 
 ```text
-{prefix}/{entity_type}/{entity_id}/{object_id}.{ext}
-{prefix}/{job_id}/{filename}.{ext}
-{prefix}/{tenant_id}/{entity_type}/{entity_id}/{object_id}.{ext}
+{prefix}/default/{resource_type}/{uuid}.{ext}
 ```
 
 规则：
 
 - Key 由服务端生成。
 - 不直接使用用户原始文件名。
+- `prefix` MUST 使用资源大类，不得使用 `original/`、`processed/`、`thumbnails/` 等生命周期或处理状态作为顶层前缀。
+- `default` MUST 保留，作为默认租户/默认命名空间占位；未来多租户时可替换为 tenant id，但单租户项目也不得省略。
+- `resource_type` MUST 表示业务资源类型，可使用多段路径，例如 `user/avatars`、`brands/logos`、`products/images`、`imports/source`、`exports/reports`。
+- 原图、缩略图、转码、处理产物等状态不得改变顶层 prefix；需要区分时应体现在 `resource_type` 或数据库元数据字段中。
 - 不允许路径穿越、绝对路径、URL 编码绕过。
 - 扩展名应基于服务端 MIME/文件头校验结果。
 - 多租户项目必须明确租户隔离策略。
@@ -311,11 +303,10 @@ UPLOAD_SIGNED_URL_EXPIRE_SECONDS=600
 | 前缀 | 生命周期 |
 |---|---|
 | `tmp/` | 短期自动清理 |
-| `imports/` | 导入完成后按策略清理 |
-| `exports/` | 下载有效期后清理 |
-| `processed/` | 跟随原始文件生命周期 |
-| `thumbnails/` | 可重建，可按需清理 |
-| `models/` | 按版本管理，不自动删除 |
+| `images/` | 跟随业务对象或媒体元数据策略 |
+| `videos/` | 跟随业务对象或媒体元数据策略 |
+| `audios/` | 跟随业务对象或媒体元数据策略 |
+| `files/` | 按 `resource_type` 区分导入、导出、文档、模型等生命周期 |
 
 清理策略必须与业务数据状态一致，避免数据库元数据指向已删除对象。
 

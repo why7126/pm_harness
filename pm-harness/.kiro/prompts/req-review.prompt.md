@@ -8,7 +8,7 @@ updated_at: 2026-06-27 08:44:18
 
 Flags：`--approve` | `--reject` | `--defer`（无 flag 时输出评审检查清单并 AskUserQuestion）
 
-**Output**：`review.md`；`trace.md` + `requirement.md` → `status: approved|rejected|deferred`
+**Output**：`review.md`；`trace.md` + `requirement.md` → `status: approved|rejected|deferred`；按结果将整个 REQ 目录从 `issues/requirements/plan/` 移动到 `review/` 或 `archive/`
 
 ---
 
@@ -30,7 +30,9 @@ Flags：`--approve` | `--reject` | `--defer`（无 flag 时输出评审检查清
 ```markdown
 ---
 review_id: REV-REQ-xxxx-001
-date: YYYY-MM-DD
+created_at: YYYY-MM-DD hh:mm:ss
+updated_at: YYYY-MM-DD hh:mm:ss
+date: YYYY-MM-DD hh:mm:ss
 participants: []
 result: approved | rejected | deferred
 ---
@@ -50,7 +52,18 @@ result: approved | rejected | deferred
 | reject | `rejected` |
 | defer | `deferred` |
 
-填写 `lifecycle.reviewed`、`lifecycle.approved`（若 approve）
+填写 `lifecycle.reviewed`、`lifecycle.approved`（若 approve），时间值使用 `YYYY-MM-DD hh:mm:ss`
+
+## Step 5 — 移动目录
+
+| result | 目标目录 |
+|--------|----------|
+| approve | `issues/requirements/review/<REQ-ID>/` |
+| reject / defer | `issues/requirements/archive/<REQ-ID>/` |
+
+移动整个 REQ 目录后，更新 `_registry.yaml` 中路径或分区字段；`trace.md` 中保留完整生命周期时间。
+
+
 
 ## 门禁
 
@@ -59,3 +72,13 @@ result: approved | rejected | deferred
 ## Next
 
 `/req-opsx REQ-xxxx` → `/sprint-propose`（可选）
+
+## Final Step — Workflow Sync (MUST)
+
+Run the shared `workflow-sync` step before reporting this command as complete:
+
+```bash
+python scripts/sync-workflow-status.py --event req.review --req "<REQ-ID>"
+```
+
+Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.

@@ -11,7 +11,7 @@ updated_at: 2026-06-27 09:02:51
 
 可选：`--priority P0|P1|P2`、`--parent REQ-xxxx`
 
-**Output**：一个或多个 `issues/requirements/REQ-NNNN-slug/capture.md` + `trace.md` 最小壳；更新 `_registry.yaml`。
+**Output**：一个或多个 `issues/requirements/plan/REQ-NNNN-slug/capture.md` + `trace.md` 最小壳；更新 `_registry.yaml`。
 
 **禁止**：创建 `requirement.md`、写 `src/`、写 `openspec/`。
 

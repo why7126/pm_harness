@@ -152,20 +152,16 @@ object_storage:
   strategy: "{OBJECT_STORAGE_MODE}"
   default_bucket: "{DEFAULT_BUCKET}"
   bucket_naming_rule: "{BUCKET_NAMING_RULE}"
-  key_pattern: "{OBJECT_KEY_PATTERN}"
+  key_pattern: "{prefix}/default/{resource_type}/{uuid}.{ext}"
   public_access_policy: "{PUBLIC_ACCESS_POLICY}"
   signed_url_ttl: "{SIGNED_URL_TTL}"
   cdn_enabled: "{CDN_ENABLED}"
   prefixes:
-    original: "original/"
-    thumbnails: "thumbnails/"
-    processed: "processed/"
-    tmp: "tmp/"
-    imports: "imports/"
-    exports: "exports/"
+    images: "images/"
     videos: "videos/"
-    video_covers: "videos/covers/"
-    video_transcoded: "videos/transcoded/"
+    audios: "audios/"
+    files: "files/"
+    tmp: "tmp/"
 
 data_management:
   # [通用 + 个性化] 数据和运行时文件边界
@@ -189,6 +185,8 @@ ai:
     kiro: true
     opencode: true
   default_commands:
+    intake:
+      - /capture
     requirements:
       - /req-capture
       - /req-explore
@@ -207,6 +205,7 @@ ai:
       - /sprint-propose
       - /sprint-explore
       - /sprint-apply
+      - /sprint-exps
       - /sprint-archive
     bootstrap:
       - /initialize-project
@@ -291,3 +290,4 @@ initialization:
     - rules/global.md
     - rules/directory-structure.md
     - rules/document-governance.md
+    - rules/issues-lifecycle.md

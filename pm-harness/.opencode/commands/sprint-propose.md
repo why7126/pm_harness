@@ -79,11 +79,11 @@ iterations/**                   # 避免 sprint 编号冲突
 纳入 `sprint.yaml` 的 **requirements[]** / **bugs[]** 每项：
 
 ```text
-issues/requirements/<REQ>/trace.md  → status ∈ { approved, in_sprint }
-issues/bugs/<BUG>/trace.md        → status ∈ { approved, in_sprint }
+issues/requirements/review/<REQ>/trace.md  → status ∈ { approved, in_sprint }
+issues/bugs/review/<BUG>/trace.md        → status ∈ { approved, in_sprint }
 ```
 
-**未评审**（`draft`、`pending_review`、`captured` 等）→ **不得**写入 `sprint.yaml`；记入 `sprint.md`「延后项」，提示 `/req-review` 或 `/bug-review`。
+**未评审**（`draft`、`pending_review`、`captured` 等）→ **不得**写入任何 Sprint 规划文件（包括 `sprint.yaml`、`sprint.md`、`release-note.md`、`acceptance-report.md`）；仅在命令输出的 **Blocked/Deferred Report** 中列出，并提示 `/req-review` 或 `/bug-review`。
 
 **历史 Sprint 回填**（如 sprint-0002 已含 draft REQ）：输出 **WARN**，建议补 `review.md` + `--approve`；不自动剔除。
 
@@ -96,7 +96,7 @@ requirement.md、acceptance.md、trace.md 已存在
 status: approved（见上节门禁）
 ```
 
-**Not Ready** → 不纳入 `sprint.yaml`，写入 sprint.md「延后项」并建议 `/req-complete`。
+**Not Ready** → 不纳入任何 Sprint 规划文件；仅在命令输出的 **Blocked/Deferred Report** 中列出，并建议 `/req-complete`。
 
 ### Bug
 
@@ -244,8 +244,8 @@ estimated_person_days: <number>
 对纳入的每项更新：
 
 ```text
-issues/requirements/*/trace.md   → iteration: sprint-xxx
-issues/bugs/*/trace.md
+issues/requirements/**/trace.md   → iteration: sprint-xxx
+issues/bugs/**/trace.md
 openspec/changes/*/trace.md      # 若 change 已存在
 ```
 
@@ -286,6 +286,7 @@ openspec/changes/*/trace.md      # 若 change 已存在
 | 编号唯一 | 不覆盖已有 sprint 目录（除非用户确认续写） |
 | 容量透明 | 超容量须在 sprint.md 风险表标注 |
 | 不写 src | 本命令只建迭代文档，实现用 `/sprint-apply` |
+| 评审未完成不落盘 | 未评审 REQ/BUG 只能进入输出报告，不得写入 Sprint 四件套 |
 
 ---
 

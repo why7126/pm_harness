@@ -192,43 +192,45 @@ docs/
 
 ## 6. issues/ 目录 `[通用 + 个性化]`
 
-`issues/` 是原始需求与 Bug 池，不等同于开发任务，也不替代 OpenSpec。
+`issues/` 是原始需求与 Bug 池，不等同于开发任务，也不替代 OpenSpec。REQ/BUG 共享的 `plan/`、`review/`、`archive/` 生命周期阶段目录细则以 `rules/issues-lifecycle.md` 为准。
 
 ```text
 issues/
 ├── requirements/
 │   ├── _registry.yaml
-│   └── REQ-NNNN-slug/
-│       ├── capture.md
-│       ├── requirement.md
-│       ├── user-stories.md
-│       ├── business-flow.md
-│       ├── acceptance.md
-│       ├── trace.md
-│       ├── review.md
-│       ├── change-log.md
-│       ├── prototype/
-│       └── attachments/
+│   ├── plan/                    # 规划中、评审未完成
+│   │   └── REQ-NNNN-slug/
+│   ├── review/                  # 已完成评审，尚未归档
+│   │   └── REQ-NNNN-slug/
+│   └── archive/                 # 已验收关闭并归档
+│       └── REQ-NNNN-slug/
 └── bugs/
     ├── _registry.yaml
-    └── BUG-NNNN-slug/
-        ├── capture.md
-        ├── bug.md
-        ├── root-cause.md
-        ├── workaround.md
-        ├── acceptance.md
-        ├── trace.md
-        ├── review.md
-        ├── regression.md
-        ├── logs/
-        ├── screenshots/
-        └── attachments/
+    ├── plan/                    # 规划中、评审未完成
+    │   └── BUG-NNNN-slug/
+    ├── review/                  # 已完成评审，尚未归档
+    │   └── BUG-NNNN-slug/
+    └── archive/                 # 已验收关闭并归档
+        └── BUG-NNNN-slug/
 ```
+
+Issue 目录内每个 `REQ-NNNN-slug/` 或 `BUG-NNNN-slug/` 仍保持独立材料包结构，包含 `capture.md`、结构化说明、验收、`trace.md`、`review.md`、附件和必要证据。
+
+状态与目录映射：
+
+| 分区 | 需求状态 | BUG 状态 | 说明 |
+| --- | --- | --- | --- |
+| `plan/` | `captured`、`exploring`、`draft`、`enriching`、`pending_review` | `captured`、`exploring`、`draft`、`enriching`、`pending_review` | 规划中，评审未完成或未形成可执行结论 |
+| `review/` | `approved`、`in_sprint`、`implementing`、`delivered`、`changed` | `approved`、`in_sprint`、`fixing`、`fixed`、`reopened` | 已完成评审，未完成最终归档 |
+| `archive/` | `done`、`rejected`、`deferred` | `done`、`rejected`、`wont_fix`、`deferred` | 已关闭或已归档，保留追溯 |
+
+状态变更跨越分区时，必须移动整个 Issue 目录并同步 `_registry.yaml` 与 `trace.md`。
 
 规则：
 
 - 需求目录细节以 `rules/requirement-management.md` 为准。
 - Bug 目录细节以 `rules/bug-management.md` 为准。
+- 需求与 Bug 的阶段迁移、`lifecycle_stage`、registry 同步和遗留路径兼容以 `rules/issues-lifecycle.md` 为准。
 - 需求和 Bug 附件必须脱敏。
 - 已进入开发流程的能力必须能追溯到 OpenSpec Change 或任务记录。
 

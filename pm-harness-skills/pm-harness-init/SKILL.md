@@ -146,9 +146,13 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 │   └── knowledge-base/         # 初始化阶段仅保留 .gitkeep 或按需创建 README
 ├── issues/
 │   ├── requirements/
-│   │   └── template/           # 需求模板目录（详见文件规则）
+│   │   ├── plan/               # 规划中、评审未完成
+│   │   ├── review/             # 已完成评审，尚未归档
+│   │   └── archive/            # 已验收关闭并归档
 │   └── bugs/
-│       └── template/           # Bug模板目录（详见文件规则）
+│       ├── plan/               # 规划中、评审未完成
+│       ├── review/             # 已完成评审，尚未归档
+│       └── archive/            # 已修复关闭并归档
 ├── iterations/                 # 初始化阶段仅保留 .gitkeep
 ├── openspec/
 │   ├── project.md
@@ -168,6 +172,7 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 │   ├── directory-structure.md
 │   ├── document-governance.md
 │   ├── environment.md
+│   ├── issues-lifecycle.md
 │   ├── media.md
 │   ├── object-storage.md
 │   ├── port-management.md
@@ -207,7 +212,7 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 保留所有 `[通用]` 模块。
 - 用用户输入替换所有 `[个性化]` 占位符；缺失信息标记为 `待确认`。
 - 用用户输入替换 AGENTS.md 核心占位符：`{PRODUCT_NAME}`、`{PRODUCT_CODE}`、`{PRODUCT_DESCRIPTION}`、`{BUSINESS_DOMAIN}`、`{TARGET_USERS}`、`{PRODUCT_FORMS}`、`{BACKEND_STACK}`、`{FRONTEND_STACK}`、`{DATABASE_STACK}`、`{OBJECT_STORAGE_STACK}`、`{ASYNC_TASK_STACK}`、`{ALGORITHM_STACK}`、`{DEPLOYMENT_STACK}`、`{ENABLED_AGENT_TOOLS}`、`{PRIMARY_AGENT_TOOL}`、`{PRIMARY_VERIFY_COMMAND}`。
-- AGENTS.md 必须保留默认自定义命令基线：需求治理 `/req-*`、缺陷治理 `/bug-*`、Sprint 治理 `/sprint-*`、项目基线 `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework`，以及 OpenSpec `/opsx-*` 命令族；仅允许按项目能力删除不适用的条件启用说明，不得改变同名命令的输入、输出、是否生成文档和是否生成代码边界。
+- AGENTS.md 必须保留默认自定义命令基线：综合捕获 `/capture`、需求治理 `/req-*`、缺陷治理 `/bug-*`、Sprint 治理 `/sprint-*`、项目基线 `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework`，以及 OpenSpec `/opsx-*` 命令族；仅允许按项目能力删除不适用的条件启用说明，不得改变同名命令的输入、输出、是否生成文档和是否生成代码边界。
 - `ENABLED_AGENT_TOOLS` 中启用的 `.cursor/`、`.claude/`、`.codex/`、`.kiro/`、`.opencode/` 必须保留同一套默认命令语义；不同工具只允许按目录约定使用 commands、prompts 或分组路径。
 - AGENTS.md 中项目验证、开发、部署类占位符必须按实际脚本或命令替换，例如 `{DIRECTORY_VALIDATE_COMMAND}`、`{OPENSPEC_VALIDATE_COMMAND}`、`{TEST_COMMAND}`、`{BUILD_COMMAND}`、`{DEV_COMMAND}`、`{DOCKER_UP_COMMAND}`、`{DOCKER_DOWN_COMMAND}`。
 - AGENTS.md 中所有路径、URL 与策略占位符必须按实际工程替换或删除对应模块，例如 `{DESIGN_TOKEN_PATH}`、`{BASE_COMPONENT_PATH}`、`{COMPOSITE_COMPONENT_PATH}`、`{BUSINESS_COMPONENT_PATH}`、`{PAGE_TEMPLATE_PATH}`、`{DESIGN_SYSTEM_PREVIEW_URL}`、`{SERVICE_URLS}`、`{FORBIDDEN_DIRECTORIES}`、`{UI_TOKEN_POLICY}`、`{UI_COMPONENT_POLICY}`、`{UI_VISUAL_ACCEPTANCE_POLICY}`。
@@ -221,7 +226,7 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 不得保留指向不存在目录、命令、服务地址、子项目规则入口、Design System 预览页或客户端生成脚本的内容。
 - 文档元数据 note 字段更新为 `适用于 {PRODUCT_NAME} 项目；AI 执行任何任务前必须优先阅读本文档`。
 - 文档元数据必须包含 `created_at` 和 `updated_at`，二者在初始化生成时均使用 `{GENERATED_AT}`，格式为 `YYYY-MM-DD hh:mm:ss`。
-- 保持 AGENTS.md 与 README.md、project.yaml、rules/global.md、rules/directory-structure.md、rules/document-governance.md、rules/requirement-management.md、rules/bug-management.md、rules/testing.md、rules/release.md 的流程、目录和命令命名一致。
+- 保持 AGENTS.md 与 README.md、project.yaml、rules/global.md、rules/directory-structure.md、rules/document-governance.md、rules/issues-lifecycle.md、rules/requirement-management.md、rules/bug-management.md、rules/testing.md、rules/release.md 的流程、目录和命令命名一致。
 - 生成后必须检查 AGENTS.md 是否能回答：
   - AI 任务开始前应该先读什么？
   - 这个项目的目录、模块和命令边界是什么？
@@ -339,14 +344,14 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 根据 BACKEND_STACK 生成 `src/backend/` 入口文件、依赖文件、分层目录；非 Python/FastAPI 项目不得保留 Python 专属硬性描述。
 - 根据 FRONTEND_STACK 生成 `src/web/` 结构和生成代码目录；无 Web 前端时删除 Web 前端强制规则。
 - 根据 DATABASE_STACK 和兼容性要求生成数据库迁移、schema、compatibility/database 目录描述；无数据库时简化数据库相关描述。
-- 根据 REQ_ROOT_DIR、BUG_ROOT_DIR、ITERATION_PATTERN、CHANGE_ID_PATTERN 生成 issues、iterations、openspec 的目录归属；必须与 requirement-management.md、bug-management.md、document-governance.md 一致。
+- 根据 REQ_ROOT_DIR、BUG_ROOT_DIR、ITERATION_PATTERN、CHANGE_ID_PATTERN 生成 issues、iterations、openspec 的目录归属；必须与 issues-lifecycle.md、requirement-management.md、bug-management.md、document-governance.md 一致。
 - 根据 DOCS_STRUCTURE 生成 docs 分层；未知时默认使用主文档、standards、guides、knowledge-base、README 分层。
 - 根据 GENERATED_CODE_DIRS 生成生成代码目录边界；未知时标记 `待确认`，不得编造生成工具。
 - 根据 HAS_ALGORITHM 决定是否生成 `src/algorithm/` 和根 `models/` 目录规则；没有算法/模型需求时 `models/` 只保留占位说明或删除强制规则。
 - 根据 HAS_OBJECT_STORAGE、HAS_MEDIA 生成 object-storage、media、data、tests fixtures 和 compatibility 相关目录规则；未启用能力删除强制要求。
 - 根据 DEPLOYMENT_STACK 生成 `deploy/` 子目录规则；未启用 Kubernetes 时不得生成强制 `k8s/` 规则。
 - 根据 ENABLED_AGENT_TOOLS 保留 `.claude/`、`.codex/`、`.cursor/`、`.kiro/`、`.opencode/`；未启用工具不得保留强制规则。
-- 保持 directory-structure.md 与 AGENTS.md、README.md、project.yaml、global.md、document-governance.md、requirement-management.md、bug-management.md、coding.md、testing.md、data-management.md、database.md 一致。
+- 保持 directory-structure.md 与 AGENTS.md、README.md、project.yaml、global.md、document-governance.md、issues-lifecycle.md、requirement-management.md、bug-management.md、coding.md、testing.md、data-management.md、database.md 一致。
 
 ### rules/document-governance.md
 
@@ -357,7 +362,7 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 用用户输入替换 `[个性化]` 占位符：`{PRODUCT_NAME}`、`{PRODUCT_CODE}`、`{PRODUCT_FORMS}`、`{BACKEND_STACK}`、`{FRONTEND_STACK}`、`{DATABASE_STACK}`、`{DEPLOYMENT_STACK}`、`{PROJECT_GOVERNANCE_LEVEL}`、`{DOCS_STRUCTURE}`、`{ISSUE_WORKFLOW}`、`{REQ_ROOT_DIR}`、`{BUG_ROOT_DIR}`、`{ITERATION_PATTERN}`、`{SPRINT_FACT_SOURCE}`、`{CHANGE_ID_PATTERN}`、`{TASK_TRACKING_SYSTEM}`、`{DOC_REVIEW_POLICY}`、`{ARCHIVE_POLICY}`。
 - 根据 PROJECT_GOVERNANCE_LEVEL 生成研发文档链路；未知时默认使用 `issues -> iterations -> openspec/changes -> src/tests -> docs/compatibility/rules -> openspec/specs -> openspec/archive`。
 - 根据 DOCS_STRUCTURE 生成 docs 分层；未知时默认使用主文档、standards、guides、knowledge-base、README 分层。
-- 根据 REQ_ROOT_DIR、BUG_ROOT_DIR、ISSUE_WORKFLOW 与 requirement-management.md、bug-management.md 生成 issues 治理；不得把需求、Bug、迭代放入 docs 根目录。
+- 根据 REQ_ROOT_DIR、BUG_ROOT_DIR、ISSUE_WORKFLOW 与 issues-lifecycle.md、requirement-management.md、bug-management.md 生成 issues 治理；不得把需求、Bug、迭代放入 docs 根目录。
 - 根据 ITERATION_PATTERN 与 SPRINT_FACT_SOURCE 生成迭代目录、四件套和事实源规则；未知时默认 `iterations/sprint-xxx/` 与 `sprint.yaml`。
 - 根据是否启用 OpenSpec 生成 changes/specs/archive 章节；未启用时替换为项目等价变更系统，不得保留不可执行的 OpenSpec 强制要求。
 - 根据 PRODUCT_FORMS 保留或删除 Web、微信小程序、移动端、桌面端、H5 相关 docs 和兼容性同步规则。
@@ -365,7 +370,21 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 根据 TASK_TRACKING_SYSTEM 保留 Jira、Linear、飞书、多维表格、GitHub Issues 或本地 backlog 章节；未启用时删除或标记为 `未启用`。
 - 根据 DOC_REVIEW_POLICY 与 ARCHIVE_POLICY 生成人工确认和归档策略；未知时标记 `待确认`。
 - 所有文档中的发生时间、创建时间、更新时间、评审时间、验证时间、发布时间、归档时间必须生成到秒级，格式为 `YYYY-MM-DD hh:mm:ss`；无法确认时写 `待确认`。
-- 保持 document-governance.md 与 AGENTS.md、global.md、directory-structure.md、requirement-management.md、bug-management.md、api.md、database.md、testing.md、release.md、README.md 一致。
+- 保持 document-governance.md 与 AGENTS.md、global.md、directory-structure.md、issues-lifecycle.md、requirement-management.md、bug-management.md、api.md、database.md、testing.md、release.md、README.md 一致。
+
+### rules/issues-lifecycle.md
+
+基于 `assets/pm-harness-template/rules/issues-lifecycle.md` 的模块化框架生成，作为需求与 BUG 共用的 plan、review、archive 三阶段物理目录生命周期规则。
+
+生成要求：
+- 保留所有 `[通用]` 模块，包括规则定位、文档模块分类、总原则、目录结构、阶段准入、迁移时机、trace 字段、registry 规则、与需求/BUG/Sprint/OpenSpec 的关系、自动化要求、初始化生成建议和检查清单。
+- 用用户输入替换 `[个性化]` 占位符：`{PRODUCT_NAME}`、`{REQ_ROOT_DIR}`、`{BUG_ROOT_DIR}`、`{REQ_ID_PATTERN}`、`{BUG_ID_PATTERN}`、`{REQ_REGISTRY_FILE}`、`{BUG_REGISTRY_FILE}`、`{ISSUE_LIFECYCLE_STAGES}`、`{REQ_STATUS_TO_STAGE}`、`{BUG_STATUS_TO_STAGE}`、`{ISSUE_REVIEW_POLICY}`、`{ISSUE_ARCHIVE_POLICY}`、`{ISSUE_PATH_COMPAT_POLICY}`、`{WORKFLOW_SYNC_COMMAND}`、`{TASK_TRACKING_SYSTEM}`。
+- 默认生成 `plan`、`review`、`archive` 三阶段；如用户明确改名，必须同步 directory-structure、document-governance、requirement-management、bug-management、AGENTS、命令说明和校验脚本。
+- 默认要求新建 REQ/BUG 落入 `plan/`，评审通过后进入 `review/`，拒绝/延期/不修/关闭或归档后进入 `archive/`。
+- 根据是否启用 OpenSpec、Sprint、外部看板、遗留扁平路径和自动化同步脚本保留或删除 `[条件启用]` 模块；未启用能力不得保留不可执行的强制命令。
+- `trace.md` 字段必须至少能表达 `status` 与 `lifecycle_stage`；如启用 `current_path`、外部看板字段或 owner 字段，必须说明同步策略。
+- `_registry.yaml` 必须保留在 `issues/requirements/` 与 `issues/bugs/` 根目录；不得生成到阶段目录内。
+- 保持 issues-lifecycle.md 与 AGENTS.md、directory-structure.md、document-governance.md、requirement-management.md、bug-management.md、sprint 命令、capture/review/opsx 命令和 sync-workflow-status.py 一致。
 
 ### rules/requirement-management.md
 
@@ -375,14 +394,14 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 保留所有 `[通用]` 模块，包括规则定位、文档模块分类、需求治理总原则、目录结构、状态机、需求类型与优先级、捕获与澄清、需求包六件套、验收标准、Readiness 门禁、评审门禁、trace 最小字段、变更控制、AI 处理规则、同步关系、初始化生成建议和检查清单。
 - 用用户输入替换 `[个性化]` 占位符：`{PRODUCT_NAME}`、`{PRODUCT_CODE}`、`{REQ_ROOT_DIR}`、`{REQ_ID_PATTERN}`、`{REQ_REGISTRY_FILE}`、`{REQ_STATUS_MACHINE}`、`{REQ_PRIORITY_LEVELS}`、`{REQ_TYPE_TAXONOMY}`、`{REQ_REVIEW_POLICY}`、`{REQ_READINESS_POLICY}`、`{REQ_SPRINT_POLICY}`、`{REQ_TO_CHANGE_POLICY}`、`{REQ_PROTOTYPE_POLICY}`、`{REQ_ACCEPTANCE_POLICY}`、`{REQ_TRACE_POLICY}`、`{REQ_CHANGE_CONTROL_POLICY}`、`{TASK_TRACKING_SYSTEM}`。
 - 根据 ISSUE_WORKFLOW、ITERATION_PATTERN、CHANGE_ID_PATTERN、TASK_TRACKING_SYSTEM 生成需求目录、状态流转、进入迭代和转研发变更规则；未知时标记 `待确认`。
-- 保留默认需求命令族 `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx`，并确保已启用 Agent 工具目录语义一致。
+- 保留默认综合捕获命令 `/capture` 和需求命令族 `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx`，并确保已启用 Agent 工具目录语义一致。
 - 根据团队产品治理策略生成 REQ_TYPE_TAXONOMY、REQ_PRIORITY_LEVELS、REQ_REVIEW_POLICY 和 REQ_READINESS_POLICY；未知时保留模板默认值并标记需要人工确认。
 - 根据是否启用 OpenSpec、Sprint、外部看板、CI/CD、发布流程生成 REQ_TO_CHANGE_POLICY、REQ_SPRINT_POLICY 和 trace 规则；未启用能力删除对应强制章节。
 - 需求 `trace.md` 必须包含「关联缺陷」章节，字段为 `BUG`、`严重等级`、`状态`、`关联 Change`、`说明`；该章节只保存索引级关联，不重复 BUG 全文、复现步骤、根因分析、日志、截图或回归记录。
 - 根据 HAS_WEB、HAS_WECHAT_MINIAPP、HAS_MOBILE、HAS_DESKTOP、UI_STACK 生成原型目录与设计评审规则；无 UI 或原型流程时删除或标记为“不适用”。
 - 根据 api、database、security、media、object-storage、compatibility、ui-design、testing 能力生成验收标准同步矩阵；未启用能力不得保留强制验收项。
 - 根据是否存在客户需求、合规需求或外部看板生成客户/合规/外部看板章节；未启用时删除或标记为“不适用”。
-- 保持 requirement-management.md 与 document-governance.md、directory-structure.md、testing.md、bug-management.md、release.md、api.md、database.md、security.md、ui-design.md 一致。
+- 保持 requirement-management.md 与 issues-lifecycle.md、document-governance.md、directory-structure.md、testing.md、bug-management.md、release.md、api.md、database.md、security.md、ui-design.md 一致。
 
 ### rules/bug-management.md
 
@@ -392,13 +411,13 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 保留所有 `[通用]` 模块，包括规则定位、文档模块分类、缺陷治理总原则、目录结构、状态机、严重等级与优先级、捕获与复现、根因分析、评审门禁、迭代与修复流转、验收与回归测试、AI 处理规则、同步关系、初始化生成建议和检查清单。
 - 用用户输入替换 `[个性化]` 占位符：`{PRODUCT_NAME}`、`{PRODUCT_CODE}`、`{BUG_ROOT_DIR}`、`{BUG_ID_PATTERN}`、`{BUG_REGISTRY_FILE}`、`{BUG_STATUS_MACHINE}`、`{BUG_SEVERITY_LEVELS}`、`{BUG_PRIORITY_LEVELS}`、`{BUG_REVIEW_POLICY}`、`{BUG_SPRINT_POLICY}`、`{BUG_TO_CHANGE_POLICY}`、`{BUG_EVIDENCE_POLICY}`、`{BUG_TEST_POLICY}`、`{BUG_KB_POLICY}`、`{BUG_SLA_POLICY}`。
 - 根据 ISSUE_WORKFLOW、ITERATION_PATTERN、CHANGE_ID_PATTERN、TASK_TRACKING_SYSTEM 生成 Bug 目录、状态流转、进入迭代和转修复变更规则；未知时标记 `待确认`。
-- 保留默认缺陷命令族 `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx`，并确保已启用 Agent 工具目录语义一致。
+- 保留默认综合捕获命令 `/capture` 和缺陷命令族 `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx`，并确保已启用 Agent 工具目录语义一致。
 - 根据团队质量策略生成 BUG_SEVERITY_LEVELS、BUG_PRIORITY_LEVELS 和 BUG_REVIEW_POLICY；未知时保留模板默认等级并标记需要人工确认。
 - 根据是否启用 OpenSpec、Sprint、外部看板、CI/CD、发布流程生成 BUG_TO_CHANGE_POLICY、BUG_SPRINT_POLICY 和 trace 规则；未启用能力删除对应强制章节。
 - Bug 关联需求时，必须反向更新对应需求 `trace.md` 的「关联缺陷」索引；不得把 BUG 全文复制到需求文档。
 - 根据 security、database、media、object-storage、compatibility、ui-design、testing 能力保留或删除安全缺陷、数据缺陷、上传/媒体缺陷、兼容缺陷、UI 缺陷和回归测试同步规则。
 - 根据是否存在线上 SLA、值班、客户工单或事故响应生成 BUG_SLA_POLICY；未启用时删除或标记为“不适用”。
-- 保持 bug-management.md 与 document-governance.md、directory-structure.md、testing.md、security.md、release.md、api.md、database.md、media.md、object-storage.md、compatibility.md、ui-design.md 一致。
+- 保持 bug-management.md 与 issues-lifecycle.md、document-governance.md、directory-structure.md、testing.md、security.md、release.md、api.md、database.md、media.md、object-storage.md、compatibility.md、ui-design.md 一致。
 
 ### rules/environment.md
 
@@ -544,7 +563,7 @@ cp {PRODUCT_CODE}-harness.zip /mnt/user-data/outputs/
 - 根据实际脚本、包管理器、Makefile、Docker Compose、CI 或项目文档生成启动、开发、测试、验证、部署和目录校验命令；未知时标记 `待确认`，不得编造。
 - 服务名、端口、URL、环境变量和默认账号策略必须来自真实配置或用户输入；不得在 README 中写入真实密码、Token、Access Key 或生产凭据。
 - 根据是否启用 Docker、Kubernetes、对象存储、媒体、算法/模型、移动端、微信小程序、桌面端、OpenSpec、Sprint 治理保留或删除 `[条件启用]` 内容。
-- 保留默认自定义命令族说明：`/req-*`、`/bug-*`、`/sprint-*`、`/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework`、`/opsx-*`；不得改变默认命令的阶段、输入、输出和是否生成代码边界。
+- 保留默认自定义命令族说明：`/capture`、`/req-*`、`/bug-*`、`/sprint-*`、`/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework`、`/opsx-*`；不得改变默认命令的阶段、输入、输出和是否生成代码边界。
 - 不得保留来源项目产品名、用户角色、业务能力、技术栈、端口、服务地址、默认账号密码、bucket、表名、路径或测试示例。
 - 保持 README 与 `AGENTS.md`、`project.yaml`、`docs/README.md`、`docs/00-product-overview.md`、`docs/01-architecture.md`、`docs/02-deployment.md`、`rules/directory-structure.md`、`rules/environment.md`、`rules/port-management.md`、`rules/document-governance.md` 一致。
 
@@ -634,7 +653,7 @@ algorithm:
   - 根据项目能力保留或删除 `[条件启用]` 文档条目，例如 API、OpenAPI、认证、文件上传、前端测试、数据库、视频/媒体、对象存储。
   - 文档清单必须与实际生成的 `docs/` 文件一致；不存在的文件不得作为已存在链接出现，可标记为 `计划创建`。
   - 不得保留来源项目产品名、业务说明、技术栈、数据库、bucket、端名称或旧路径假设；专项治理文档必须统一生成到 `docs/standards/`。
-  - 明确 `issues/requirements/`、`issues/bugs/`、`iterations/`、`openspec/changes/` 与 `docs/` 的职责边界，禁止恢复旧式 `docs/prd/`、`docs/bugs/`、`docs/iterations/`。
+  - 明确 `issues/requirements/{plan,review,archive}/`、`issues/bugs/{plan,review,archive}/`、`iterations/`、`openspec/changes/` 与 `docs/` 的职责边界，禁止恢复旧式 `docs/prd/`、`docs/bugs/`、`docs/iterations/`。
   - 保持 `docs/README.md` 与 `rules/document-governance.md`、`DOCUMENT_METADATA_INDEX.md`、`AGENTS.md`、主 `README.md`、`docs/00-product-overview.md` 一致。
 - `docs/standards/api-governance.md`：基于 `assets/pm-harness-template/docs/standards/api-governance.md` 的模块化框架生成，作为 API 设计原则、资源命名、URL/Method/版本、请求响应、错误码、认证授权、分页排序、幂等、OpenAPI、客户端生成、测试和维护规则入口。
   - 保留所有 `[通用]` 模块，包括文档定位、启用条件、设计原则、HTTP Method、分页排序过滤、AI 修改规则、初始化生成建议和更新触发条件。
@@ -1046,8 +1065,9 @@ note: 适用于{PRODUCT_NAME}项目模板
 □ src/algorithm/ 根据 HAS_ALGORITHM 正确处理
 □ docker-compose.yml 服务与实际选型一致
 □ .env.example 变量与 docker-compose.yml 一致
-□ issues/requirements/template/ 包含完整模板结构
-□ issues/bugs/template/ 包含完整模板结构
+□ issues/requirements/ 包含 plan、review、archive 三个状态目录
+□ issues/bugs/ 包含 plan、review、archive 三个状态目录
+□ rules/issues-lifecycle.md 已生成，并与需求/BUG/目录/文档治理规则一致
 □ openspec/specs、changes、archive 仅保留 .gitkeep
 □ iterations/ 仅保留 .gitkeep
 □ data/ 仅保留 .gitkeep 或必要 README

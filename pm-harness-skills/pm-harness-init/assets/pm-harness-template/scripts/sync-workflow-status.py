@@ -442,9 +442,9 @@ def patch_issue_trace(root: Path, trace_path: Path, change_states: dict[str, Cha
 def candidate_trace_files(root: Path, reqs: list[str], bugs: list[str], change_ids: list[str]) -> list[Path]:
     paths: set[Path] = set()
     for req in reqs:
-        paths.update((root / "issues" / "requirements").glob(f"{req}*/trace.md"))
+        paths.update((root / "issues" / "requirements").glob(f"**/{req}*/trace.md"))
     for bug in bugs:
-        paths.update((root / "issues" / "bugs").glob(f"{bug}*/trace.md"))
+        paths.update((root / "issues" / "bugs").glob(f"**/{bug}*/trace.md"))
     if change_ids:
         for trace in (root / "issues").glob("**/trace.md"):
             try:

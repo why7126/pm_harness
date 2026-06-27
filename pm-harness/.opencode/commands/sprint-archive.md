@@ -181,7 +181,7 @@ openspec list --json
 ### Updated
 - iterations/sprint-0002/sprint.yaml
 - iterations/sprint-0002/acceptance-report.md
-- issues/requirements/*/trace.md (N files)
+- issues/requirements/**/trace.md (N files)
 ```
 
 ### 部分失败

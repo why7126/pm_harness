@@ -218,16 +218,20 @@ Content-Type: application/json
 推荐结构：
 
 ```text
-{resource_type}/{business_id}/{file_id}/original.{ext}
-{resource_type}/{business_id}/{file_id}/thumbnail.{ext}
-{resource_type}/{business_id}/{file_id}/processed/{variant}.{ext}
-imports/{job_id}/source.{ext}
-exports/{job_id}/result.{ext}
+{prefix}/default/{resource_type}/{uuid}.{ext}
+images/default/user/avatars/{uuid}.{ext}
+images/default/brands/logos/{uuid}.{ext}
+files/default/imports/source/{uuid}.{ext}
+files/default/exports/result/{uuid}.{ext}
 tmp/{upload_id}/{part_id}
 ```
 
 规则：
 
+- 正式业务对象 Key MUST 使用 `{prefix}/default/{resource_type}/{uuid}.{ext}`。
+- `prefix` MUST 是资源大类，例如 `images`、`videos`、`files`、`audios`；不得使用 `original`、`processed`、`thumbnails` 作为顶层前缀。
+- `default` MUST 保留为默认租户/命名空间占位。
+- `resource_type` MUST 是业务资源路径，例如 `user/avatars`、`brands/logos`、`imports/source`。
 - 对象 Key 必须由服务端生成。
 - 扩展名必须来自服务端校验结果。
 - 多租户项目必须明确租户隔离策略。

@@ -107,6 +107,9 @@ AI 在执行以下任务前必须先阅读本文件：
 规则：
 
 - 缺陷记录必须放在 `{BUG_ROOT_DIR}`，不得散落到 `docs/bugs/`、聊天记录、临时文档或代码注释中。
+- 缺陷物理阶段目录、迁移时机、`lifecycle_stage` 与 registry 同步规则以 `rules/issues-lifecycle.md` 为准。
+- 缺陷目录必须按生命周期放入 `{BUG_ROOT_DIR}/plan/`、`{BUG_ROOT_DIR}/review/`、`{BUG_ROOT_DIR}/archive/` 三个分区。
+- 新捕获、复现分析中、草稿、补齐中或待评审的 BUG 必须位于 `plan/`；评审通过后必须移动到 `review/`；验收关闭、拒绝、不修或延期关闭后必须移动到 `archive/`。
 - 每个 Bug 目录必须可独立理解问题、原因、修复、验证和状态。
 - 附件必须脱敏，不得提交真实密钥、Token、客户隐私、生产数据原文。
 - 关闭 Bug 前，`bug.md`、`root-cause.md`、`acceptance.md`、`trace.md`、`regression.md` 必须完整。
@@ -169,6 +172,10 @@ bugs:
 - `rejected`、`wont_fix`、`deferred` 必须有评审理由。
 - `done` 必须有关联修复、验收结果和回归记录。
 - 重新复现的问题不得直接覆盖旧记录，应使用 `reopened` 或创建关联 Bug。
+- 状态跨越生命周期分区时，必须移动整个 `BUG-NNNN-slug/` 目录：
+  - `captured`、`exploring`、`draft`、`enriching`、`pending_review` → `{BUG_ROOT_DIR}/plan/`
+  - `approved`、`in_sprint`、`fixing`、`fixed`、`reopened` → `{BUG_ROOT_DIR}/review/`
+  - `done`、`rejected`、`wont_fix`、`deferred` → `{BUG_ROOT_DIR}/archive/`
 
 ## 6. 严重等级与优先级 `[通用 + 个性化]`
 
@@ -282,6 +289,8 @@ Bug 转修复变更规则为：`{BUG_TO_CHANGE_POLICY}`。
 - P0 Bug 优先于普通功能需求。
 - P1 Bug 若阻塞发布，必须在发布前修复或获得明确风险接受。
 - 进入 Sprint 的 Bug 必须至少达到 `approved` 或 `in_sprint`。
+- 只有完成 `/bug-review` 且结论为 `approved` 的 Bug 可以执行 `/bug-opsx` 转 OpenSpec fix change；未完成评审或评审未通过的 Bug 不得进入 Sprint 规划、不得执行 `/sprint-apply`、`/opsx-apply` 或等价开发流程。
+- 发现未评审 Bug 被用户要求纳入 Sprint 时，只能在命令输出中列为 Blocked/Deferred，并提示 `/bug-review` 或 `/bug-complete`；不得写入 `iterations/<sprint-id>/sprint.yaml`、`sprint.md`、`release-note.md` 或 `acceptance-report.md`。
 - 转 OpenSpec change、修复任务或 PR 前，必须完成 Bug 完整性检查。
 - 修复任务必须能追踪回 Bug ID。
 - Bug 关联一个或多个需求时，必须在对应需求 `trace.md` 的「关联缺陷」章节维护索引级关联；不得把 Bug 全文复制进需求 trace。

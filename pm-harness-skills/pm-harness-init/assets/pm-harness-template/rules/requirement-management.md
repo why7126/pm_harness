@@ -112,6 +112,9 @@ AI 在执行以下任务前必须先阅读本文件：
 规则：
 
 - 业务需求必须放在 `{REQ_ROOT_DIR}`，不得散落在 `docs/product/`、`docs/prd/`、聊天记录或临时文档中。
+- 需求物理阶段目录、迁移时机、`lifecycle_stage` 与 registry 同步规则以 `rules/issues-lifecycle.md` 为准。
+- 需求目录必须按生命周期放入 `{REQ_ROOT_DIR}/plan/`、`{REQ_ROOT_DIR}/review/`、`{REQ_ROOT_DIR}/archive/` 三个分区。
+- 新捕获、探索中、草稿、补齐中或待评审的需求必须位于 `plan/`；评审通过后必须移动到 `review/`；验收关闭、拒绝或延期关闭后必须移动到 `archive/`。
 - 每个需求目录必须能独立说明“为什么做、为谁做、做什么、不做什么、如何验收、何时交付”。
 - `/req-capture` 接收会议纪要、反馈原文或长文本时，MUST 先评估是否包含多个独立需求；若存在多个独立用户目标、业务价值、功能边界、验收标准、优先级或交付节奏，必须拆分为多个 REQ 分别登记。
 - 不应把多个可独立评审、独立排期或独立验收的需求塞进同一个 `capture.md`；同一目标下的字段、约束、边界条件和验收点可以保留在同一个 REQ 中。
@@ -171,6 +174,10 @@ requirements:
 - `trace.md` 的 `status` 是推荐事实源。
 - `requirement.md` frontmatter、登记表、外部看板必须与事实源同步。
 - 每次状态变更必须在 `trace.md` 或 `change-log.md` 追加记录。
+- 状态跨越生命周期分区时，必须移动整个 `REQ-NNNN-slug/` 目录：
+  - `captured`、`exploring`、`draft`、`enriching`、`pending_review` → `{REQ_ROOT_DIR}/plan/`
+  - `approved`、`in_sprint`、`implementing`、`delivered`、`changed` → `{REQ_ROOT_DIR}/review/`
+  - `done`、`rejected`、`deferred` → `{REQ_ROOT_DIR}/archive/`
 
 ## 6. 需求类型与优先级 `[通用 + 个性化]`
 
@@ -351,7 +358,9 @@ Readiness 规则为：`{REQ_READINESS_POLICY}`。
 通用要求：
 
 - 只有 `approved` 或 `in_sprint` 的需求可以进入 Sprint 或正式实现。
-- 只有 `approved` 的需求可以转 OpenSpec change，除非团队明确允许技术探索型 Spike。
+- 只有完成 `/req-review` 且结论为 `approved` 的需求可以执行 `/req-opsx` 转 OpenSpec change，除非团队明确允许技术探索型 Spike。
+- 未完成评审或评审未通过的需求（如 `captured`、`draft`、`enriching`、`pending_review`、`rejected`、`deferred`）MUST 停止在评审前置步骤：不得执行 `/req-opsx`，不得被 `/sprint-propose` 写入 Sprint 规划文件，且不得被 `/sprint-apply`、`/opsx-apply` 或等价开发流程实现。
+- 发现未评审需求被用户要求纳入 Sprint 时，只能在命令输出中列为 Blocked/Deferred，并提示 `/req-review` 或 `/req-complete`；不得写入 `iterations/<sprint-id>/sprint.yaml`、`sprint.md`、`release-note.md` 或 `acceptance-report.md`。
 - OpenSpec change 必须能追踪回 REQ ID。
 - Sprint 任务、PR、测试、发布说明必须能追踪回 REQ ID。
 - 需求拆分为多个 change 时，`trace.md` 必须列出全部关联。

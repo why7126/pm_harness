@@ -11,7 +11,7 @@ updated_at: 2026-06-27 09:02:51
 
 Flags：`--severity blocker|critical|high|medium|low`
 
-**Output**：一个或多个 `issues/bugs/BUG-NNNN-slug/capture.md` + `trace.md`；更新 `_registry.yaml`
+**Output**：一个或多个 `issues/bugs/plan/BUG-NNNN-slug/capture.md` + `trace.md`；更新 `_registry.yaml`
 
 **禁止**：`bug.md`、`src/`、`openspec/`
 

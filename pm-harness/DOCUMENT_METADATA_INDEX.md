@@ -189,6 +189,7 @@ note: {适用范围或注意事项}
 | `rules/global.md` | 全局协作与 guard 规则 | 全局 AI 行为变化时更新 |
 | `rules/directory-structure.md` | 目录边界和文件归属 | 目录结构变化时更新 |
 | `rules/document-governance.md` | 文档生命周期和同步规则 | 文档治理流程变化时更新 |
+| `rules/issues-lifecycle.md` | 需求与 BUG 三阶段目录生命周期规则 | issues 阶段目录、评审门禁或归档流程变化时更新 |
 | `rules/requirement-management.md` | 需求治理规则 | 需求流程或命令变化时更新 |
 | `rules/bug-management.md` | Bug 治理规则 | 缺陷流程或命令变化时更新 |
 | `rules/coding.md` | 编码、分层和模块边界 | 技术栈或代码规范变化时更新 |

@@ -111,7 +111,7 @@ changes[]
 | `artifacts_complete` | `openspec status --change` 全 done |
 | `tasks_total` / `tasks_done` | `openspec list --json` 或 `instructions apply` |
 | `state` | `done` \| `in_progress` \| `not_started` \| `blocked` \| `archived` |
-| `blocked_reason` | artifacts 缺 / REQ Not Ready / 依赖未满足 |
+| `blocked_reason` | not_reviewed / artifacts 缺 / REQ Not Ready / 依赖未满足 |
 
 **Skip 规则**（满足任一即 **跳过**，不调用 apply）：
 
@@ -121,7 +121,7 @@ changes[]
 
 **Blocked 规则**（不满足则不可进入 apply，排队靠后）：
 
-1. 关联 REQ/BUG `status ∉ { approved, in_sprint }` → `blocked: not_reviewed`（提示 `/req-review` 或 `/bug-review`）
+1. 关联 REQ/BUG `status ∉ { approved, in_sprint }` → `blocked: not_reviewed`（停止开发；不得调用 apply；提示 `/req-review` 或 `/bug-review`）
 2. `openspec status` 有 artifact 非 done → `blocked: artifacts`
 3. 关联 REQ Readiness 为 Not Ready → `blocked: req_docs`（`--force-req-check` 时严格）
 4. **依赖未满足**（见 Step 2）
@@ -236,7 +236,7 @@ changes:
 
 ## Step 5 — REQ Readiness Gate（`--force-req-check` 或 change 首次 apply 前）
 
-对 change 关联的 `issues/requirements/<REQ-ID>/`：
+对 change 关联的 `issues/requirements/{plan,review,archive}/<REQ-ID>/`：
 
 | 文件 | 必须 |
 |------|------|
@@ -307,6 +307,7 @@ Run `/sprint-apply sprint-0002 --dry-run` to refresh queue.
 | 不并行写同一 change | 单会话串行；并行由用户开多 Agent |
 | 不替代 opsx-apply | 编排层；单 change 实现逻辑与 opsx-apply 一致 |
 | 不绕过 OpenSpec | 无 change 目录 → 告警 `/req-opsx`，不直接开发 |
+| 评审未完成不开发 | REQ/BUG 未 approved 或未 in_sprint 时，标记 blocked，不得调用 apply 或修改 src |
 | Sprint 外 change | 不在 `sprint.yaml` 的 change **不得**被本命令 apply |
 | 容量告警 | 若连续 3 个 change blocked，输出风险摘要并停止 |
 

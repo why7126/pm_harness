@@ -7,7 +7,7 @@ created_at: 2026-06-27 08:44:18
 updated_at: 2026-06-27 08:44:18
 ---
 
-将 **`approved`** 的 `issues/requirements/REQ-*` 转为 `openspec/changes/<change-id>/`（proposal / design / specs / tasks）。**不写 `src/`**；实现用 `/opsx-apply`。
+将 **`approved`** 的 `issues/requirements/review/REQ-*` 转为 `openspec/changes/<change-id>/`（proposal / design / specs / tasks）。**不写 `src/`**；实现用 `/opsx-apply`。
 
 **Input**：`REQ-xxxx` 或 `REQ-xxxx-name`
 
@@ -47,7 +47,7 @@ openspec list --json
 openspec list --specs
 ```
 
-REQ 目录：requirement.md、user-stories.md、business-flow.md、acceptance.md、trace.md、prototype/**
+REQ 目录（优先在 `issues/requirements/review/` 查找）：requirement.md、user-stories.md、business-flow.md、acceptance.md、trace.md、prototype/**
 
 ---
 
@@ -153,7 +153,7 @@ openspec_changes:
 
 | 规则 | 说明 |
 |------|------|
-| 仅 approved | 未评审不得 opsx |
+| 仅 approved | 未评审不得 opsx，不得写 Sprint 规划，不得进入开发 |
 | 不替代 req-complete | 文档不全先 complete |
 | 不跳过 CLI | 禁止手写 change 目录 |
 | 不写 src | 实现用 opsx-apply |

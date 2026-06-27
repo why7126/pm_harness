@@ -8,7 +8,7 @@ updated_at: 2026-06-27 08:44:18
 
 Flags：`--approve` | `--reject` | `--defer` | `--wont-fix`
 
-**Output**：`review.md`；status → `approved` | `rejected` | `deferred` | `wont_fix`
+**Output**：`review.md`；status → `approved` | `rejected` | `deferred` | `wont_fix`；按结果将整个 BUG 目录从 `issues/bugs/plan/` 移动到 `review/` 或 `archive/`
 
 ## 评审清单
 
@@ -16,6 +16,15 @@ Flags：`--approve` | `--reject` | `--defer` | `--wont-fix`
 - [ ] 严重等级合理
 - [ ] 回归验收明确
 - [ ] 是否需 hotfix 路径
+
+## Step 2 — 移动目录
+
+| result | 目标目录 |
+|--------|----------|
+| approve | `issues/bugs/review/<BUG-ID>/` |
+| reject / defer / wont-fix | `issues/bugs/archive/<BUG-ID>/` |
+
+移动整个 BUG 目录后，更新 `_registry.yaml` 中路径或分区字段；`trace.md` 中保留完整生命周期时间。
 
 ## 门禁
 

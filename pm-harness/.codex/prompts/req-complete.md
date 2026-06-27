@@ -18,8 +18,8 @@ updated_at: 2026-06-27 08:44:18
 AGENTS.md
 rules/requirement-management.md
 rules/ui-design.md          # UI 类
-issues/requirements/<REQ-ID>/requirement.md
-issues/requirements/<REQ-ID>/capture.md
+issues/requirements/{plan,review,archive}/<REQ-ID>/requirement.md
+issues/requirements/{plan,review,archive}/<REQ-ID>/capture.md
 ```
 
 ## Step 1 — 生成/补齐文档
