@@ -52,12 +52,16 @@ rules/document-governance.md
 rules/requirement-management.md
 rules/bug-management.md
 rules/directory-structure.md
+docs/knowledge-base/README.md
 ```
 
 扫描范围：
 
 ```text
 project.yaml                    # 若存在：团队容量
+docs/knowledge-base/sprints/**  # 上一 Sprint 复盘与 open action items
+docs/knowledge-base/incidents/**
+docs/knowledge-base/best-practices/**
 issues/requirements/**
 issues/bugs/**
 openspec/changes/**             # 含 archive/
@@ -138,6 +142,33 @@ XS=0.5  S=1  M=3  L=5  XL=8  XXL=13 人天
 
 按前端 / 后端 / 测试分列；汇总 `estimated_story_points` 与 `estimated_person_days`。
 
+### Knowledge Base Gate（MUST）
+
+在确定范围前必须读取最近一次 Sprint 复盘、所有 `open` / `in_sprint` 行动项，以及与候选 REQ/BUG/Change 领域匹配的 best-practices / incidents。
+
+输出并写入 `sprint.md`：
+
+```markdown
+## 知识库承接项
+
+| Action | 来源 | 状态 | 本 Sprint 处理 |
+|---|---|---|---|
+| A-xxx | `docs/knowledge-base/...` | in_sprint | REQ-xxxx / change-id / Deferred: 原因 |
+```
+
+写入 `sprint.yaml`：
+
+```yaml
+knowledge_base:
+  carried_actions:
+    - id: A-xxx
+      source: docs/knowledge-base/sprints/YYYY-MM-DD-sprint-xxx-experience.md
+      status: in_sprint
+      target: REQ-xxxx | BUG-xxxx | change-id | rule-update
+```
+
+若存在 `open` 行动项但本 Sprint 不承接，必须在 `sprint.md` 风险或 Deferred 列表说明原因；不得静默忽略。
+
 ---
 
 ## Step 4 — 优先级、依赖与归组
@@ -181,6 +212,9 @@ requirements: []          # issues/requirements 目录名
 bugs: []
 changes: []               # openspec change id
 
+knowledge_base:
+  carried_actions: []
+
 estimated_story_points: <int>
 estimated_person_days: <number>
 ```
@@ -192,6 +226,7 @@ estimated_person_days: <number>
 - 工作量估算表
 - 里程碑（「目标日期」列 MUST 使用 `YYYY-MM-DD hh:mm:ss`）
 - 风险
+- 知识库承接项（上一 Sprint open action、best-practice gate、未承接原因）
 - **依赖** ASCII 树
 - 发布计划
 - 关联文档链接

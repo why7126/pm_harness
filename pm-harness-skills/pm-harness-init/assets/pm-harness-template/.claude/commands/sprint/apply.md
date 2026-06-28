@@ -1,8 +1,5 @@
 ---
-name: "Sprint: Apply"
 description: 按 Sprint 依赖与优先级编排 OpenSpec Change 开发，自动跳过已完成/已归档项
-category: Workflow
-tags: [workflow]
 created_at: 2026-06-27 08:44:18
 updated_at: 2026-06-27 08:44:18
 ---
@@ -65,6 +62,7 @@ openspec/project.md
 rules/global.md
 rules/document-governance.md   # sprint 四件套
 rules/directory-structure.md
+docs/knowledge-base/README.md
 ```
 
 Sprint 目录（MUST 四件套齐全，缺一则 **Not Ready**，停止并提示 `/sprint-propose` 或补文件）：
@@ -80,6 +78,14 @@ CLI 现状：
 
 ```bash
 openspec list --json
+```
+
+Knowledge Base（MUST）：
+
+```text
+docs/knowledge-base/sprints/**        # carried_actions、open/in_sprint action items
+docs/knowledge-base/best-practices/** # 与 Sprint change 领域相关
+docs/knowledge-base/incidents/**      # 与 BUG / recurring pattern 相关
 ```
 
 对每个 `sprint.yaml` 中的 `changes[]` 项，若目录仍在 `openspec/changes/<id>/`：
@@ -115,6 +121,7 @@ changes[]
 | `tasks_total` / `tasks_done` | `openspec list --json` 或 `instructions apply` |
 | `state` | `done` \| `in_progress` \| `not_started` \| `blocked` \| `archived` |
 | `blocked_reason` | not_reviewed / artifacts 缺 / REQ Not Ready / 依赖未满足 |
+| `knowledge_gate` | read / missing / blocked，来源于 `docs/knowledge-base/**` |
 
 **Skip 规则**（满足任一即 **跳过**，不调用 apply）：
 
@@ -127,7 +134,8 @@ changes[]
 1. 关联 REQ/BUG `status ∉ { approved, in_sprint }` → `blocked: not_reviewed`（停止开发；不得调用 apply；提示 `/req-review` 或 `/bug-review`）
 2. `openspec status` 有 artifact 非 done → `blocked: artifacts`
 3. 关联 REQ Readiness 为 Not Ready → `blocked: req_docs`（`--force-req-check` 时严格）
-4. **依赖未满足**（见 Step 2）
+4. Knowledge Gate 未读取或存在必须承接但未进入 design/tasks/acceptance 的行动项 → `blocked: knowledge_gate`
+5. **依赖未满足**（见 Step 2）
 
 ---
 
@@ -189,15 +197,16 @@ changes:
 **Status:** in_progress
 **Mode:** apply | dry-run
 
-| # | Change | REQ | P | Tasks | State | Deps OK | Action |
-|---|--------|-----|---|-------|-------|---------|--------|
-| 1 | add-admin-home | REQ-0004 | P0 | 25/25 | archived | ✓ | SKIP |
-| 2 | add-user-management | REQ-0005 | P0 | 31/36 | in_progress | ✓ | **APPLY NEXT** |
-| 3 | fix-user-management-list-refine | ... | P1 | 0/20 | not_started | ✗ | WAIT (add-user-management) |
+| # | Change | REQ | P | Tasks | State | Deps OK | Knowledge | Action |
+|---|--------|-----|---|-------|-------|---------|-----------|--------|
+| 1 | add-admin-home | REQ-0004 | P0 | 25/25 | archived | ✓ | read | SKIP |
+| 2 | add-user-management | REQ-0005 | P0 | 31/36 | in_progress | ✓ | read | **APPLY NEXT** |
+| 3 | fix-user-management-list-refine | ... | P1 | 0/20 | not_started | ✗ | blocked | WAIT (add-user-management) |
 ...
 
 **Next action:** /opsx-apply add-user-management（via sprint-apply）
 **Parallel hint:** add-login-remember-autofill, add-brand-management, ...
+**Knowledge Gate:** read `docs/knowledge-base/...`; blocked items: ...
 ```
 
 `--dry-run` 到此 **停止**。
@@ -214,6 +223,7 @@ changes:
    - `openspec status --change "<name>" --json`
    - `openspec instructions apply --change "<name>" --json`
    - 读取 `contextFiles` 全部路径
+   - 读取并应用 Knowledge Gate 中相关 best-practices / incidents / carried_actions
    - 仅处理 **pending** tasks（`- [ ]`）
    - 每完成一项即标记 `- [x]`
 
@@ -311,6 +321,7 @@ Run `/sprint-apply sprint-0002 --dry-run` to refresh queue.
 | 不替代 opsx-apply | 编排层；单 change 实现逻辑与 opsx-apply 一致 |
 | 不绕过 OpenSpec | 无 change 目录 → 告警 `/req-opsx`，不直接开发 |
 | 评审未完成不开发 | REQ/BUG 未 approved 或未 in_sprint 时，标记 blocked，不得调用 apply 或修改 src |
+| 知识库未通过不开发 | Knowledge Gate missing / blocked 时，先补 design/tasks/acceptance 或说明不适用 |
 | Sprint 外 change | 不在 `sprint.yaml` 的 change **不得**被本命令 apply |
 | 容量告警 | 若连续 3 个 change blocked，输出风险摘要并停止 |
 

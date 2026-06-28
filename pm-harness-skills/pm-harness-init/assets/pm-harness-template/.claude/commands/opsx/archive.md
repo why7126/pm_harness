@@ -158,12 +158,13 @@ Target archive directory already exists.
 - If sync is requested, use the Skill tool to invoke `openspec-sync-specs` (agent-driven)
 - If delta specs exist, always run the sync assessment and show the combined summary before prompting
 
-## Final Step — Workflow Sync (MUST)
+## Final Step — Workflow Sync And Issue Promotion (MUST)
 
 Run the shared `workflow-sync` step before reporting this command as complete:
 
 ```bash
 python scripts/sync-workflow-status.py --event opsx.archive --change "<change-id>" --sprint auto
+python scripts/promote-issue-stage.py --to archive --change "<change-id>" --reason "opsx.archive"
 ```
 
-Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.
+Use the actual IDs produced or changed by this command. If either script exits non-zero, read the report, fix the inconsistent workflow documents, rerun the failed step, and include the final `## Workflow Sync` and `## Issue Stage Promotion` reports in the command output. If issue promotion reports Blocked because other linked changes are not archived, keep the issue in `review/` and report the blocker.

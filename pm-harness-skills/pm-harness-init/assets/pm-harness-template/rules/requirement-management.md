@@ -346,6 +346,7 @@ Readiness 规则为：`{REQ_READINESS_POLICY}`。
 
 - 默认命令不得直接生成业务代码，除非后续进入 `/opsx-apply` 或 `/sprint-apply`。
 - 旧命令、迁移命令或团队别名必须写清楚当前有效入口。
+- `/req-complete` 必须读取 `docs/knowledge-base/README.md` 和与需求领域相关的 best-practices / incidents / Sprint 行动项，并把适用约束写入 `acceptance.md` checklist；不适用的知识库条目必须在 Readiness Report 中说明原因。
 
 ## 14. OpenSpec 与迭代流转 `[条件启用]`
 
@@ -364,6 +365,7 @@ Readiness 规则为：`{REQ_READINESS_POLICY}`。
 - OpenSpec change 必须能追踪回 REQ ID。
 - Sprint 任务、PR、测试、发布说明必须能追踪回 REQ ID。
 - 需求拆分为多个 change 时，`trace.md` 必须列出全部关联。
+- 需求进入 `/req-opsx` 或 `/sprint-propose` 前，相关 knowledge-base checklist 必须已进入 `acceptance.md` 或明确标记不适用；不得等 Bug 出现后才引用知识库。
 
 推荐链路：
 

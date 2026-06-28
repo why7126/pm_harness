@@ -1,8 +1,5 @@
 ---
-name: "OPSX: Apply"
 description: Implement tasks from an OpenSpec change (Experimental)
-category: Workflow
-tags: [workflow]
 created_at: 2026-06-27 08:44:18
 updated_at: 2026-06-27 08:44:18
 ---
@@ -54,6 +51,14 @@ Implement tasks from an OpenSpec change.
    - **spec-driven**: proposal, specs, design, tasks
    - Other schemas: follow the contextFiles from CLI output
 
+   Also read the Knowledge Base gate inputs before implementation:
+   - `docs/knowledge-base/README.md`
+   - Relevant `docs/knowledge-base/best-practices/**`
+   - Relevant `docs/knowledge-base/incidents/**`
+   - Relevant open / in_sprint action items from `docs/knowledge-base/sprints/**`
+
+   Relevance is determined from the change id, linked REQ/BUG, touched module, UI pattern, upload/media/auth/data flow, and recurring BUG pattern.
+
 5. **Show current progress**
 
    Display:
@@ -61,6 +66,7 @@ Implement tasks from an OpenSpec change.
    - Progress: "N/M tasks complete"
    - Remaining tasks overview
    - Dynamic instruction from CLI
+   - Knowledge Gate: read entries, applicable constraints, and not-applicable reasons
 
 6. **Implement tasks (loop until done or blocked)**
 
@@ -139,6 +145,7 @@ What would you like to do?
 **Guardrails**
 - Keep going through tasks until done or blocked
 - Always read context files before starting (from the apply instructions output)
+- Always read and report Knowledge Gate before starting implementation; do not wait for a bug-fix change to consult best-practices
 - If task is ambiguous, pause and ask before implementing
 - If implementation reveals issues, pause and suggest artifact updates
 - Keep code changes minimal and scoped to each task

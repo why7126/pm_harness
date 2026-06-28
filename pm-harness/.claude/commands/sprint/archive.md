@@ -234,12 +234,13 @@ openspec list --json
 - 治理：`rules/document-governance.md` §4.2
 - AGENTS.md §4.1 Sprint 命令族
 
-## Final Step — Workflow Sync (MUST)
+## Final Step — Workflow Sync And Issue Promotion (MUST)
 
 Run the shared `workflow-sync` step before reporting this command as complete:
 
 ```bash
 python scripts/sync-workflow-status.py --event sprint.archive --sprint "<sprint-id>"
+python scripts/promote-issue-stage.py --to archive --sprint "<sprint-id>" --reason "sprint.archive"
 ```
 
-Use the actual IDs produced or changed by this command. If the script exits non-zero, read the drift report, fix the inconsistent workflow documents, rerun the sync, and include the final `## Workflow Sync` report in the command output.
+Use the actual IDs produced or changed by this command. If either script exits non-zero, read the report, fix the inconsistent workflow documents, rerun the failed step, and include the final `## Workflow Sync` and `## Issue Stage Promotion` reports in the command output. If issue promotion reports Blocked because other linked changes are not archived, keep those issues in `review/` and report the blockers.

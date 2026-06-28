@@ -137,6 +137,9 @@ updated_at: YYYY-MM-DD hh:mm:ss
 - `lifecycle_stage` 变更必须记录原因、命令、操作者或来源。
 - `current_path` 如启用，必须在目录移动后同步更新。
 - 外部看板字段如启用，必须与 `trace.md` 和 `_registry.yaml` 保持一致。
+- `/opsx-archive` 和 `/sprint-archive` 完成 OpenSpec 归档后，必须运行 `python scripts/promote-issue-stage.py --to archive ...` 同步物理目录。
+- REQ/BUG 进入 `archive/` 的门禁为：该条目 `trace.md` 中所有关联 OpenSpec Change 均已位于 `openspec/changes/archive/`；多 Change 条目不得因其中一个 Change 归档而提前归档。
+- 如果仍有关联 Change 未归档，`promote-issue-stage.py` 必须报告 Blocked，并保持条目在 `review/`。
 
 ## 6. registry 规则 `[通用]`
 

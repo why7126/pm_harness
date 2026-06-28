@@ -197,8 +197,11 @@ updated_at: YYYY-MM-DD hh:mm:ss
 
 ## 8. 行动项
 
-| Action | 类型 | 建议落点 | Owner | 时机 |
-| --- | --- | --- | --- | --- |
+| Action ID | Action | 类型 | 状态 | 建议落点 | Owner | 时机 |
+| --- | --- | --- | --- | --- | --- | --- |
+| A-xxx | 待确认 | process / component / test / rule / command | open | REQ / BUG / Change / rule-update | 待确认 | next_sprint / later |
+
+状态必须使用：`open`、`in_sprint`、`done`、`deferred`、`rejected`。新复盘默认 `open`；如果已被本次同步落地，才允许写 `done`。
 
 ## 9. 后续同步建议
 

@@ -95,7 +95,7 @@ AI 在执行以下任务前必须读取本文件：
 
 | 事件 | 常见命令 | 目录迁移 | 要求 |
 | --- | --- | --- | --- |
-| 新建 Sprint | `/sprint-propose` | 无 → `change/` | 创建 Sprint 四件套，写入 `status: planning` 与 `lifecycle_stage: change` |
+| 新建 Sprint | `/sprint-propose` | 无 → `change/` | 创建 Sprint 四件套，写入 `status: planning` 与 `lifecycle_stage: change`，并承接 `docs/knowledge-base/` 中未关闭行动项 |
 | 范围/依赖探索 | `/sprint-explore` | 保持 `change/` | 只更新风险、依赖、容量和范围建议 |
 | 执行 Sprint | `/sprint-apply` | 保持 `change/` | 只处理 `change/` 中未归档 Sprint |
 | 经验复盘 | `/sprint-exps` | 通常保持原阶段 | 可读取 `change/` 或 `archive/`，输出沉淀到 `docs/knowledge-base/sprints/` |
@@ -108,6 +108,7 @@ AI 在执行以下任务前必须读取本文件：
 - 迁移前必须确认目标阶段不存在同 ID 目录。
 - 迁移后必须同步 `sprint.yaml` 的 `status`、`lifecycle_stage`、`updated_at` 和必要的验收/发布字段。
 - 迁移后应运行 `{WORKFLOW_SYNC_COMMAND}` 或项目等价同步命令；如支持 `--check`，应执行漂移检查。
+- 新建或执行 Sprint 前必须读取 `docs/knowledge-base/README.md`、最近一次 Sprint 复盘和相关 best-practices；未承接的 `open` 行动项必须在 `sprint.md` 风险或 Deferred 列表说明原因。
 
 ## 5. sprint.yaml 字段 `[通用 + 个性化]`
 
@@ -122,9 +123,37 @@ lifecycle_stage: change | archive
 start_date: YYYY-MM-DD
 end_date: YYYY-MM-DD
 updated_at: YYYY-MM-DD hh:mm:ss
-requirements: []
-bugs: []
-changes: []
+requirements:
+  - id: REQ-xxxx
+    name: 需求名称
+    priority: P0 | P1 | P2
+    status: approved | in_sprint | completed
+    description: 需求说明
+    included_at: YYYY-MM-DD hh:mm:ss
+bugs:
+  - id: BUG-xxxx
+    severity: P0 | P1 | P2
+    status: approved | in_sprint | fixed
+    description: 缺陷说明
+    included_at: YYYY-MM-DD hh:mm:ss
+changes:
+  - id: change-id
+    requirement: REQ-xxxx
+    status: proposed | in_progress | applied | archived
+    sprint_goal: Sprint 内交付目标
+    target_date: YYYY-MM-DD hh:mm:ss
+milestones:
+  - id: M1
+    stage: 阶段名称
+    deliverable: 交付物
+    status: planning | in_progress | completed
+    target_date: YYYY-MM-DD hh:mm:ss
+knowledge_base:
+  carried_actions:
+    - id: A-xxx
+      source: docs/knowledge-base/sprints/YYYY-MM-DD-sprint-xxx-experience.md
+      status: in_sprint
+      target: REQ-xxxx | BUG-xxxx | change-id | rule-update
 ```
 
 要求：
@@ -132,6 +161,10 @@ changes: []
 - `planning`、`in_progress` 必须对应 `lifecycle_stage: change`。
 - `completed` 必须对应 `lifecycle_stage: archive`。
 - `status` 与 `lifecycle_stage` 不一致时，必须优先修复不一致，不得继续归档或作为事实源推进开发。
+- `sprint.md` 的 Scope 模块必须包含需求的 `description`、BUG 的 `description` 和 Change 的 `sprint_goal`。
+- `sprint.md` 的里程碑模块必须包含 `target_date`。
+- 上述正文时间字段必须是完整 `YYYY-MM-DD hh:mm:ss`；如果只能确认日期，必须写 `待确认`，不得自动补成 `00:00:00`。
+- `knowledge_base.carried_actions` 必须记录本 Sprint 承接的复盘行动项；没有承接项时必须在 `sprint.md` 说明“无适用 open 行动项”。
 - `sprint.md` 或项目约定变更记录中应记录 `change -> archive` 的迁移原因和命令来源。
 
 ## 6. 遗留路径兼容 `[条件启用]`

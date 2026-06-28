@@ -29,10 +29,12 @@ REQUIRED_PATHS = [
     "docs/03-api-index.md",
     "docs/04-database-design.md",
     "docs/05-compatibility-matrix.md",
+    "docs/knowledge-base/README.md",
     "openspec/project.md",
     "openspec/config.yaml",
     "openspec/testing-mapping.md",
     "docker-compose.yml",
+    "scripts/promote-issue-stage.py",
     "scripts/validate-directory-structure.py",
 ]
 
@@ -45,6 +47,10 @@ REQUIRED_DIRS = [
     "rules",
     "docs",
     "docs/standards",
+    "docs/knowledge-base",
+    "docs/knowledge-base/best-practices",
+    "docs/knowledge-base/incidents",
+    "docs/knowledge-base/sprints",
     "compatibility",
     "compatibility/database",
     "compatibility/devices",

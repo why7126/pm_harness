@@ -299,9 +299,12 @@ estimated_person_days: 0
 | 场景 | 必须更新 |
 | --- | --- |
 | 新迭代创建 | `sprint.yaml`、`sprint.md`、`release-note.md`、`acceptance-report.md` |
+| 新迭代创建且存在知识库行动项 | `sprint.yaml` 的 `knowledge_base.carried_actions`、`sprint.md` 的「知识库承接项」 |
 | 需求进入或移出迭代 | `sprint.yaml`、`sprint.md`、需求 `trace.md` |
+| 需求完善 | `acceptance.md` 的 knowledge-base checklist、Readiness Report |
 | Bug 进入或移出迭代 | `sprint.yaml`、`sprint.md`、Bug `trace.md` |
 | Change 创建或纳入 | `sprint.yaml`、`sprint.md`、Change `trace.md` |
+| Change 实现前 | Knowledge Gate：已读取知识库条目、适用约束、不适用说明 |
 | Change 完成或归档 | `sprint.yaml`、`release-note.md`、`acceptance-report.md` |
 | 发现范围、排期、质量风险 | `sprint.md` 风险章节 |
 | Sprint 结束 | `sprint.yaml`、`acceptance-report.md`，完成归档后移动到 `iterations/archive/` |

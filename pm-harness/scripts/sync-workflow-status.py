@@ -42,7 +42,27 @@ SYNC_MARKERS = {
         "<!-- workflow-sync:release-changes:start -->",
         "<!-- workflow-sync:release-changes:end -->",
     ),
+    "milestones": (
+        "<!-- workflow-sync:milestones:start -->",
+        "<!-- workflow-sync:milestones:end -->",
+    ),
 }
+
+
+DATETIME_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
+DATE_ONLY_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+@dataclass
+class SprintItem:
+    item_id: str
+    fields: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
+class SprintMilestone:
+    milestone_id: str
+    fields: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -59,9 +79,22 @@ class SprintState:
     sprint_id: str
     path: Path
     status: str = "unknown"
-    requirements: list[str] = field(default_factory=list)
-    bugs: list[str] = field(default_factory=list)
-    changes: list[str] = field(default_factory=list)
+    requirements: list[SprintItem] = field(default_factory=list)
+    bugs: list[SprintItem] = field(default_factory=list)
+    changes: list[SprintItem] = field(default_factory=list)
+    milestones: list[SprintMilestone] = field(default_factory=list)
+
+    @property
+    def requirement_ids(self) -> list[str]:
+        return [item.item_id for item in self.requirements]
+
+    @property
+    def bug_ids(self) -> list[str]:
+        return [item.item_id for item in self.bugs]
+
+    @property
+    def change_ids(self) -> list[str]:
+        return [item.item_id for item in self.changes]
 
 
 @dataclass
@@ -111,11 +144,11 @@ def scalar_from_yaml_line(line: str) -> str:
     return value.strip("'\"")
 
 
-def parse_yaml_list(lines: list[str], key: str) -> list[str]:
-    values: list[str] = []
+def parse_yaml_item_list(lines: list[str], key: str) -> list[SprintItem]:
+    values: list[SprintItem] = []
     in_list = False
     key_indent = 0
-    pending_item: str | None = None
+    current_fields: dict[str, str] | None = None
 
     for line in lines:
         if not line.strip() or line.lstrip().startswith("#"):
@@ -129,7 +162,11 @@ def parse_yaml_list(lines: list[str], key: str) -> list[str]:
             if inline.startswith("[") and inline.endswith("]"):
                 raw_items = inline[1:-1].strip()
                 if raw_items:
-                    values.extend(item.strip().strip("'\"") for item in raw_items.split(","))
+                    values.extend(
+                        SprintItem(item.strip().strip("'\""))
+                        for item in raw_items.split(",")
+                        if item.strip()
+                    )
             continue
         if in_list and indent <= key_indent and not stripped.startswith("-"):
             break
@@ -137,21 +174,53 @@ def parse_yaml_list(lines: list[str], key: str) -> list[str]:
             continue
         if stripped.startswith("- "):
             item = stripped[2:].strip()
-            pending_item = None
+            current_fields = None
             if not item:
                 continue
             if ":" in item:
                 item_key, item_value = item.split(":", 1)
-                if item_key.strip() == "id":
-                    values.append(item_value.strip().strip("'\""))
-                else:
-                    pending_item = item_key.strip()
+                current_fields = {item_key.strip(): item_value.strip().strip("'\"")}
+                item_id = current_fields.get("id") or current_fields.get(f"{key[:-1]}_id") or current_fields.get("change_id")
+                values.append(SprintItem(item_id or "", current_fields))
             else:
-                values.append(item.strip("'\""))
-        elif pending_item is not None and stripped.startswith("id:"):
-            values.append(stripped.split(":", 1)[1].strip().strip("'\""))
-            pending_item = None
-    return [value for value in values if value]
+                values.append(SprintItem(item.strip("'\"")))
+        elif current_fields is not None and ":" in stripped:
+            item_key, item_value = stripped.split(":", 1)
+            current_fields[item_key.strip()] = item_value.strip().strip("'\"")
+            if values[-1].item_id == "":
+                item_id = (
+                    current_fields.get("id")
+                    or current_fields.get(f"{key[:-1]}_id")
+                    or current_fields.get("change_id")
+                    or ""
+                )
+                values[-1].item_id = item_id
+    return [value for value in values if value.item_id]
+
+
+def parse_yaml_milestones(lines: list[str]) -> list[SprintMilestone]:
+    return [
+        SprintMilestone(item.item_id, item.fields)
+        for item in parse_yaml_item_list(lines, "milestones")
+    ]
+
+
+def item_value(item, keys: list[str], default: str = "待确认") -> str:
+    for key in keys:
+        value = item.fields.get(key)
+        if value:
+            return value
+    return default
+
+
+def full_datetime_or_unknown(value: str) -> str:
+    if value == "待确认":
+        return value
+    if DATETIME_PATTERN.match(value):
+        return value
+    if DATE_ONLY_PATTERN.match(value):
+        return "待确认"
+    return value
 
 
 def parse_sprint_yaml(path: Path) -> SprintState:
@@ -168,9 +237,10 @@ def parse_sprint_yaml(path: Path) -> SprintState:
         sprint_id=sprint_id,
         path=path.parent,
         status=status,
-        requirements=parse_yaml_list(lines, "requirements"),
-        bugs=parse_yaml_list(lines, "bugs"),
-        changes=parse_yaml_list(lines, "changes"),
+        requirements=parse_yaml_item_list(lines, "requirements"),
+        bugs=parse_yaml_item_list(lines, "bugs"),
+        changes=parse_yaml_item_list(lines, "changes"),
+        milestones=parse_yaml_milestones(lines),
     )
 
 
@@ -208,19 +278,19 @@ def resolve_sprint(root: Path, args: argparse.Namespace) -> SprintState | None:
 
     if event.startswith("bug.") and args.bug:
         for sprint in sprints:
-            if any_id_matches(args.bug, sprint.bugs):
+            if any_id_matches(args.bug, sprint.bug_ids):
                 return sprint
         return None
 
     if event.startswith("req.") and args.req:
         for sprint in sprints:
-            if any_id_matches(args.req, sprint.requirements):
+            if any_id_matches(args.req, sprint.requirement_ids):
                 return sprint
         return None
 
     if event.startswith("opsx.") and args.change:
         for sprint in sprints:
-            if any_exact_matches(args.change, sprint.changes):
+            if any_exact_matches(args.change, sprint.change_ids):
                 return sprint
         return None
 
@@ -233,11 +303,10 @@ def resolve_sprint(root: Path, args: argparse.Namespace) -> SprintState | None:
     if args.sprint == "auto" or event.startswith("sprint.") or not [*args.req, *args.bug, *args.change]:
         return active_sprint(sprints)
 
-    entity_ids = [*args.req, *args.bug, *args.change]
     for sprint in sprints:
         if (
-            any_id_matches([*args.req, *args.bug], sprint.requirements + sprint.bugs)
-            or any_exact_matches(args.change, sprint.changes)
+            any_id_matches([*args.req, *args.bug], sprint.requirement_ids + sprint.bug_ids)
+            or any_exact_matches(args.change, sprint.change_ids)
         ):
             return sprint
     return None
@@ -302,15 +371,15 @@ def sprint_goals_body(sprint: SprintState, change_states: dict[str, ChangeState]
         f"- 本 Sprint 当前包含 {len(sprint.requirements)} 个需求、{len(sprint.bugs)} 个 BUG、{len(sprint.changes)} 个 OpenSpec Change。",
     ]
     if sprint.requirements:
-        lines.append("- 需求目标：" + "、".join(f"`{req}`" for req in sprint.requirements))
+        lines.append("- 需求目标：" + "、".join(f"`{req}`" for req in sprint.requirement_ids))
     if sprint.bugs:
-        lines.append("- 缺陷目标：" + "、".join(f"`{bug}`" for bug in sprint.bugs))
+        lines.append("- 缺陷目标：" + "、".join(f"`{bug}`" for bug in sprint.bug_ids))
     if sprint.changes:
         archived = sum(1 for state in change_states.values() if state.status == "archived")
         applied = sum(1 for state in change_states.values() if state.status == "applied")
         active = len(sprint.changes) - archived - applied
         lines.append(f"- 交付目标：推进 {len(sprint.changes)} 个 Change（archived {archived}，applied {applied}，active/proposed {active}）。")
-    lines.append("- 时间记录：本模块由 workflow-sync 根据 sprint.yaml 刷新；目标日期字段统一使用 `YYYY-MM-DD hh:mm:ss`。")
+    lines.append("- 时间记录：本模块由 workflow-sync 根据 sprint.yaml 刷新；目标日期字段统一使用 `YYYY-MM-DD hh:mm:ss`，缺少时分秒时写 `待确认`。")
     return "\n".join(lines)
 
 
@@ -324,24 +393,56 @@ def patch_sprint_md(root: Path, sprint: SprintState, change_states: dict[str, Ch
     after = before
     changed_any = False
 
-    req_rows = [[req, "纳入时间: 待确认; 来源: sprint.yaml; 时间格式: YYYY-MM-DD hh:mm:ss", "in_sprint"] for req in sprint.requirements]
-    bug_rows = [[bug, "纳入时间: 待确认; 来源: sprint.yaml; 时间格式: YYYY-MM-DD hh:mm:ss", "in_sprint"] for bug in sprint.bugs]
+    req_rows = [
+        [
+            req.item_id,
+            item_value(req, ["name", "title"], req.item_id),
+            item_value(req, ["priority"], "-"),
+            item_value(req, ["status"], "in_sprint"),
+            item_value(req, ["description", "说明"]),
+            full_datetime_or_unknown(item_value(req, ["included_at", "created_at", "updated_at", "纳入时间"])),
+        ]
+        for req in sprint.requirements
+    ]
+    bug_rows = [
+        [
+            bug.item_id,
+            item_value(bug, ["severity", "严重等级"], "-"),
+            item_value(bug, ["status"], "in_sprint"),
+            item_value(bug, ["description", "说明"]),
+            full_datetime_or_unknown(item_value(bug, ["included_at", "created_at", "updated_at", "纳入时间"])),
+        ]
+        for bug in sprint.bugs
+    ]
     change_rows = [
         [
             f"`{state.change_id}`",
-            "目标时间: 待确认; sprint目标: 待确认; 时间格式: YYYY-MM-DD hh:mm:ss",
+            item_value(change, ["requirement", "req", "关联需求"], "-"),
             state.status,
+            item_value(change, ["sprint_goal", "Sprint目标", "Sprint 目标"]),
+            full_datetime_or_unknown(item_value(change, ["target_date", "目标日期", "updated_at"])),
             f"{state.tasks_done}/{state.tasks_total}" if state.tasks_total else "-",
             state.path,
         ]
-        for state in change_states.values()
+        for change in sprint.changes
+        if (state := change_states.get(change.item_id))
+    ]
+    milestone_rows = [
+        [
+            item_value(milestone, ["stage", "阶段"], milestone.milestone_id),
+            item_value(milestone, ["deliverable", "交付"], "-"),
+            item_value(milestone, ["status"], "待确认"),
+            full_datetime_or_unknown(item_value(milestone, ["target_date", "目标日期"])),
+        ]
+        for milestone in sprint.milestones
     ]
 
     replacements = {
         "sprint_goals": sprint_goals_body(sprint, change_states),
-        "scope_requirements": table(["REQ ID", "说明", "状态"], req_rows),
-        "scope_bugs": table(["BUG ID", "说明", "状态"], bug_rows),
-        "scope_changes": table(["Change ID", "Sprint 目标", "状态", "Tasks", "路径"], change_rows),
+        "scope_requirements": table(["REQ ID", "名称", "优先级", "状态", "说明", "纳入时间"], req_rows),
+        "scope_bugs": table(["BUG ID", "严重等级", "状态", "说明", "纳入时间"], bug_rows),
+        "scope_changes": table(["Change ID", "关联需求", "状态", "Sprint 目标", "目标日期", "Tasks", "路径"], change_rows),
+        "milestones": table(["阶段", "交付", "状态", "目标日期"], milestone_rows),
     }
     for marker, body in replacements.items():
         start, end = SYNC_MARKERS[marker]
@@ -518,7 +619,7 @@ def main() -> int:
 
     change_ids = list(dict.fromkeys(args.change))
     if sprint:
-        change_ids = list(dict.fromkeys([*change_ids, *sprint.changes]))
+        change_ids = list(dict.fromkeys([*change_ids, *sprint.change_ids]))
     change_states = {change_id: derive_change(root, change_id) for change_id in change_ids}
 
     patches: list[Patch] = []

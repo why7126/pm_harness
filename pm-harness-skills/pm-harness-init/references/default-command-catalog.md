@@ -31,4 +31,20 @@
 python scripts/sync-workflow-status.py --event <event> [--req REQ-xxxx] [--bug BUG-xxxx] [--change change-id] [--sprint sprint-xxx|auto]
 ```
 
+`/opsx-archive` 与 `/sprint-archive` 的 Final Step 必须额外运行：
+
+```bash
+python scripts/promote-issue-stage.py --to archive [--change change-id] [--sprint sprint-xxx] --reason "<event>"
+```
+
 Agent 工具目录之间同步命令时，必须同步该 Final Step，不得只复制主体流程。
+
+## Knowledge Base 复用钩子
+
+以下命令必须保留 knowledge-base 读取和落地门禁：
+
+- `/sprint-propose`：读取 `docs/knowledge-base/README.md`、最近 Sprint 复盘、`open`/`in_sprint` 行动项和相关 best-practices，并写入 Sprint「知识库承接项」。
+- `/req-complete`：读取相关 best-practices / incidents，并把适用项写入 `acceptance.md` checklist。
+- `/opsx-apply`、`/sprint-apply`：实现前输出 Knowledge Gate，列出已读取条目、适用约束和不适用原因。
+
+Agent 工具目录之间同步命令时，必须同步 knowledge-base gate，不得只复制主体流程。
