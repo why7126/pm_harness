@@ -19,6 +19,7 @@ SYNC_PATHS = [
     "project.yaml",
     "docker-compose.yml",
     "pytest.ini",
+    ".agents",
     "rules",
     "docs",
     "compatibility",

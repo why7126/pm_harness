@@ -39,6 +39,7 @@ REQUIRED_PATHS = [
 ]
 
 REQUIRED_DIRS = [
+    ".agents",
     ".claude",
     ".codex",
     ".cursor",
@@ -109,6 +110,7 @@ ALLOWED_ROOT_DIRS = {
     "issues",
     "iterations",
     "compatibility",
+    ".agents",
     ".claude",
     ".codex",
     ".cursor",

@@ -63,10 +63,11 @@ note: 适用于 {PRODUCT_NAME} 项目；作为 docs 目录的第一阅读入口
 | 05 | [05-compatibility-matrix.md](05-compatibility-matrix.md) | `[通用 + 个性化]` | 端、运行时、数据库、部署和能力兼容性矩阵 | 必须保留 |
 | 06 | [06-video-asset-management.md](06-video-asset-management.md) | `[条件启用 + 个性化]` | 视频与富媒体资产管理 | 启用媒体/视频时完整保留 |
 | 07 | [07-object-storage-strategy.md](07-object-storage-strategy.md) | `[条件启用 + 个性化]` | 对象存储选型、桶策略、key、生命周期和迁移 | 启用对象存储时完整保留 |
+| 08 | [08-production-image-release.md](08-production-image-release.md) | `[条件启用 + 个性化]` | 生产镜像包构建、离线交付、云服务器部署、校验和回滚 | 启用容器镜像/离线交付时保留 |
 
 新增主文档规则：
 
-- 新增主文档应占用下一个未使用编号，例如 `08-*.md`。
+- 新增主文档应占用下一个未使用编号，例如 `09-*.md`。
 - 主文档必须服务于项目级理解，不得把具体需求、缺陷或迭代计划放入 `docs/` 根目录。
 - 主文档新增、删除或改名后，必须同步更新本文档和 `DOCUMENT_METADATA_INDEX.md`。
 
@@ -149,7 +150,7 @@ docs/requirements/
 - 新增、删除、移动或重命名文档时，必须同步更新本文档。
 - 修改文档职责或路径时，必须同步更新 `rules/document-governance.md`。
 - 涉及产品范围变化时，必须同步更新 `00-product-overview.md`。
-- 涉及架构、部署、API、数据库、兼容性、媒体或对象存储变化时，必须同步更新对应编号文档。
+- 涉及架构、部署、API、数据库、兼容性、媒体、对象存储或生产镜像发布变化时，必须同步更新对应编号文档。
 - 文档中不得保留来源项目的产品名、业务场景、端名称、数据库、bucket、接口路径或命令。
 - 未知信息应标记为 `待确认`，不得编造。
 

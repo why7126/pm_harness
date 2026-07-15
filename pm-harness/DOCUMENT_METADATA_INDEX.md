@@ -109,8 +109,9 @@ note: {适用范围或注意事项}
 | 模块 | 目录/文件 | 说明 |
 |---|---|---|
 | 根入口 | `README.md`、`AGENTS.md`、`project.yaml`、`DOCUMENT_METADATA_INDEX.md` | 项目入口、AI 协作、元数据 |
+| Agent 入口 | `.agents/skills/` | 低噪声统一 Agent 技能与命令入口 |
 | 工程规则 | `rules/` | 代码、目录、安全、测试、环境、发布等规则 |
-| 产品与架构文档 | `docs/00-*` 到 `docs/07-*` | 产品、架构、部署、API、数据库、兼容、媒体、对象存储 |
+| 产品与架构文档 | `docs/00-*` 到 `docs/08-*` | 产品、架构、部署、API、数据库、兼容、媒体、对象存储、生产镜像发布 |
 | 专项标准 | `docs/standards/` | API、认证、错误码、上传、测试等标准 |
 | 兼容模块 | `compatibility/` | 端设备、数据库、对象存储等独立兼容适配说明 |
 | 需求治理 | `issues/requirements/` | 需求捕获、PRD、验收、追踪 |
@@ -139,6 +140,7 @@ note: {适用范围或注意事项}
 | `docs/05-compatibility-matrix.md` | 兼容文档 | 支持矩阵和验证要求 | 产品形态 / 技术栈 | 兼容承诺变化时更新 | `{DOCS_OWNER}` | 条件 |
 | `docs/06-video-asset-management.md` | 媒体文档 | 视频/富媒体资产管理 | 媒体需求 | 媒体能力变化时更新 | `{DOCS_OWNER}` | 条件 |
 | `docs/07-object-storage-strategy.md` | 存储文档 | 对象存储策略 | 存储需求 / 部署配置 | 存储策略变化时更新 | `{DOCS_OWNER}` | 条件 |
+| `docs/08-production-image-release.md` | 发布文档 | 生产镜像包构建与部署 | 部署策略 / 发布记录 | 镜像构建、交付或部署流程变化时更新 | `{DOCS_OWNER}` | 条件 |
 
 ## 5.1 兼容性模块清单 `[通用 + 条件启用]`
 
@@ -218,6 +220,13 @@ note: {适用范围或注意事项}
 | `docker-compose.yml` | 配置 | 本地容器编排 | 部署策略 | 服务拓扑变化时更新 | 条件 |
 | `deploy/` | 配置 | 部署配置 | 部署策略 | 部署方式变化时更新 | 条件 |
 | `scripts/validate-directory-structure.py` | 脚本 | 目录结构校验 | 目录规则 | 目录规则变化时更新 | 是 |
+| `scripts/validate-template-sync.py` | 脚本 | 主模板与初始化资产同步校验 | 模板治理 | 模板同步规则变化时更新 | 是 |
+| `scripts/validate-agent-context-budget.py` | 脚本 | Agent 技能上下文预算校验 | Token 优化治理 | Agent 命令或上下文预算规则变化时更新 | 是 |
+| `scripts/extract-ai-usage.py` | 脚本 | AI usage 采集 CLI 入口 | Token 上报治理 | usage 采集参数、输出格式或 session 解析规则变化时更新 | 是 |
+| `scripts/ai_usage.py` | 脚本模块 | 解析本地 session JSONL 并生成脱敏 command usage / sprint snapshot | Token 上报治理 | token 字段、归因规则、脱敏规则或快照格式变化时更新 | 是 |
+| `scripts/sync-workflow-status.py` | 脚本 | Workflow Sync 轻入口 | 工作流治理 | 需求、BUG、Sprint、OpenSpec 状态同步规则变化时更新 | 是 |
+| `scripts/workflow_sync/` | 脚本模块 | Workflow Sync 实现模块 | 工作流治理 | 状态派生、路径解析或文档 patch 规则变化时更新 | 是 |
+| `.agents/skills/` | Agent 技能 | source-command、OpenSpec、workflow-sync 统一入口 | Agent 工作流治理 | 命令语义、上下文预算或工作流规则变化时更新 | 是 |
 | `{CUSTOM_SCRIPT_PATH}` | 脚本 | `{CUSTOM_SCRIPT_PURPOSE}` | `{CUSTOM_SCRIPT_SOURCE}` | `{CUSTOM_SCRIPT_UPDATE_METHOD}` | `{AI_EDIT_ALLOWED}` |
 
 ## 9. 条件启用模块 `[个性化]`
