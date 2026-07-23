@@ -138,4 +138,4 @@ Frontmatter **MUST** 含 `created_at`、`updated_at`；更新 trace 时刷新 `u
 
 ## 8. 参考命令
 
-对应 Agent 工具入口中的 `source-command-bug-*` 技能说明。
+对应 Agent 工具入口中的 `bug-*` 技能说明。

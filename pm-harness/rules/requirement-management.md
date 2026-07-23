@@ -178,4 +178,4 @@ related_requirements: []
 
 ## 8. 参考命令
 
-对应 Agent 工具入口中的 `source-command-req-*` 技能说明。
+对应 Agent 工具入口中的 `req-*` 技能说明。

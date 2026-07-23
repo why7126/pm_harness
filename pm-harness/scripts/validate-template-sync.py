@@ -37,6 +37,12 @@ SYNC_PATHS = [
 
 errors = []
 
+
+def mapped_asset_path(base: Path, rel_item: Path) -> Path:
+    if base.name == ".agents" and rel_item.name == "SKILL.md":
+        return base / rel_item.with_name("SKILL.template.md")
+    return base / rel_item
+
 for rel in SYNC_PATHS:
     left = MAIN / rel
     right = ASSET / rel
@@ -54,7 +60,7 @@ for rel in SYNC_PATHS:
         if item.is_dir():
             continue
         rel_item = item.relative_to(left)
-        other = right / rel_item
+        other = mapped_asset_path(right, rel_item)
         if item.name == ".DS_Store" or "__pycache__" in item.parts or item.suffix == ".pyc":
             errors.append(f"主模板包含缓存文件: {rel}/{rel_item}")
             continue

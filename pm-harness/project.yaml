@@ -179,11 +179,7 @@ ai:
   document_governance_required: true
   metadata_style: YAML Frontmatter
   agent_tools:
-    cursor: true
-    claude: true
-    codex: true
-    kiro: true
-    opencode: true
+    agents_skills: true
   default_commands:
     intake:
       - /capture
@@ -207,6 +203,16 @@ ai:
       - /sprint-apply
       - /sprint-exps
       - /sprint-archive
+    miniapp:
+      - /miniapp-env
+      - /miniapp-check
+      - /miniapp-prepare
+      - /miniapp-confirm
+      - /miniapp-restore
+    release:
+      - /release-propose
+      - /release-prepare
+      - /release-publish
     bootstrap:
       - /initialize-project
       - /build-design-system
@@ -226,6 +232,7 @@ governance:
   change_source: "openspec/changes"
   spec_source: "openspec/specs"
   iteration_source: "iterations"
+  release_source: "releases"
   docs_source: "docs"
   rules_source: "rules"
   standards_source: "docs/standards"

@@ -12,11 +12,6 @@ REQUIRED_RULE = "rules/agent-context-budget.md"
 
 SKILL_DIRS = [
     ROOT / ".agents" / "skills",
-    ROOT / ".claude" / "skills",
-    ROOT / ".codex" / "skills",
-    ROOT / ".cursor" / "skills",
-    ROOT / ".kiro" / "skills",
-    ROOT / ".opencode" / "skills",
 ]
 
 # Patterns that are risky when written as a positive/default instruction.
@@ -50,7 +45,9 @@ def iter_skill_paths() -> list[Path]:
     paths: list[Path] = []
     for directory in SKILL_DIRS:
         if directory.exists():
-            paths.extend(directory.glob("source-command-*/SKILL.md"))
+            for path in list(directory.glob("*/SKILL.md")) + list(directory.glob("*/SKILL.template.md")):
+                if path.parent.name not in {"openspec-apply-change", "openspec-archive-change", "openspec-explore", "openspec-propose", "workflow-sync"}:
+                    paths.append(path)
     return sorted(paths)
 
 
@@ -79,7 +76,7 @@ def validate_skill(path: Path) -> list[str]:
 def main() -> int:
     skill_paths = iter_skill_paths()
     if not skill_paths:
-        print("未找到 source-command 技能文件；跳过 Agent 上下文预算技能校验。")
+        print("未找到命令技能文件；跳过 Agent 上下文预算技能校验。")
         return 0
 
     errors: list[str] = []
@@ -92,7 +89,7 @@ def main() -> int:
             print(f"- {error}")
         return 1
 
-    print(f"Agent 上下文预算校验通过：{len(skill_paths)} 个 source-command 技能均已接入预算规则。")
+    print(f"Agent 上下文预算校验通过：{len(skill_paths)} 个命令技能均已接入预算规则。")
     return 0
 
 

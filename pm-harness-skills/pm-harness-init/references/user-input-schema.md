@@ -28,10 +28,9 @@
 | 12 | 前端技术栈 | `FRONTEND_STACK` | 单选：`React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`。
 | 13 | 主关系型数据库 | `DB_PRIMARY`、`DATABASE_STACK` | 单选：`SQLite`、`MySQL`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `SQLite`。
 | 14 | 信创数据库 | `XINCHUANG_DATABASES` | 多选：`无`、`达梦`、`海量`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；`无` 与 `达梦/海量/Postgresql` 互斥。
-| 15 | 编码 Agent 工具 | `ENABLED_AGENT_TOOLS`、`PRIMARY_AGENT_TOOL` | 多选：`Codex`、`Claude Code`、`Cursor`、`OpenCode`、`Kiro`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；默认选中 `Codex`。`PRIMARY_AGENT_TOOL` 默认取第一个已选标准工具；仅选择“其他”时取其填写值。
-| 16 | UI 设计 | `UI_DESIGN_INPUT_MODE`、`UI_DESIGN_SOURCE_PATH`、`UI_DESIGN_SOURCE_CONTENT`、`UI_STYLE_BRIEF` | 二选一：`上传 ui-design.md` 或 `手工输入 UI 设计风格`。上传时读取完整文档；手工输入时显示下方的填写引导。 | 必填；两种方式必须且只能选择一种。
+| 15 | UI 设计 | `UI_DESIGN_INPUT_MODE`、`UI_DESIGN_SOURCE_PATH`、`UI_DESIGN_SOURCE_CONTENT`、`UI_STYLE_BRIEF` | 二选一：`上传 ui-design.md` 或 `手工输入 UI 设计风格`。上传时读取完整文档；手工输入时显示下方的填写引导。 | 必填；两种方式必须且只能选择一种。
 
-> 用户原始编号中“核心能力”和“产品竞品”均标为 3。为保证问询顺序和变量可追踪性，schema 内连续编号；加上新增产品编号与 UI 设计，共 16 个输入步骤。
+> 用户原始编号中“核心能力”和“产品竞品”均标为 3。为保证问询顺序和变量可追踪性，schema 内连续编号；加上新增产品编号与 UI 设计，共 15 个输入步骤。
 
 ### UI 设计输入分支
 
@@ -86,9 +85,9 @@
 - `DATABASE_STACK` 由 `DB_PRIMARY` 与 `XINCHUANG_DATABASES` 组合生成；若信创数据库包含主库同名项，保留一次并在兼容矩阵中标注“主库兼容目标”。
 - `LOCAL_MODEL_INCLUDED=包含` 时：`HAS_ALGORITHM=true`、`AI_OR_ALGORITHM_ENABLED=true`、`MODEL_ASSET_POLICY=models/ 本地模型资产，具体模型待确认`；否则均为 `false` 或 `不适用`。
 
-### Agent 标准化
+### Agent 技能入口
 
-依照 [agent-tool-mapping.md](agent-tool-mapping.md) 标准化已选工具。`MULTI_AGENT_ENABLED` 在已选标准工具超过一个时为 `true`；`PRIMARY_AGENT_TOOL` 是输出项目的主要入口，命令模板仍以 `agent-tool-mapping.md` 规定的事实源渲染，再同步到其它已选工具目录。
+固定使用 `.agents/skills/` 作为唯一 Agent 技能入口。初始化流程不得询问、生成或同步 `.claude/`、`.codex/`、`.cursor/`、`.kiro/`、`.opencode/` 等兼容工具目录。
 
 ### UI 设计派生
 
@@ -105,19 +104,19 @@
 | 业务定位 | `BUSINESS_DOMAIN`、`OUT_OF_SCOPE`、`DOMAIN_TERMS` | 由产品描述、核心能力、竞品与核心竞争力推导；不确定部分标记 `待确认`。 |
 | 基础架构 | `HAS_BACKEND`、`HAS_API_SERVICE`、`API_ENABLED` | 默认启用后端与 REST API，以匹配默认后端栈；选择其它栈时仍保持 API 需求，框架细节待确认。 |
 | 前端能力与 UI | `HAS_FRONTEND`、`HAS_WEB`、`HAS_WECHAT_MINIAPP`、`HAS_MOBILE`、`HAS_DESKTOP`、`UI_STACK`、`DESIGN_SYSTEM_ENABLED` | 由产品形态、管理后台与 UI 设计输入分支派生。 |
-| Agent | `MULTI_AGENT_ENABLED`、`AGENT_COMMAND_SYNC_POLICY` | 由已选工具派生；以主 Agent 的命令语义为事实源，向其它已选工具同步。 |
+| Agent | `AGENT_SKILL_ENTRYPOINT` | 固定为 `.agents/skills/`，不再派生多 Agent 工具目录或命令同步策略。 |
 | 固定目录 | `REQ_ROOT_DIR`、`BUG_ROOT_DIR`、`SPRINT_ROOT_DIR`、`CHANGE_ROOT_DIR`、`SPEC_ROOT_DIR`、`TEST_ROOT_DIR` | 固定为 `issues/requirements`、`issues/bugs`、`iterations`、`openspec/changes`、`openspec/specs`、`tests`。 |
 | 治理与验证 | OpenSpec、需求、Bug、Sprint、项目基线、文档和测试治理 | 默认启用；验证命令由已选技术栈生成。 |
 | 部署 | `DEPLOYMENT_STACK`、`DOCKER_COMPOSE_ENABLED` | 默认 `docker-compose` 与本地开发；生产配置标记 `待确认`。 |
 
 ## 推导配置摘要
 
-完成第 16 步后，先输出以下摘要供用户确认或修正，再生成工程：
+完成第 15 步后，先输出以下摘要供用户确认或修正，再生成工程：
 
 1. 产品定位：产品名称、产品编号、用户群体、解决问题、核心能力、竞品、核心竞争力。
 2. 产品范围：产品形态、管理后台、对象存储类型、本地模型。
 3. 技术方案：后端、前端、主关系型数据库、信创数据库及其自动派生配置。
-4. Agent：已启用工具、主 Agent、命令同步策略。
+4. Agent：固定 `.agents/skills/` 技能入口。
 5. UI 设计：输入方式；上传模式展示严格遵循的文档来源，手工模式展示 AI 推导的设计方案摘要。
 6. AI 推导项与所有 `待确认` 项。
 

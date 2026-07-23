@@ -1,0 +1,10 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Product Releases",
+  "navigation": [
+    {
+      "group": "Releases",
+      "pages": []
+    }
+  ]
+}

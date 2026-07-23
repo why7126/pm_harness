@@ -226,7 +226,7 @@ note: {适用范围或注意事项}
 | `scripts/ai_usage.py` | 脚本模块 | 解析本地 session JSONL 并生成脱敏 command usage / sprint snapshot | Token 上报治理 | token 字段、归因规则、脱敏规则或快照格式变化时更新 | 是 |
 | `scripts/sync-workflow-status.py` | 脚本 | Workflow Sync 轻入口 | 工作流治理 | 需求、BUG、Sprint、OpenSpec 状态同步规则变化时更新 | 是 |
 | `scripts/workflow_sync/` | 脚本模块 | Workflow Sync 实现模块 | 工作流治理 | 状态派生、路径解析或文档 patch 规则变化时更新 | 是 |
-| `.agents/skills/` | Agent 技能 | source-command、OpenSpec、workflow-sync 统一入口 | Agent 工作流治理 | 命令语义、上下文预算或工作流规则变化时更新 | 是 |
+| `.agents/skills/` | Agent 技能 | 命令技能、OpenSpec、workflow-sync 统一入口 | Agent 工作流治理 | 命令语义、上下文预算或工作流规则变化时更新 | 是 |
 | `{CUSTOM_SCRIPT_PATH}` | 脚本 | `{CUSTOM_SCRIPT_PURPOSE}` | `{CUSTOM_SCRIPT_SOURCE}` | `{CUSTOM_SCRIPT_UPDATE_METHOD}` | `{AI_EDIT_ALLOWED}` |
 
 ## 9. 条件启用模块 `[个性化]`

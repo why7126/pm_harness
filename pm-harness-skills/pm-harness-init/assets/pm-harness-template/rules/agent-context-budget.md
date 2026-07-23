@@ -45,18 +45,14 @@ AI 执行任务时 MUST NOT：
 --glob '!**/coverage/**'
 --glob '!openspec/changes/archive/**'
 --glob '!src/**/generated/**'
---glob '!.claude/**'
---glob '!.codex/**'
---glob '!.cursor/**'
---glob '!.kiro/**'
---glob '!.opencode/**'
+--glob '!.agents/**'
 ```
 
 如当前任务明确要求分析 Harness、模板工程、agent 资产、历史归档或生成物，MAY 放开对应排除项，但 MUST 先说明原因，并优先输出清单或命中数。
 
 ## 4. Harness 与模板工程
 
-- `pm-harness*/`、Harness 模板 assets、历史 agent 目录默认视为高噪音上下文。
+- `pm-harness*/`、Harness 模板 assets、`.agents/skills/` 默认视为高噪音上下文。
 - 非 Harness 任务不得读取 Harness 模板资产全文。
 - 需要清理或校验 Harness 资产时，先限定具体路径与文件类型，再分段读取。
 - 不应把长脚本、长批准命令或模板资产内容复制进技能文件；应引用脚本路径或规则文档。

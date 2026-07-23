@@ -45,7 +45,7 @@ rules/agent-context-budget.md
 | API 变更 | `rules/api.md`、`docs/03-api-index.md`、OpenAPI 来源、客户端生成配置 |
 | DB / 数据模型 | `rules/database.md`、`docs/04-database-design.md` 相关表段、schema / migration 文件 |
 | UI / Design System | `rules/ui-design.md`、前端 README、Design Token、组件库、视觉验收入口 |
-| Docker / 发布部署 | `rules/environment.md`、`rules/port-management.md`、`rules/release.md`、`docs/02-deployment.md`、`docker-compose*.yml` |
+| Docker / 发布部署 | `rules/environment.md`、`rules/port-management.md`、`rules/release.md`、`docs/02-deployment.md`、`docker-compose*.yml`、`releases/README.md` |
 | data / media / object storage | `rules/data-management.md`、`rules/media.md`、`rules/object-storage.md`、相关存储策略文档 |
 | 安全 / 权限 / 敏感数据 | `rules/security.md`，以及 API、数据、部署相关规则 |
 | 兼容性 / 私有化 | `rules/compatibility.md`、`compatibility/`、部署矩阵 |
@@ -53,15 +53,15 @@ rules/agent-context-budget.md
 
 若文件不存在，应说明缺失并使用最接近的已有规则；不得编造不存在的规则内容。
 
-## 3. Agent 工具入口
+## 3. Agent 技能入口
 
-模板默认以 `.agents/skills/` 作为低噪声统一命令入口：
+本项目只保留 `.agents/skills/` 作为唯一 AI 技能入口：
 
 ```text
 .agents/skills/
 ```
 
-历史工具目录（如 `.claude/`、`.codex/`、`.cursor/`、`.kiro/`、`.opencode/`）如需保留，必须与 `.agents/skills/` 的输入、输出、是否允许生成代码和状态同步语义一致。新增或移除工具入口时，必须同步更新 `rules/directory-structure.md`、`scripts/validate-directory-structure.py` 和模板同步校验。
+不得新增或恢复 `.claude/`、`.codex/`、`.cursor/`、`.kiro/`、`.opencode/` 等兼容工具目录。新增、删除或修改命令时，只更新 `.agents/skills/<command-name>/SKILL.md` 和相关规则/脚本。
 
 ## 4. 开发流程总览
 
@@ -89,6 +89,8 @@ idea / bug / change
 | 缺陷 | `/bug-capture` -> `/bug-generate` -> `/bug-complete` -> `/bug-review --approve` -> `/bug-opsx` |
 | Change | `/opsx-propose`、`/opsx-explore`、`/opsx-apply`、`/opsx-archive` |
 | Sprint | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive`、`/sprint-exps` |
+| MiniApp | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` |
+| Release | `/release-propose <version>`、`/release-prepare <version>`、`/release-publish <version>` |
 | Bootstrap | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
 
 工作流状态变化后运行：
@@ -137,7 +139,7 @@ python scripts/promote-issue-stage.py --to archive [--change change-id] [--sprin
 | OpenSpec 变更 | `openspec/changes/<change-id>/` |
 | 正式规格 | `openspec/specs/<capability>/spec.md` |
 | 复盘 / 事故知识 | `docs/knowledge-base/` |
-| 发布对象 | `releases/vX.Y.Z/`（如项目启用） |
+| 发布对象 | `releases/vX.Y.Z/` |
 | 本地数据 | `data/`（不得提交真实客户数据和运行时数据库） |
 
 ## 9. 输出要求
