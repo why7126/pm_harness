@@ -1,6 +1,6 @@
 ---
-name: pm-harness-adopt-existing
-description: 将 ProjectSoulKing 优化后的 PM Harness / OpenSpec + AI Agent 规范工程非破坏式接入存量项目。凡用户要把 harness 工程应用到已有代码仓库、迁移存量项目到 pm-harness、给旧项目补齐 AGENTS/rules/docs/issues/iterations/openspec/commands/skills，或把 ProjectSoulKing Harness 优化成果落到现有项目中时必须使用；重点是先盘点现状、保护业务代码、按需合并治理资产、项目化渲染文档并完成校验，而不是覆盖式初始化。
+name: pm-harness-refactor
+description: 将 ProjectSoulKing 优化后的 PM Harness / OpenSpec + AI Agent 规范工程非破坏式接入、重构或治理化改造存量项目。凡用户要把 harness 工程应用到已有代码仓库、迁移存量项目到 pm-harness、给旧项目补齐 AGENTS/rules/docs/issues/iterations/openspec/commands/skills，或把 ProjectSoulKing Harness 优化成果落到现有项目中时必须使用；重点是先盘点现状、保护业务代码、按需合并治理资产、项目化渲染文档并完成校验，而不是覆盖式初始化。
 ---
 
 # PM Harness 存量项目接入技能
