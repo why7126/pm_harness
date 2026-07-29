@@ -56,6 +56,8 @@ iterations/sprint-xxx/   # 遗留，deprecated
 | **change** | **未归档**：迭代规划、开发、验收进行中 | `planning`、`in_progress` |
 | **archive** | **已完成归档**：Sprint 内 Change 已全部 `/opsx-archive`，迭代验收与发布说明已收尾 | `completed` |
 
+`planning` 是 `/sprint-propose` 成功后的正式 Sprint 状态，表示范围已纳入但尚未批量执行；它 **不是** “没有启动 Sprint”。只要 Sprint 四件套已落在 `iterations/change/<sprint>/` 且范围、Issue trace、Change trace 已同步一致，`/opsx-apply` MUST 允许解析并执行该 planning Sprint 中的 Change。
+
 ## 3.1 Sprint 容量门禁（MUST）
 
 `/sprint-propose` 在生成正式四件套或更新 REQ/BUG/Change trace 前 MUST 计算候选范围的容量占用率：
@@ -69,6 +71,8 @@ capacity_usage = estimated_person_days / capacity_person_days
 - 当 `capacity_person_days < estimated_person_days <= capacity_person_days * 1.2` 时，MAY 继续生成 Sprint，但 MUST 在 `sprint.md` 记录容量风险、fix 缓冲影响和延后项建议。
 - 当 `estimated_person_days <= capacity_person_days` 时，按既有 Review Gate、Readiness Gate 和 Scope 规则继续。
 
+`/sprint-propose` 一旦通过门禁并生成正式四件套，MUST 立即执行 Workflow Sync，将正式纳入的 REQ/BUG `trace.md` 同步为 `status: in_sprint` 与 `iteration: <sprint-id>`；不得留下 `approved + iteration` 的半纳入状态。
+
 ## 3.2 opsx-apply 迭代纳入门禁（MUST）
 
 `/opsx-apply <change-id>` 对来源于 REQ/BUG 的 Change 执行前，目标 Change **MUST** 已纳入某个 `sprint-xxx` 正式范围。门禁判定以 Sprint 四件套与 Issue trace 双向一致为准：
@@ -77,6 +81,7 @@ capacity_usage = estimated_person_days / capacity_person_days
 - 若 Change 关联 REQ，`requirements[]` MUST 包含对应 `REQ-*`；若关联 BUG，`bugs[]` MUST 包含对应 `BUG-*`。
 - 关联 REQ/BUG `trace.md` MUST 存在 `iteration: sprint-xxx`，且状态为 `in_sprint` 或后续交付态。
 - `python scripts/sync-workflow-status.py --event opsx.apply --change <change-id> --sprint auto --dry-run` 或等价解析 MUST 能定位到该 Sprint；若报告 sprint skipped / unresolved，MUST 停止 `/opsx-apply`。
+- 若解析到的 Sprint 为 `status: planning`，仍视为通过迭代纳入门禁；不得要求额外 `/sprint-apply` 或手工“启动 Sprint”后才允许 `/opsx-apply`。
 
 未通过时的修复路径：先运行 `/sprint-propose` 将 REQ/BUG/Change 纳入 `iterations/change/<sprint>/`，完成 Workflow Sync 后再重新执行 `/opsx-apply`。
 
@@ -125,9 +130,9 @@ lifecycle_stage: change | archive
 | `iterations/archive/` | 已结束 Sprint 四件套（历史保留） |
 | `issues/*/review/` | 已评审、开发中 REQ/BUG |
 | `openspec/changes/` | 进行中的 Change |
-| `openspec/changes/archive/` | 已归档 Change |
+| `openspec/archive/` | 已归档 Change |
 
-Sprint 归档 **MUST** 在 `/sprint-archive` 时同步：Change → `openspec/changes/archive/`，关联 REQ/BUG → `issues/*/archive/`（若尚未迁入）。
+Sprint 归档 **MUST** 在 `/sprint-archive` 时同步：Change → `openspec/archive/`，关联 REQ/BUG → `issues/*/archive/`（若尚未迁入）。
 
 ## 8. AI 检查清单
 

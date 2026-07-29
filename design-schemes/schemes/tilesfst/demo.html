@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TilesFST / STONEX UI Demo</title>
+<style>
+  :root {
+    --page: #18160F;
+    --surface: #211E16;
+    --deep: #100F0A;
+    --text: #EDE8DF;
+    --secondary: rgba(237,232,223,.5);
+    --muted: rgba(237,232,223,.3);
+    --subtle: rgba(237,232,223,.25);
+    --gold: #C8A055;
+    --gold-muted: rgba(200,160,85,.12);
+    --gold-border: rgba(200,160,85,.5);
+    --hot: #E07050;
+    --line: rgba(255,255,255,.07);
+    --line-strong: rgba(255,255,255,.18);
+    --card-bg: rgba(33,30,22,.72);
+    --font-brand: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 88% 8%, rgba(200,160,85,.08), transparent 24%),
+      radial-gradient(circle at 24% 18%, rgba(200,160,85,.12), transparent 28%),
+      linear-gradient(135deg, var(--page), var(--deep));
+    color: var(--text);
+    font-family: var(--font-sans);
+    letter-spacing: 0;
+  }
+  .shell { display: grid; grid-template-columns: 264px minmax(0, 1fr); min-height: 100vh; }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 30px 10px 18px;
+    border-right: .5px solid var(--line);
+    background:
+      radial-gradient(circle at 20% 8%, rgba(200,160,85,.1), transparent 30%),
+      linear-gradient(180deg, rgba(255,255,255,.025), transparent 28%),
+      rgba(16,15,10,.76);
+    display: flex;
+    flex-direction: column;
+  }
+  .shell.collapsed { grid-template-columns: 72px minmax(0, 1fr); }
+  .sidebar-head { position: relative; padding-bottom: 28px; }
+  .brand { display: grid; grid-template-columns: 40px 1fr; gap: 6px; align-items: center; padding-right: 40px; }
+  .logo-img {
+    width: 40px; height: 40px; border-radius: 3px; border: .5px solid var(--line);
+    background: linear-gradient(135deg, var(--surface), rgba(200,160,85,.28));
+    display: grid; place-items: center; color: var(--gold); font-family: var(--font-brand); font-size: 24px;
+  }
+  .brand-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .logo-text { color: var(--gold); font-family: var(--font-brand); font-size: 15px; letter-spacing: .16em; font-weight: 600; white-space: nowrap; }
+  .brand-subtitle { display: block; margin-top: 5px; color: var(--secondary); font-size: 12px; font-weight: 500; }
+  .version { display: inline-flex; align-items: center; height: 18px; padding: 2px 7px; border: .5px solid var(--line-strong); border-radius: 2px; background: rgba(255,255,255,.03); color: var(--secondary); font-size: 10px; font-weight: 500; letter-spacing: .04em; line-height: 1; white-space: nowrap; }
+  .sidebar-toggle { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); width: 28px; height: 28px; border: .5px solid var(--line-strong); border-radius: 2px; background: rgba(255,255,255,.03); color: var(--secondary); cursor: pointer; font-size: 16px; line-height: 1; padding: 0; }
+  .sidebar-toggle:hover { color: var(--text); border-color: var(--line-strong); }
+  .nav-title { padding: 0 14px; margin: 0 0 10px; color: var(--muted); font-size: 10px; letter-spacing: .18em; font-weight: 500; }
+  .nav-section { margin-bottom: 26px; }
+  .nav-item {
+    height: 40px; margin-bottom: 4px; padding: 0 12px; border-radius: 3px; border: .5px solid transparent;
+    display: flex; align-items: center; gap: 10px; color: var(--secondary); font-size: 13px;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,.035); border-color: var(--line); }
+  .nav-item.active { position: relative; color: var(--gold); background: var(--gold-muted); border-color: rgba(200,160,85,.26); }
+  .nav-item.active::before { content: ""; position: absolute; left: 0; width: 2px; height: 16px; border-radius: 2px; background: var(--gold); }
+  .nav-icon { width: 16px; opacity: .72; text-align: center; }
+  .theme { margin-top: auto; padding: 14px 0 16px; border-top: .5px solid var(--line); color: var(--secondary); font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .select { min-width: 118px; border: 1px solid rgba(255,255,255,.1); border-radius: 2px; background: var(--surface); color: var(--text); padding: 7px 10px; }
+  .user { padding-top: 16px; border-top: .5px solid var(--line); }
+  .user-trigger {
+    min-height: 56px; padding: 10px; display: grid; grid-template-columns: 34px 1fr 14px; gap: 10px; align-items: center;
+    border: .5px solid transparent; border-radius: 3px; color: inherit;
+  }
+  .avatar { width: 34px; height: 34px; border-radius: 3px; border: .5px solid rgba(200,160,85,.32); background: var(--gold-muted); color: var(--gold); display: grid; place-items: center; font-size: 12px; }
+  .user-name { display: block; font-size: 12px; }
+  .user-email { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
+  .chevron { color: var(--muted); font-size: 14px; line-height: 1; transform: rotate(180deg); transition: transform .18s ease; }
+  .user-trigger[aria-expanded="true"] .chevron { transform: rotate(0deg); }
+  .shell.collapsed .sidebar { align-items: center; padding: 16px 10px 18px; }
+  .shell.collapsed .sidebar-head { display: flex; flex-direction: column; align-items: center; padding-bottom: 16px; }
+  .shell.collapsed .brand { display: flex; padding: 0; }
+  .shell.collapsed .sidebar-toggle { position: static; transform: none; margin-top: 8px; }
+  .shell.collapsed .brand-copy,
+  .shell.collapsed .nav-title,
+  .shell.collapsed .nav-label,
+  .shell.collapsed .theme span,
+  .shell.collapsed .user span:not(.avatar),
+  .shell.collapsed .chevron { display: none; }
+  .shell.collapsed .nav-item { justify-content: center; padding: 0; }
+  main { height: 100vh; overflow: auto; padding: 24px 24px 48px; }
+  .content { max-width: min(1440px, 100%); margin: 0 auto; }
+  .hero {
+    position: relative; overflow: hidden; border: .5px solid var(--line); border-radius: 3px; background: var(--card-bg);
+    backdrop-filter: blur(18px); padding: 28px; display: grid; grid-template-columns: minmax(0, 1.1fr) 360px; gap: 28px;
+  }
+  .eyebrow { color: var(--gold); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; margin: 0 0 16px; }
+  h1 { margin: 0; font-size: 38px; line-height: 1.3; font-weight: 400; }
+  .desc { max-width: 620px; margin: 18px 0 0; color: var(--secondary); font-size: 13px; line-height: 1.8; }
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .btn { height: 44px; padding: 0 24px; border-radius: 2px; border: 1px solid var(--line-strong); background: transparent; color: var(--secondary); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; }
+  .btn.primary { border-color: var(--gold); background: var(--gold); color: var(--page); }
+  .btn.inquiry { border-color: var(--gold-border); color: var(--gold); background: transparent; }
+  .material-board { width: 280px; height: 280px; display: grid; grid-template-columns: 1.1fr .9fr; grid-template-rows: 1fr 1fr; gap: 3px; transform: rotate(-2deg); justify-self: center; align-self: center; }
+  .tile { position: relative; border-radius: 2px; overflow: hidden; border: .5px solid rgba(255,255,255,.12); box-shadow: 0 24px 80px rgba(0,0,0,.28); }
+  .tile.large { grid-row: span 2; background: linear-gradient(120deg, rgba(255,255,255,.12), transparent 18%, rgba(255,255,255,.08) 28%, transparent 46%), linear-gradient(45deg, #27231A, #100F0A 48%, #3A3020); }
+  .tile.dark { background: linear-gradient(135deg, transparent 0 38%, rgba(255,255,255,.14) 39% 40%, transparent 41%), linear-gradient(45deg, #100F0A, #211E16); }
+  .tile.gold { background: radial-gradient(circle at 20% 30%, rgba(255,255,255,.35), transparent 10%), linear-gradient(135deg, #9D7736, #100F0A 52%, #C8A055); }
+  .tile label { position: absolute; left: 12px; bottom: 10px; font-size: 9px; letter-spacing: .12em; color: rgba(255,255,255,.7); }
+  .section { margin-top: 28px; }
+  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .section-title { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: .02em; }
+  .section-note { color: var(--muted); font-size: 11px; }
+  .metric-grid, .quick-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .metric-card, .quick-card, .table-card, .filter-card {
+    border: .5px solid var(--line); background: var(--card-bg); backdrop-filter: blur(18px); border-radius: 3px;
+  }
+  .metric-card { min-height: 118px; padding: 20px; position: relative; overflow: hidden; }
+  .metric-card::after { content: ""; position: absolute; right: -28px; top: -36px; width: 90px; height: 90px; border-radius: 50%; background: rgba(200,160,85,.08); }
+  .metric-label { color: var(--secondary); font-size: 12px; }
+  .metric-value { margin-top: 18px; color: var(--gold); font-size: 28px; line-height: 1; font-weight: 500; }
+  .metric-desc { margin-top: 10px; color: var(--muted); font-size: 11px; }
+  .quick-card { min-height: 132px; padding: 18px; }
+  .quick-icon { width: 32px; height: 32px; border-radius: 3px; border: .5px solid rgba(200,160,85,.32); background: var(--gold-muted); color: var(--gold); display: grid; place-items: center; margin-bottom: 18px; }
+  .quick-title { font-size: 14px; font-weight: 500; }
+  .quick-desc { margin-top: 8px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+  .filter-card { padding: 16px; display: grid; grid-template-columns: 1fr 180px 120px; gap: 12px; }
+  .input, .select-like { height: 44px; border: .5px solid var(--line-strong); border-radius: 2px; background: transparent; color: var(--text); padding: 0 12px; font: inherit; font-size: 12px; outline: none; }
+  .input:focus { border-color: rgba(200,160,85,.7); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 15px 18px; text-align: left; border-bottom: .5px solid var(--line); font-size: 12px; }
+  th { color: var(--muted); font-weight: 400; letter-spacing: .08em; }
+  td { color: var(--secondary); }
+  tbody tr:hover { background: rgba(255,255,255,.025); }
+  .name-cell { color: var(--text); }
+  .badge { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: 1px; background: var(--gold-muted); color: var(--gold); font-size: 10px; letter-spacing: .04em; }
+  .badge.hot { background: rgba(196,80,50,.15); color: var(--hot); }
+  .palette { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+  .swatch { border: .5px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--card-bg); }
+  .chip { height: 54px; }
+  .swatch div:last-child { padding: 9px; font-size: 11px; color: var(--secondary); line-height: 1.5; }
+  footer { padding: 28px 0 0; color: var(--muted); font-size: 11px; }
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: 72px 1fr; }
+    .brand-copy, .nav-title, .nav-label, .theme span, .user span:not(.avatar), .chevron { display: none; }
+    .sidebar { align-items: center; padding: 16px 10px 18px; }
+    .sidebar-head { display: flex; flex-direction: column; align-items: center; padding-bottom: 16px; }
+    .brand { display: flex; padding: 0; }
+    .sidebar-toggle { position: static; transform: none; margin-top: 8px; }
+    .nav-item { justify-content: center; padding: 0; }
+    .hero { grid-template-columns: 1fr; }
+    .metric-grid, .quick-grid, .palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filter-card { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    main { padding: 16px; }
+    .metric-grid, .quick-grid, .palette { grid-template-columns: 1fr; }
+    h1 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+  <div class="shell" id="demoShell">
+    <aside class="sidebar" aria-label="后台导航">
+      <div class="sidebar-head">
+        <div class="brand">
+          <div class="logo-img">F</div>
+          <div class="brand-copy">
+            <div class="brand-row"><span class="logo-text">菲尚特FST</span><span class="version">v0.2</span></div>
+            <span class="brand-subtitle">家居建材资料库</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle" id="demoSidebarToggle" type="button" aria-expanded="true" aria-label="收起侧边栏">‹</button>
+      </div>
+      <nav class="nav-section" aria-label="Operations">
+        <p class="nav-title">OPERATIONS</p>
+        <div class="nav-item active"><span class="nav-icon">⌂</span><span class="nav-label">首页</span></div>
+        <div class="nav-item"><span class="nav-icon">□</span><span class="nav-label">瓷砖 SKU</span></div>
+        <div class="nav-item"><span class="nav-icon">◇</span><span class="nav-label">瓷砖品牌</span></div>
+        <div class="nav-item"><span class="nav-icon">▦</span><span class="nav-label">瓷砖类目</span></div>
+        <div class="nav-item"><span class="nav-icon">⌗</span><span class="nav-label">瓷砖规格</span></div>
+        <div class="nav-item"><span class="nav-icon">▣</span><span class="nav-label">品牌证书</span></div>
+        <div class="nav-item"><span class="nav-icon">▤</span><span class="nav-label">Banner 管理</span></div>
+      </nav>
+      <nav class="nav-section" aria-label="System">
+        <p class="nav-title">SYSTEM</p>
+        <div class="nav-item"><span class="nav-icon">◎</span><span class="nav-label">用户管理</span></div>
+        <div class="nav-item"><span class="nav-icon">⚙</span><span class="nav-label">系统设置</span></div>
+        <div class="nav-item"><span class="nav-icon">≡</span><span class="nav-label">日志审计</span></div>
+      </nav>
+      <div class="theme"><span>主题</span><span class="select">暗色旗舰</span></div>
+      <div class="user">
+        <div class="user-trigger" aria-expanded="false"><span class="avatar">管</span><span><span class="user-name">管理员</span><span class="user-email">admin-account</span></span><span class="chevron">⌃</span></div>
+      </div>
+    </aside>
+    <main>
+      <div class="content">
+        <section class="hero">
+          <div>
+            <p class="eyebrow">STONEX DESIGN SYSTEM</p>
+            <h1>工业石材 · 暗色旗舰风</h1>
+            <p class="desc">TilesFST 的真实设计语言来自瓷砖零售与企业管理场景：深色黑棕背景、品牌金强调、近直角工业圆角、半透明面板、细分割线和中等偏紧凑的数据密度。</p>
+            <div class="actions">
+              <span class="btn primary">主 CTA</span>
+              <span class="btn inquiry">询价描边</span>
+              <span class="btn">次级操作</span>
+            </div>
+          </div>
+          <div class="material-board" aria-label="材质拼贴">
+            <div class="tile large"><label>CALACATTA</label></div>
+            <div class="tile dark"><label>GRAPHITE</label></div>
+            <div class="tile gold"><label>GOLD VEIN</label></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head"><h2 class="section-title">数据概览</h2><span class="section-note">核心主数据</span></div>
+          <div class="metric-grid">
+            <article class="metric-card"><div class="metric-label">SKU 总数</div><div class="metric-value">1,284</div><div class="metric-desc">正在同步商品主数据</div></article>
+            <article class="metric-card"><div class="metric-label">品牌数量</div><div class="metric-value">86</div><div class="metric-desc">含代理与自营品牌</div></article>
+            <article class="metric-card"><div class="metric-label">Banner 数量</div><div class="metric-value">12</div><div class="metric-desc">当前生效 7 个</div></article>
+            <article class="metric-card"><div class="metric-label">用户数量</div><div class="metric-value">48</div><div class="metric-desc">员工与管理员账号</div></article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-head"><h2 class="section-title">快捷操作</h2><span class="section-note">管理端骨架</span></div>
+          <div class="quick-grid">
+            <article class="quick-card"><div class="quick-icon">＋</div><div class="quick-title">新增瓷砖 SKU</div><div class="quick-desc">录入规格、图片、价格和上架状态。</div></article>
+            <article class="quick-card"><div class="quick-icon">◇</div><div class="quick-title">维护瓷砖品牌</div><div class="quick-desc">管理品牌资料、Logo 和品牌展示内容。</div></article>
+            <article class="quick-card"><div class="quick-icon">▦</div><div class="quick-title">配置类目树</div><div class="quick-desc">保持两级类目结构和前台筛选一致。</div></article>
+            <article class="quick-card"><div class="quick-icon">▤</div><div class="quick-title">Banner 管理</div><div class="quick-desc">配置首页、品牌页与活动图片入口。</div></article>
+          </div>
+        </section>
+
+        <section class="section filter-card">
+          <input class="input" value="关键词：岩板 / 通体 / 柔光">
+          <div class="select-like">状态：全部</div>
+          <div class="btn primary">搜索</div>
+        </section>
+
+        <section class="section table-card">
+          <table>
+            <thead><tr><th>SKU</th><th>品牌</th><th>规格</th><th>状态</th><th>更新时间</th></tr></thead>
+            <tbody>
+              <tr><td class="name-cell">FST-岩板-900</td><td>菲尚特</td><td>900×1800</td><td><span class="badge">现货</span></td><td>09:42</td></tr>
+              <tr><td class="name-cell">FST-柔光-750</td><td>STONEX</td><td>750×1500</td><td><span class="badge hot">热销</span></td><td>10:18</td></tr>
+              <tr><td class="name-cell">FST-通体-600</td><td>岩境</td><td>600×1200</td><td><span class="badge">新品</span></td><td>11:03</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section">
+          <div class="section-head"><h2 class="section-title">Token Palette</h2><span class="section-note">真实项目 token</span></div>
+          <div class="palette">
+            <div class="swatch"><div class="chip" style="background:#18160F"></div><div>page<br>#18160F</div></div>
+            <div class="swatch"><div class="chip" style="background:#211E16"></div><div>surface<br>#211E16</div></div>
+            <div class="swatch"><div class="chip" style="background:#100F0A"></div><div>deep<br>#100F0A</div></div>
+            <div class="swatch"><div class="chip" style="background:#EDE8DF"></div><div>text<br>#EDE8DF</div></div>
+            <div class="swatch"><div class="chip" style="background:#C8A055"></div><div>brand gold<br>#C8A055</div></div>
+            <div class="swatch"><div class="chip" style="background:#E07050"></div><div>hot/error<br>#E07050</div></div>
+          </div>
+        </section>
+        <footer>scheme_id: tilesfst-ui | source: real local TilesFST project | inferred: false</footer>
+      </div>
+    </main>
+  </div>
+  <script>
+    const demoShell = document.getElementById('demoShell');
+    const demoSidebarToggle = document.getElementById('demoSidebarToggle');
+    demoSidebarToggle.addEventListener('click', () => {
+      const collapsed = demoShell.classList.toggle('collapsed');
+      demoSidebarToggle.textContent = collapsed ? '›' : '‹';
+      demoSidebarToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+      demoSidebarToggle.setAttribute('aria-label', collapsed ? '展开侧边栏' : '收起侧边栏');
+    });
+  </script>
+</body>
+</html>

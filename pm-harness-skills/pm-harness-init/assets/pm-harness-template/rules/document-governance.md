@@ -119,7 +119,7 @@ estimated_person_days: <number>
 
 - `openspec/specs/`：已生效能力；开发中不得直接修改。
 - `openspec/changes/`：开发中的需求、BUG 修复、技术改造。
-- `openspec/changes/archive/`：已完成变更。
+- `openspec/archive/`：已完成变更。
 
 以下变化必须创建 Change：新功能、行为性 BUG 修复、API/数据库/权限/Docker/环境变量/UI/上传存储/测试验收发布治理变化。
 
@@ -128,6 +128,7 @@ estimated_person_days: <number>
 - `iterations/change|archive/<sprint>/sprint.yaml` 的 `requirements[]` / `bugs[]` / `changes[]` MUST 能同时追溯到目标 REQ/BUG 与 Change。
 - 关联 REQ/BUG `trace.md` 的 `iteration` MUST 指向同一个 `sprint-xxx`，且 `status` MUST 为 `in_sprint` 或后续交付态。
 - 若 `python scripts/sync-workflow-status.py --event opsx.apply --change <change-id> --sprint auto --dry-run` 无法解析到 Sprint，MUST 视为门禁失败；先运行 `/sprint-propose` 纳入迭代并完成同步，不得继续实现。
+- `sprint.yaml` `status: planning` 是 `/sprint-propose` 成功后的正式纳入状态；只要双向追溯一致，`/opsx-apply` MUST 允许继续，不得再要求额外“启动 Sprint”。
 - 仅非 REQ/BUG 来源的纯技术治理 Change 可豁免此门禁；豁免原因 MUST 写入执行输出。
 
 Change 推荐结构：

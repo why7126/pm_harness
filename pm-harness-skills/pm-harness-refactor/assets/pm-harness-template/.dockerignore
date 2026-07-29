@@ -1,0 +1,16 @@
+.git
+.gitignore
+**/.DS_Store
+**/__pycache__
+**/.pytest_cache
+**/.venv
+**/node_modules
+**/dist
+*.zip
+.env
+data/runtime
+data/sqlite
+data/uploads
+data/processed
+data/tmp
+data/minio

@@ -4,6 +4,8 @@
   "owner": "release-owner",
   "announcement": "announcement.mdx",
   "formal_scope_only": true,
+  "image_required": false,
+  "image_required_rationale": "No runtime image delivery is required for this release template.",
   "sprints": [],
   "requirements": [],
   "bugs": [],
@@ -56,6 +58,14 @@
     "announcement_preview": {
       "status": "na",
       "rationale": "No announcement preview required yet."
+    },
+    "image_prepare": {
+      "status": "na",
+      "rationale": "image_required is false."
+    },
+    "image_build": {
+      "status": "na",
+      "rationale": "image_required is false."
     }
   }
 }

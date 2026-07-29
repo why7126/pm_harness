@@ -127,12 +127,15 @@ Markdown frontmatter MUST 含 `created_at`、`updated_at`；更新只改 `update
 
 ## Trace Updates
 
-对纳入的 REQ/BUG/Change 更新：
+对正式纳入 `iterations/change/<sprint-id>/` 四件套的 REQ/BUG/Change 更新：
 
 ```text
 trace.md iteration: sprint-xxx
+trace.md status: in_sprint
 openspec/changes/<change>/trace.md（若存在）
 ```
+
+`sprint.yaml` `status: planning` 已表示正式规划完成、尚未开始批量执行；它不是“未启动 Sprint”。`/sprint-propose` 成功后 MUST 通过 Workflow Sync 将纳入项置为 `in_sprint`，使后续 `/opsx-apply --sprint auto` 可直接解析该 planning Sprint。
 
 ## Output
 
@@ -147,5 +150,6 @@ python scripts/sync-workflow-status.py --event sprint.propose --sprint <sprint-i
 ```
 
 - Exit code MUST be `0`。
+- MUST verify included REQ/BUG traces are updated to `status: in_sprint` and `iteration: <sprint-id>`。
 - Print summary Workflow Sync Report；use `--output detail` only for debugging。
 - Do not hand-edit workflow-sync marker blocks。

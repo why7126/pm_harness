@@ -104,11 +104,11 @@ lifecycle_stage: plan | review | archive
 | `issues/*/review` | 已评审、开发中条目 |
 | `issues/*/archive` | 已交付条目（文档保留） |
 | `openspec/changes/` | Change 工件（与 review 阶段并行） |
-| `openspec/changes/archive/` | 已归档 Change |
+| `openspec/archive/` | 已归档 Change |
 | `iterations/change/sprint-xxx/` | 迭代四件套（进行中） |
 | `iterations/archive/sprint-xxx/` | 迭代四件套（已归档） |
 
-阶段目录 **不替代** OpenSpec archive；二者 MUST 在 `/opsx-archive` 时同步闭环（条目 → `issues/*/archive/`，Change → `openspec/changes/archive/`）。
+阶段目录 **不替代** OpenSpec archive；二者 MUST 在 `/opsx-archive` 时同步闭环（条目 → `issues/*/archive/`，Change → `openspec/archive/`）。
 
 ## 8. AI 检查清单
 

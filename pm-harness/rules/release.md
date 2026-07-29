@@ -62,8 +62,26 @@ releases/vX.Y.Z/announcement.mdx
 | 环境变量 | 涉及环境变量时，`.env.example` 与注释已同步 |
 | 产品版本 | 用户可见版本号与发布对象版本一致；如不更新，必须记录原因 |
 | 公告预览 | 公告 build、preview 或等价静态文档校验通过 |
+| 镜像准备 | 当 `image_required=true` 时，`releases/<version>/image-build-plan.json` 已生成、校验通过并被 `release.json` 引用 |
+| 镜像构建 | 当 `image_required=true` 或包含离线镜像交付时，`releases/<version>/image-manifest.json` 已生成、未过期并被 `release.json` 引用；外部构建证据必须受控 |
 
 任一必填门禁失败时，发布流程 MUST 阻断，并输出失败原因与修复建议。
+
+当发布范围涉及后端运行代码、Web 构建产物、Dockerfile、Compose、`.env.example`、镜像构建脚本、构建 env 示例、数据库 schema / migration、API / 客户端生成物或离线镜像交付时，发布对象 MUST 将 `image_required` 设为 `true`，并按以下顺序执行：
+
+```text
+/release-propose <version>
+  -> /release-prepare <version>
+  -> /image-prepare <version>
+  -> /image-build <version>
+  -> /release-publish <version>
+```
+
+`/image-prepare` 只生成或更新 `releases/<version>/image-build-plan.json`，记录版本、image tag、source scope、build env 安全摘要、Dockerfile、Compose、构建脚本、构建 env 示例、Nginx、schema、migration、数据库文档 input hash、required commands 和 blockers。Docker 不可用、网络不可用或缺少 `scripts/build-images.env` 时可以写 blocked plan，但不得写 pass 证据。
+
+`/image-build` MUST 读取有效且未过期的 image build plan 后再复用 `scripts/build-images.sh` 执行真实构建。构建成功后写入 `releases/<version>/image-manifest.json`，记录 version、image_tag、built_at、platform、backend_image、web_image、tarball、input_hashes、validation 和 source_plan。缺少 plan、plan blocked、版本/tag 不一致、input hash 漂移、Docker/buildx/网络/基础镜像源/验证/tar/sha256 失败时 MUST 阻断，不得伪造成功 manifest。
+
+发布确认阶段 MUST 重新校验 manifest 的版本、tag、source plan 和 input hashes。manifest 生成后 Dockerfile、构建脚本、schema、migration、Compose 或 release input 漂移时，镜像证据失效，必须重新执行 `/image-prepare` 与 `/image-build`，或记录经批准的外部构建证据。
 
 数据库影响不允许只记录本地轻量数据库测试或文档同步证据。`impact_scope.database` 非 `none` / `na` / `不涉及` 时，`database_migration` 门禁 MUST 为 `pass`，且 evidence MUST 明确包含：
 
@@ -85,4 +103,6 @@ python scripts/validate-release.py --release-dir releases/vX.Y.Z
 |---|---|
 | `/release-propose <version>` | 创建或更新产品版本发布计划 |
 | `/release-prepare <version>` | 执行发布前校验，生成或更新公告源文件 |
+| `/image-prepare <version>` | 生成镜像构建计划并校验 release、tag、Compose、Dockerfile、schema/migration 等输入 |
+| `/image-build <version>` | 基于有效构建计划执行真实镜像构建、验证、离线包导出并生成 manifest |
 | `/release-publish <version>` | 记录发布确认结果和最终公告位置 |

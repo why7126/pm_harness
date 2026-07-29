@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-07-28T00:00:00+08:00",
+  "schemes": [
+    {
+      "id": "tilesfst",
+      "name": "TilesFST / STONEX Design Assets",
+      "category": "dashboard",
+      "tags": ["admin", "miniapp", "dashboard", "dark-flagship", "industrial", "brand-gold", "stone-texture", "collapsible-sidebar"],
+      "created_at": "2026-07-28T00:00:00+08:00",
+      "path": "schemes/tilesfst",
+      "design_path": "schemes/tilesfst/design.json",
+      "navigation_path": "schemes/tilesfst/navigation.json",
+      "demo_path": "schemes/tilesfst/demo.html",
+      "navigation_demo_path": "schemes/tilesfst/navigation-demo.html",
+      "design_summary": "TilesFST real STONEX industrial dark flagship UI/UX and navigation assets extracted from the local source project.",
+      "inferred": false
+    }
+  ]
+}

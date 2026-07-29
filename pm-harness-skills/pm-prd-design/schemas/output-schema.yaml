@@ -1,0 +1,58 @@
+skill: pm-prd-design
+version: 1.1.0
+
+outputs:
+  - file: requirement.md
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: PRD需求文档——背景/目标用户/功能清单/用户故事/验收标准/非目标
+    required: true
+
+  - file: interaction.md
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: 交互说明——页面流程/状态(加载/空/错误/权限受限)/表单校验/跳转关系
+    required: true
+
+  - file: prototype.html
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: 单文件、可点击、可在浏览器直接打开的高保真原型
+    required: true
+
+  - file: prototype-context.md
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: 供工程团队参照的组件/字段/接口预期/跳转关系说明
+    required: true
+
+  - file: prototype.png
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: prototype.html 在标准桌面视口下的静态截图
+    required: true
+
+  - file: version-manifest.md
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: 版本号/设计系统版本/页面清单/组件清单/稳定区/变更区
+    required: true
+
+  - file: change-log.md
+    produced_by: [iterate_prd_design, patch_prd_design]
+    description: 面向人的可读变更说明，按新增/修改/移除分类
+    required: true
+
+  - file: diff-report.md
+    produced_by: [iterate_prd_design, patch_prd_design]
+    description: 结构化的逐项差异清单，用于比对或校验
+    required: true
+
+  - file: regression-report.md
+    produced_by: [iterate_prd_design, patch_prd_design]
+    description: 回归校验结果，逐项标注 未变化/已按要求变化/意外变化
+    required: true
+
+  - file: package.zip
+    produced_by: [create_prd_design, iterate_prd_design, patch_prd_design]
+    description: 本次全部产出文件的打包压缩包
+    required: true
+
+versioning_rules:
+  create_prd_design: 起版为 1.0.0
+  iterate_prd_design: 次版本号 +1（如 1.0.0 -> 1.1.0）
+  patch_prd_design: 修订号 +1（如 1.1.0 -> 1.1.1）

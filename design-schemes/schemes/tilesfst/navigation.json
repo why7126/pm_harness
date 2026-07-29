@@ -1,0 +1,245 @@
+{
+  "schema_version": "1.0",
+  "scheme_id": "tilesfst-navigation",
+  "scheme_name": "TilesFST Navigation",
+  "source_project": "TilesFST",
+  "source_repo": "local-source-redacted:tilesfst",
+  "source_files": [
+    "src/web/src/pages/admin/AdminLayout.tsx",
+    "src/web/src/features/admin/components/AdminSidebar.tsx",
+    "src/web/src/features/admin/components/AdminUserMenu.tsx",
+    "src/web/src/features/admin/data/admin-nav.ts",
+    "src/web/src/features/admin/lib/admin-sidebar-preference.ts",
+    "src/web/src/features/admin/styles/admin-home.css",
+    "src/miniapp/app.json",
+    "src/miniapp/components/custom-navigation/index.ts",
+    "src/miniapp/components/custom-navigation/index.wxml",
+    "src/miniapp/components/custom-navigation/index.wxss",
+    "src/miniapp/custom-tab-bar/index.js",
+    "src/miniapp/custom-tab-bar/index.wxml",
+    "src/miniapp/custom-tab-bar/index.wxss"
+  ],
+  "inferred": false,
+  "nav_type": "web-admin-collapsible-sidebar-and-miniapp-custom-navigation",
+  "surfaces": {
+    "web_admin": {
+      "layout": {
+        "app_shell": "CSS grid: sidebar plus scrollable main content",
+        "sidebar_width": "264px",
+        "sidebar_collapsed_width": "72px",
+        "sidebar_position": "sticky top 0, height 100vh",
+        "content": "main-content height 100vh, overflow auto, padding 24px 24px 48px",
+        "content_max_width": "min(1440px, 100%)",
+        "collapse_storage_key": "admin-sidebar-collapsed"
+      },
+      "colors": {
+        "page": "#18160F",
+        "deep": "#100F0A",
+        "surface": "#211E16",
+        "sidebar_bg": "color-mix(in srgb, var(--color-deep) 76%, transparent)",
+        "card_bg": "color-mix(in srgb, var(--color-surface) 72%, transparent)",
+        "dropdown_bg": "color-mix(in srgb, var(--color-surface) 98%, transparent)",
+        "text": "#EDE8DF",
+        "muted": "rgba(237,232,223,0.5)",
+        "weak": "rgba(237,232,223,0.3)",
+        "brand_gold": "#C8A055",
+        "line": "rgba(255,255,255,0.07)",
+        "line_strong": "rgba(255,255,255,0.1)",
+        "line_hover": "rgba(255,255,255,0.18)"
+      },
+      "brand": {
+        "placement": "sidebar-head",
+        "logo": "/logos/64x64.png",
+        "title": "菲尚特FST",
+        "subtitle": "家居建材资料库",
+        "title_font": "brand font",
+        "title_tracking": "0.16em",
+        "version_badge": {
+          "enabled": true,
+          "component": "ProductVersionBadge",
+          "placement": "same row as brand title",
+          "expanded_visibility": "visible beside brand title",
+          "collapsed_visibility": "hidden with brand copy",
+          "style": {
+            "height": "18px",
+            "padding": "2px 7px",
+            "border_radius": "2px",
+            "border": "0.5px solid var(--admin-line-strong)",
+            "background": "rgba(255,255,255,0.03)",
+            "color": "var(--admin-muted)",
+            "font_size": "10px",
+            "font_weight": 500,
+            "letter_spacing": "0.04em",
+            "line_height": "1",
+            "white_space": "nowrap"
+          }
+        }
+      },
+      "sidebar_toggle": {
+        "enabled": true,
+        "component": "button.sidebar-toggle",
+        "placement": "absolute right 6px, vertically centered in sidebar-head when expanded; static below logo when collapsed",
+        "size": "28px x 28px",
+        "border": "0.5px solid var(--admin-line-strong)",
+        "border_radius": "2px",
+        "background": "rgba(255,255,255,0.03)",
+        "color": "var(--admin-muted)",
+        "hover": {
+          "color": "var(--admin-text)",
+          "border_color": "var(--admin-line-hover)"
+        },
+        "expanded_icon": "‹",
+        "collapsed_icon": "›",
+        "aria": {
+          "expanded_state": "aria-expanded=true",
+          "collapsed_state": "aria-expanded=false",
+          "expanded_label": "收起侧边栏",
+          "collapsed_label": "展开侧边栏"
+        },
+        "state": {
+          "react_state": "sidebarCollapsed",
+          "storage_key": "admin-sidebar-collapsed",
+          "read_function": "readAdminSidebarCollapsed",
+          "write_function": "writeAdminSidebarCollapsed",
+          "shell_attribute": "data-sidebar-state=expanded|collapsed",
+          "transition": "grid-template-columns 220ms ease",
+          "reduced_motion": "disable transition under prefers-reduced-motion"
+        }
+      },
+      "sections": [
+        {
+          "id": "operations",
+          "title": "OPERATIONS",
+          "aria_label": "Operations",
+          "items": [
+            { "id": "home", "label": "首页", "path": "/admin/dashboard", "icon": "LayoutDashboard" },
+            { "id": "sku", "label": "瓷砖 SKU", "path": "/admin/tile-skus", "icon": "Package" },
+            { "id": "brand", "label": "瓷砖品牌", "path": "/admin/brands", "icon": "Building2" },
+            { "id": "category", "label": "瓷砖类目", "path": "/admin/tile-categories", "icon": "FolderTree" },
+            { "id": "tile-spec", "label": "瓷砖规格", "path": "/admin/tile-specs", "icon": "Ruler" },
+            { "id": "brand-certificate", "label": "品牌证书", "path": "/admin/brand-certificates", "icon": "ShieldCheck" },
+            { "id": "banner", "label": "Banner 管理", "path": "/admin/banners", "icon": "Image" }
+          ]
+        },
+        {
+          "id": "system",
+          "title": "SYSTEM",
+          "aria_label": "System",
+          "items": [
+            { "id": "users", "label": "用户管理", "path": "/admin/users", "icon": "Users", "admin_only": true },
+            { "id": "settings", "label": "系统设置", "path": "/admin/settings", "icon": "Settings", "admin_only": true },
+            { "id": "logs", "label": "日志审计", "path": "/admin/logs", "icon": "ListTree", "admin_only": true },
+            { "id": "api-docs", "label": "接口文档", "path": "/admin/api-docs", "icon": "BookOpen", "admin_only": true }
+          ]
+        }
+      ],
+      "permissions": {
+        "employee_hidden_items": ["users", "settings", "logs", "api-docs"],
+        "behavior": "filter restricted system items out before render"
+      },
+      "states": {
+        "active": {
+          "color": "brand gold",
+          "background": "brand gold muted",
+          "border": "brand gold 26%",
+          "indicator": "2px gold vertical bar at left"
+        },
+        "hover": {
+          "color": "primary text",
+          "background": "rgba(255,255,255,0.035)",
+          "border": "default semantic line"
+        },
+        "collapsed": {
+          "width": "72px",
+          "show": ["logo", "icons", "toggle", "theme icon", "avatar"],
+          "hide": ["brand copy", "version badge", "section titles", "nav labels", "user name", "user email", "chevron"],
+          "item_alignment": "center"
+        },
+        "expanded": {
+          "width": "264px",
+          "show": ["brand copy", "version badge", "section titles", "nav labels", "theme switcher", "user menu"]
+        }
+      },
+      "user_menu": {
+        "placement": "sidebar bottom",
+        "trigger": "avatar + display name + email + chevron",
+        "chevron": {
+          "source": "AdminUserMenu.tsx",
+          "glyph": "⌃",
+          "font_size": "14px",
+          "default_transform": "rotate(180deg)",
+          "expanded_transform": "rotate(0deg)",
+          "transition": "transform 0.18s ease",
+          "collapsed_behavior": "hidden with user name and email"
+        },
+        "dropdown": ["个人资料", "密码修改", "退出登录"],
+        "dropdown_position": "absolute bottom 76px",
+        "dropdown_style": "translucent surface, 3px radius, 0.5px border, blur 18px, large dark shadow"
+      },
+      "theme_switcher": {
+        "placement": "above user menu",
+        "modes": ["系统默认", "暗色旗舰", "舒适暗色", "浅色"],
+        "compact_behavior": "icon and narrow select in collapsed sidebar"
+      }
+    },
+    "miniapp": {
+      "top_navigation": {
+        "type": "custom fixed top navigation component",
+        "component": "src/miniapp/components/custom-navigation",
+        "background": "rgba(24,22,15,0.96)",
+        "border_bottom": "2rpx solid rgba(255,255,255,0.07)",
+        "text_color": "#EDE8DF",
+        "height": "computed from statusBarHeight + menuButton height/fallback",
+        "fallback_status_bar_height": "44px",
+        "fallback_content_height": "62px",
+        "fallback_nav_height": "106px",
+        "horizontal_padding": "28rpx",
+        "gap": "16rpx",
+        "variants": {
+          "home": {
+            "brand": "菲尚特瓷砖馆",
+            "subtitle": "质感空间，由砖而生",
+            "logo": "/assets/logos/product-logo.png",
+            "logo_size": "76rpx",
+            "logo_radius": "18rpx"
+          },
+          "subpage": {
+            "back_button": "88rpx circular hit area with ‹ glyph",
+            "title": "provided title or 菲尚特瓷砖",
+            "native_action_reserve": "computed reserve width for WeChat capsule"
+          }
+        }
+      },
+      "tabbar": {
+        "type": "custom five-item bottom tabbar",
+        "component": "src/miniapp/custom-tab-bar",
+        "background": "rgba(24,22,15,0.98)",
+        "border_top": "2rpx solid rgba(255,255,255,0.07)",
+        "safe_area": "padding bottom env(safe-area-inset-bottom)",
+        "height": "min-height 112rpx",
+        "item_height": "88rpx",
+        "icon_size": "46rpx",
+        "inactive_color": "#8c8376",
+        "active_color": "#C8A055",
+        "items": [
+          { "text": "首页", "pagePath": "/pages/index/index", "icon": "home-default.png", "activeIcon": "home-active.png" },
+          { "text": "分类", "pagePath": "/pages/category/index", "icon": "category-default.png", "activeIcon": "category-active.png" },
+          { "text": "品牌", "pagePath": "/pages/brand-list/index", "icon": "brand-default.png", "activeIcon": "brand-active.png" },
+          { "text": "证书", "pagePath": "/pages/certificates/index", "icon": "certificate-default.png", "activeIcon": "certificate-active.png" },
+          { "text": "收藏", "pagePath": "/pages/favorites/index", "icon": "favorite-default.png", "activeIcon": "favorite-active.png" }
+        ]
+      }
+    }
+  },
+  "accessibility": {
+    "web_sidebar": ["aside aria-label=后台导航", "nav section aria-label", "toggle aria-expanded", "nav item aria-label"],
+    "web_user_menu": ["role=menu", "role=menuitem", "aria-expanded", "aria-haspopup=menu", "aria-controls"],
+    "miniapp": ["back hit area has aria-label=返回", "safe area and WeChat native capsule reserve handled by metrics"]
+  },
+  "integration_notes": [
+    "Do not replace this with a generic blue/white admin shell; TilesFST uses dark industrial STONEX styling.",
+    "Web admin navigation is permission-aware and persisted collapsed state uses localStorage key admin-sidebar-collapsed.",
+    "Miniapp navigation is a separate reusable asset: custom top navigation plus custom tabbar.",
+    "Navigation assets can be reused independently from product-card or login-page templates, but must keep dark flagship tokens."
+  ]
+}

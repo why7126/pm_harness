@@ -45,7 +45,7 @@ rules/agent-context-budget.md
 | API 变更 | `rules/api.md`、`docs/03-api-index.md`、OpenAPI 来源、客户端生成配置 |
 | DB / 数据模型 | `rules/database.md`、`docs/04-database-design.md` 相关表段、schema / migration 文件 |
 | UI / Design System | `rules/ui-design.md`、前端 README、Design Token、组件库、视觉验收入口 |
-| Docker / 发布部署 | `rules/environment.md`、`rules/port-management.md`、`rules/release.md`、`docs/02-deployment.md`、`docker-compose*.yml`、`releases/README.md` |
+| Docker / 发布部署 | `rules/environment.md`、`rules/port-management.md`、`rules/release.md`、`docs/02-deployment.md`、`docs/08-production-image-release.md`、`docker-compose*.yml`、`releases/README.md`、`scripts/build-images.sh`、`scripts/build-images.env.example`、`scripts/validate-image-build.py` |
 | data / media / object storage | `rules/data-management.md`、`rules/media.md`、`rules/object-storage.md`、相关存储策略文档 |
 | 安全 / 权限 / 敏感数据 | `rules/security.md`，以及 API、数据、部署相关规则 |
 | 兼容性 / 私有化 | `rules/compatibility.md`、`compatibility/`、部署矩阵 |
@@ -90,6 +90,7 @@ idea / bug / change
 | Change | `/opsx-propose`、`/opsx-explore`、`/opsx-apply`、`/opsx-archive` |
 | Sprint | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive`、`/sprint-exps` |
 | MiniApp | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` |
+| Image | `/image-prepare <version>`、`/image-build <version>` |
 | Release | `/release-propose <version>`、`/release-prepare <version>`、`/release-publish <version>` |
 | Bootstrap | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
 

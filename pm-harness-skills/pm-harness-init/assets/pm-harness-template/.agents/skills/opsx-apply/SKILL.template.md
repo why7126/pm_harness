@@ -74,6 +74,8 @@ For every Change linked to a REQ/BUG:
 
 If any check fails, **BLOCKED**: do not implement. Tell the user to run `/sprint-propose` to include the REQ/BUG/Change in a `sprint-xxx`, then rerun `/opsx-apply`.
 
+A resolved `sprint.yaml` with `status: planning` is eligible. Planning means `/sprint-propose` has created the official Sprint scope; it MUST NOT be treated as “Sprint not started” when the Issue trace is already `in_sprint` and the Sprint contains the linked Change.
+
 Only a Change with no linked REQ/BUG may bypass this gate; output the reason explicitly.
 
 ## Cross-cutting Apply Gate（MUST before `src/`）

@@ -1,0 +1,307 @@
+{
+  "schema_version": "1.0",
+  "scheme_id": "tilesfst-ui",
+  "scheme_name": "TilesFST / STONEX UI/UE",
+  "source_project": "TilesFST",
+  "source_repo": "local-source-redacted:tilesfst",
+  "source_files": [
+    "rules/ui-design.md",
+    "src/shared/design-system/spec.md",
+    "src/shared/design-system/tokens/colors.ts",
+    "src/shared/design-system/tokens/typography.ts",
+    "src/shared/design-system/tokens/spacing.ts",
+    "src/shared/design-system/tokens/radius.ts",
+    "src/shared/design-system/tokens/shadows.ts",
+    "src/web/src/styles/globals.css",
+    "src/web/src/styles/tokens.generated.css",
+    "src/web/src/features/admin/styles/admin-home.css",
+    "src/web/src/features/auth/styles/login-page.css",
+    "src/miniapp/components/custom-navigation/index.wxss",
+    "src/miniapp/custom-tab-bar/index.wxss"
+  ],
+  "inferred": false,
+  "category": "dashboard",
+  "colors": {
+    "primary": "#C8A055",
+    "primary_hover": "rgba(200,160,85,0.9)",
+    "primary_foreground": "#18160F",
+    "secondary": "#211E16",
+    "secondary_hover": "rgba(255,255,255,0.035)",
+    "secondary_foreground": "#EDE8DF",
+    "accent": "#E07050",
+    "accent_foreground": "#EDE8DF",
+    "background": "#18160F",
+    "surface": "#211E16",
+    "surface_raised": "rgba(33,30,22,0.72)",
+    "surface_deep": "#100F0A",
+    "border": "rgba(255,255,255,0.07)",
+    "border_emphasis": "rgba(255,255,255,0.1)",
+    "border_strong": "rgba(255,255,255,0.18)",
+    "border_focus": "rgba(200,160,85,0.7)",
+    "text_primary": "#EDE8DF",
+    "text_secondary": "rgba(237,232,223,0.5)",
+    "text_muted": "rgba(237,232,223,0.3)",
+    "text_subtle": "rgba(237,232,223,0.25)",
+    "text_nav_link": "rgba(237,232,223,0.45)",
+    "text_brand": "#C8A055",
+    "text_on_brand": "#18160F",
+    "error": "#E07050",
+    "error_bg": "rgba(196,80,50,0.15)",
+    "warning": "#E07050",
+    "warning_bg": "rgba(196,80,50,0.15)",
+    "success": "#C8A055",
+    "success_bg": "rgba(200,160,85,0.15)",
+    "info": "#C8A055",
+    "info_bg": "rgba(200,160,85,0.12)",
+    "overlay": "rgba(255,255,255,0.04)",
+    "palette": [
+      "#18160F",
+      "#211E16",
+      "#100F0A",
+      "#EDE8DF",
+      "#C8A055",
+      "#E07050",
+      "rgba(255,255,255,0.07)",
+      "rgba(237,232,223,0.5)"
+    ],
+    "themes": {
+      "dark_flagship": {
+        "page": "#18160F",
+        "surface": "#211E16",
+        "deep": "#100F0A",
+        "brand_gold": "#C8A055",
+        "text_primary": "#EDE8DF"
+      },
+      "comfort_dark": {
+        "page": "#222018",
+        "surface": "#2B281F",
+        "deep": "#17150F",
+        "brand_gold": "#D0AA62",
+        "text_primary": "#F1EADF"
+      },
+      "light": {
+        "page": "#F7F5F0",
+        "surface": "#FFFFFF",
+        "deep": "#EDE8DF",
+        "brand_gold": "#A8843F",
+        "text_primary": "#18160F"
+      }
+    }
+  },
+  "typography": {
+    "font_family_heading": "ui-sans-serif, system-ui, sans-serif",
+    "font_family_body": "ui-sans-serif, system-ui, sans-serif",
+    "font_family_brand": "Cormorant Garamond, ui-serif, Georgia, Times New Roman, serif",
+    "font_family_mono": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+    "font_sizes": {
+      "label": "9px",
+      "label_md": "10px",
+      "caption": "11px",
+      "caption_md": "12px",
+      "body": "13px",
+      "heading_sm": "13px",
+      "heading_md": "15px",
+      "heading_lg": "16px",
+      "card_title": "18px",
+      "card_title_lg": "20px",
+      "page_title": "22px",
+      "stat": "20px",
+      "stat_lg": "22px",
+      "price": "15px",
+      "hero": "38px",
+      "login_brand_title": "42px"
+    },
+    "font_weights": {
+      "regular": 400,
+      "medium": 500,
+      "brand_sidebar": 600,
+      "miniapp_title": 800
+    },
+    "line_heights": {
+      "tight": "1.2",
+      "heading": "1.3",
+      "caption": "1.5",
+      "body": "1.8",
+      "none": "1"
+    },
+    "letter_spacings": {
+      "normal": "0",
+      "badge": "0.04em",
+      "section": "0.12em",
+      "brand": "0.16em",
+      "eyebrow": "0.18em"
+    }
+  },
+  "spacing": {
+    "scale": {
+      "mosaic": "3px",
+      "badge": "5px",
+      "grid": "12px",
+      "card_sm": "14px",
+      "card_md": "20px",
+      "section_sm": "24px",
+      "section_lg": "32px",
+      "page": "28px",
+      "form_field": "28px",
+      "title_to_form": "48px",
+      "hero_top": "60px",
+      "hero_bottom": "48px",
+      "button_y": "11px",
+      "button_x": "24px"
+    },
+    "layout": {
+      "admin_sidebar_width": "264px",
+      "admin_sidebar_collapsed_width": "72px",
+      "shared_sidebar_width": "200px",
+      "nav_height": "52px",
+      "search_bar_height": "44px",
+      "input_height_lg": "64px",
+      "input_height_md": "52px",
+      "pagination_size": "32px",
+      "icon_button_size": "28px",
+      "product_image_height": "130px",
+      "featured_image_min_height": "180px",
+      "login_form_max_width": "520px"
+    },
+    "border_radius": {
+      "none": "0px",
+      "badge": "1px",
+      "industrial": "2px",
+      "chip": "2px",
+      "card": "3px",
+      "sm": "2px",
+      "md": "2px",
+      "lg": "3px",
+      "xl": "3px",
+      "full": "9999px"
+    },
+    "shadows": {
+      "none": "none",
+      "inset_subtle": "inset 0 1px 0 rgba(255,255,255,0.03)",
+      "sm": "0 1px 2px rgba(0,0,0,0.24)",
+      "md": "0 2px 8px rgba(0,0,0,0.32)",
+      "dropdown": "0 22px 70px rgba(0,0,0,0.42)",
+      "material_tile": "0 24px 80px rgba(0,0,0,0.28)",
+      "focus": "none"
+    }
+  },
+  "components": {
+    "button": {
+      "variants": ["default", "destructive", "outline", "inquiry", "ghost", "link"],
+      "sizes": ["default", "cta", "catalog", "sm", "icon", "pagination"],
+      "border_radius": "industrial",
+      "default_height": "64px",
+      "cta_padding": "11px 24px",
+      "primary_style": "brand gold solid background with page-colored text",
+      "outline_style": "transparent background, strong border, secondary text",
+      "focus": "border-focus / ring token, no glow shadow"
+    },
+    "card": {
+      "border_radius": "card",
+      "shadow": "none",
+      "padding": "14px to 20px",
+      "border": "0.5px or 1px semantic border",
+      "background": "surface or translucent surface with blur in admin shell"
+    },
+    "input": {
+      "height": "52px compact, 64px login",
+      "border_radius": "industrial",
+      "border": "border-emphasis or border-strong",
+      "background": "transparent or surface",
+      "focus": "pure brand-gold border/focus token"
+    },
+    "badge": {
+      "border_radius": "badge",
+      "padding": "2px 7px",
+      "font_size": "9px to 10px",
+      "font_weight": "medium",
+      "letter_spacing": "0.04em",
+      "variants": ["inStock", "new", "hotSale", "neutral", "version"]
+    },
+    "version_badge": {
+      "component": "ProductVersionBadge",
+      "placement": "sidebar brand title row",
+      "height": "18px",
+      "padding": "2px 7px",
+      "border_radius": "2px",
+      "border": "0.5px solid border-emphasis",
+      "background": "rgba(255,255,255,0.03)",
+      "color": "text-secondary / admin muted",
+      "font_size": "10px",
+      "font_weight": "500",
+      "letter_spacing": "0.04em",
+      "collapsed_behavior": "hidden with brand copy when sidebar is collapsed"
+    },
+    "admin_user_menu": {
+      "component": "AdminUserMenu",
+      "placement": "sidebar bottom",
+      "name_font_size": "12px",
+      "email_font_size": "11px",
+      "chevron_glyph": "⌃",
+      "chevron_font_size": "14px",
+      "chevron_default_transform": "rotate(180deg)",
+      "chevron_expanded_transform": "rotate(0deg)",
+      "chevron_transition": "transform 0.18s ease",
+      "collapsed_behavior": "show avatar only; hide name, email, and chevron"
+    },
+    "admin_shell": {
+      "background": "radial brand-gold glow plus dark linear gradient",
+      "sidebar": "sticky, translucent deep background, 0.5px right border, collapse persisted in localStorage",
+      "content": "24px 24px 48px, max-width min(1440px, 100%)",
+      "metric_card": "translucent card, 3px radius, 20px padding, subtle brand-gold radial glow"
+    },
+    "table": {
+      "header": "12px muted text, 0.08em tracking",
+      "cell_padding": "15px 18px",
+      "border_bottom": "0.5px semantic line",
+      "row_hover": "rgba(255,255,255,0.025)"
+    },
+    "login": {
+      "layout": "desktop 50/50 split; mobile hides brand panel and centers form",
+      "brand_panel": "dark grid texture, material mosaic, stats card",
+      "form_panel": "dark page background with top-right language/theme tools",
+      "logo": "brand font, 0.16em tracking, brand gold"
+    },
+    "miniapp_navigation": {
+      "top": "fixed custom navigation, dark rgba background, safe-area metrics from wx APIs",
+      "tabbar": "custom five-item tabbar, dark background, gold active text/icons"
+    }
+  },
+  "layout": {
+    "max_width": "1440px",
+    "content_width": "min(1440px, 100%)",
+    "grid_columns": 12,
+    "gutter": "12px",
+    "admin_sidebar_width": "264px",
+    "admin_sidebar_collapsed_width": "72px",
+    "admin_content_padding": "24px 24px 48px",
+    "login_desktop_columns": "1fr 1fr",
+    "breakpoints": {
+      "mobile": "< 768px",
+      "tablet": "768px to 1023px",
+      "desktop": ">= 1024px"
+    }
+  },
+  "interaction": {
+    "focus_visible": "border-focus token; no bright glow",
+    "hover_lift": "admin quick card translateY(-1px); product image scale(1.03)",
+    "loading": "inline loading text or muted skeleton-like text",
+    "empty_state": "field/list-local text, not global-only toast",
+    "theme_modes": ["system", "dark_flagship", "comfort_dark", "light"],
+    "admin_sidebar_preference_key": "admin-sidebar-collapsed"
+  },
+  "animation": {
+    "duration_fast": "180ms",
+    "duration_normal": "220ms",
+    "duration_slow": "400ms",
+    "easing_default": "ease",
+    "product_hover": "400ms ease-out"
+  },
+  "style_profile": {
+    "keywords": ["industrial", "dark flagship", "brand gold", "stone texture", "near-square", "data platform", "B2B"],
+    "dark_mode_support": true,
+    "primary_aesthetic": "工业石材 · 暗色旗舰风",
+    "density": "compact-to-medium",
+    "avoid": ["blue-white dashboard", "large rounded SaaS cards", "generic light admin", "heavy shadows", "unregistered hex in components"]
+  }
+}

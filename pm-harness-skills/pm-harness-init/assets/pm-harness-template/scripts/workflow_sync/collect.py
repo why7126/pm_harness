@@ -234,7 +234,7 @@ def run_openspec_list() -> dict[str, Any]:
 
 
 def find_archived_change_dir(change_id: str) -> Path | None:
-    archive_root = ROOT / "openspec/changes/archive"
+    archive_root = ROOT / "openspec/archive"
     if not archive_root.exists():
         return None
     matches = sorted(archive_root.glob(f"*-{change_id}"))
@@ -609,26 +609,26 @@ def _pick_preferred_sprint(candidates: list[str]) -> str | None:
         return None
     if len(candidates) == 1:
         return candidates[0]
-    in_progress = [
-        sprint_id
-        for sprint_id in candidates
-        if (record := load_sprint(sprint_id)) and record.status == "in_progress"
-    ]
-    if len(in_progress) == 1:
-        return in_progress[0]
+    for preferred_status in ("in_progress", "planning"):
+        matches = [
+            sprint_id
+            for sprint_id in candidates
+            if (record := load_sprint(sprint_id)) and record.status == preferred_status
+        ]
+        if len(matches) == 1:
+            return matches[0]
     return candidates[-1]
 
 
-def resolve_in_progress_sprint_id() -> str | None:
-    in_progress: list[str] = []
-    for sprint_id in list_sprint_ids():
-        sprint = load_sprint(sprint_id)
-        if sprint and sprint.status == "in_progress":
-            in_progress.append(sprint_id)
-    if len(in_progress) == 1:
-        return in_progress[0]
-    if len(in_progress) > 1:
-        return in_progress[-1]
+def resolve_active_sprint_id() -> str | None:
+    active: list[str] = []
+    for preferred_status in ("in_progress", "planning"):
+        for sprint_id in list_sprint_ids():
+            sprint = load_sprint(sprint_id)
+            if sprint and sprint.status == preferred_status:
+                active.append(sprint_id)
+        if active:
+            return active[-1]
     sprint_ids = list_sprint_ids()
     return sprint_ids[-1] if sprint_ids else None
 
@@ -666,7 +666,7 @@ def resolve_sprint_id(
             return None, f"skipped — change `{change_id}` not in sprint scope"
         return _pick_preferred_sprint(matches), None
 
-    return resolve_in_progress_sprint_id(), None
+    return resolve_active_sprint_id(), None
 
 
 def load_sprint(sprint_id: str) -> SprintRecord | None:

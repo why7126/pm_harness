@@ -14,13 +14,26 @@ rg --files
 重点识别：
 
 - 入口文档：`README*`、`AGENTS.md`、`CONTRIBUTING*`、`docs/`
+- 业务源码目录：后端服务、前端、小程序、移动端、共享代码、脚本、迁移、配置样例
 - 项目事实源：`package.json`、`pnpm-workspace.yaml`、`pyproject.toml`、`requirements*.txt`、`poetry.lock`、`uv.lock`、`go.mod`、`Cargo.toml`、`pom.xml`、`build.gradle`
 - 运行与部署：`Dockerfile*`、`docker-compose*.yml`、`Makefile`、`.env.example`、`deploy/`、`helm/`、`k8s/`
 - 测试与质量：`tests/`、`pytest.ini`、`vitest.config.*`、`jest.config.*`、`playwright.config.*`、`ruff.toml`、`eslint.config.*`
-- AI 工具资产：`.codex/`、`.claude/`、`.cursor/`、`.kiro/`、`.opencode/`、`.agents/`
+- AI 工具资产：`.agents/skills/`
 - 治理资产：`issues/`、`iterations/`、`openspec/`、`rules/`、`compatibility/`
 
 记录现有未提交改动。涉及已有改动的文件要读完再编辑，避免覆盖用户工作。
+
+如果用户指定独立输出目录，而不是直接在旧项目目录内接入 Harness，必须同时规划源码复制：
+
+| 旧源码类型 | 推荐输出路径 |
+|---|---|
+| Django / FastAPI / Flask / 后端服务 | `src/backend/` |
+| 微信小程序 | `src/wechat-miniapp/` |
+| Web 前端 | `src/web/` |
+| 共享类型 / SDK / 公共库 | `src/shared/` 或 `src/sdk/` |
+| 部署脚本 | `deploy/` 或 `src/infrastructure/` |
+
+不得只生成 Harness 治理目录而留下空的 `src/`。
 
 ## 2. 项目事实提取
 
@@ -42,6 +55,17 @@ rg --files
 
 不确定但不阻塞接入的信息放入 pending decisions；阻塞信息可以向用户追问。
 
+源码复制排除项：
+
+- Python 缓存：`__pycache__/`、`*.pyc`、`.pytest_cache/`
+- Node / 小程序缓存和构建产物：`node_modules/`、`miniprogram_npm/`、`dist/`、`build/`
+- 虚拟环境：`.venv/`、`venv/`、`env/`
+- 运行时数据：`media/`、生产上传文件、`static/` 收集产物、`db.sqlite3`、`*.sqlite3`
+- 日志和临时文件：`*.log`、`nohup.out`、`.DS_Store`
+- 真实环境文件：`.env`、`.env.*`，除非用户明确要求复制且已确认安全处理方式
+
+疑似含密钥的生产配置文件必须登记到 `docs/harness-adoption/source-import.md` 和 `docs/pending-decisions.md`。需要可运行交付时可复制源码文件，但不得把其中真实密钥复述到文档；需要安全优先交付时生成脱敏文件或 `.example`。
+
 ## 3. 模式判定
 
 ### minimal
@@ -58,7 +82,7 @@ rg --files
 - `rules/global.md`、`rules/coding.md`、`rules/testing.md`、`rules/directory-structure.md`
 - `docs/harness-adoption/`
 - 必要校验脚本
-- 当前工具对应的 `.codex/` 或 `.claude/` 命令
+- 当前项目需要的 `.agents/skills/` 命令技能
 
 ### standard
 
@@ -70,6 +94,7 @@ rg --files
 建议接入：
 
 - minimal 的全部内容
+- 独立输出目录场景下的业务源码复制
 - `project.yaml`
 - `docs/README.md`、`docs/00-product-overview.md`、`docs/01-architecture.md`、`docs/02-deployment.md`
 - `issues/requirements/`、`issues/bugs/`
@@ -128,6 +153,11 @@ rg --files
 - 只补充 Harness 需要的结构化字段。
 - 不写 `待确认` 作为布尔值、路径或命令。
 - 不能确定的字段删除或放入 pending decisions。
+- 独立输出目录场景下必须记录：
+  - `source_layout.backend`、`source_layout.wechat_miniapp` 等输出工程内路径。
+  - `source_import.origins` 中的旧目录路径。
+  - `source_import.excluded_patterns` 中的排除规则。
+  - `source_import.sensitive_files` 中的敏感配置处理策略。
 
 ### `docs/`
 
@@ -136,6 +166,7 @@ rg --files
 - 优先补充索引和缺口，不覆盖现有长文档。
 - 新增文档要引用现有文档，不复制矛盾内容。
 - Harness 接入过程记录放在 `docs/harness-adoption/`。
+- 独立输出目录场景必须新增 `docs/harness-adoption/source-import.md`，记录旧源码复制范围、目标路径、排除项、冲突、敏感配置处理和验证结果。
 
 ### `rules/`
 
@@ -148,16 +179,26 @@ rg --files
 
 ### Agent 目录
 
-只接入实际启用工具：
+只接入 `.agents/skills/` 单一技能入口：
 
-- Codex: `.codex/prompts/`、`.codex/skills/`
-- Claude: `.claude/commands/`、`.claude/skills/`
-- Cursor: `.cursor/commands/`、`.cursor/skills/`
-- Kiro: `.kiro/prompts/`、`.kiro/skills/`
-- Opencode: `.opencode/commands/`、`.opencode/skills/`
-- 通用技能事实源: `.agents/skills/`
+- 输出工程中的 `.agents/skills/<command-name>/SKILL.md` 是命令语义的唯一事实源。
+- 模板资产内的 `.agents/skills/<command-name>/SKILL.template.md` 必须渲染为输出工程中的 `SKILL.md`。
+- 不生成、同步或保留 `.claude/`、`.codex/`、`.cursor/`、`.kiro/`、`.opencode/`。
 
-已有同名命令时先比较内容；安全时合并，不能判断时保留原文件并新增冲突记录。
+已有同名 `.agents/skills/<command-name>/SKILL.md` 时先比较内容；安全时合并，不能判断时保留原文件并新增冲突记录。
+
+### 业务源码复制
+
+独立输出目录场景必须复制旧业务源码：
+
+1. 创建目标源码目录，如 `src/backend/`、`src/wechat-miniapp/`。
+2. 使用文件级复制或同步工具复制源码，应用排除规则。
+3. 保留业务入口文件、迁移、路由、模型、页面、项目配置和非敏感配置样例。
+4. 不复制运行时媒体、日志、缓存、数据库、虚拟环境、构建产物。
+5. 复制完成后确认目标目录不为空，并包含实际入口文件：
+   - Django: `src/backend/manage.py`、`src/backend/**/settings.py`
+   - 微信小程序: `src/wechat-miniapp/app.json`、`src/wechat-miniapp/project.config.json`、`src/wechat-miniapp/pages/**`
+6. 更新文档和 `project.yaml`，让日常开发路径指向输出工程内源码，而不是旧只读路径。
 
 ## 5. 必备接入文档
 
@@ -181,6 +222,16 @@ rg --files
 
 没有冲突时可以不创建该文件，或创建并写明“暂无冲突”。
 
+`docs/harness-adoption/source-import.md` 应包含：
+
+- 每个旧源码目录的来源路径。
+- 每个目标源码目录的输出路径。
+- 已复制的关键入口文件。
+- 已排除的目录和文件模式。
+- 疑似敏感配置文件处理策略。
+- 运行时媒体、数据库、日志和缓存处理策略。
+- 源码整合验证结果。
+
 `docs/harness-adoption/pending-decisions.md` 或 `docs/pending-decisions.md` 应包含：
 
 - 决策项
@@ -194,10 +245,10 @@ rg --files
 
 ```bash
 rg "\\[通用\\]|\\[个性化\\]|\\[条件启用\\]|【通用】|【个性化】|【条件启用】|template_scope|抽象模板|Token 优化模板|初始化参数|生成参数" .
-rg "ProjectSoulKing|待确认" README.md AGENTS.md project.yaml docs rules openspec issues iterations
+rg "来源示例项目|待确认" README.md AGENTS.md project.yaml docs rules openspec issues iterations
 ```
 
-允许 `待确认` 只出现在集中 pending decisions 文档中。允许 ProjectSoulKing 只出现在接入说明中用于描述来源，不得出现在项目业务事实、命令、端口或配置中。
+允许 `待确认` 只出现在集中 pending decisions 文档中。允许来源示例项目名称只出现在接入说明中用于描述来源，不得出现在项目业务事实、命令、端口或配置中。
 
 ## 7. 验证顺序
 
@@ -209,5 +260,15 @@ rg "ProjectSoulKing|待确认" README.md AGENTS.md project.yaml docs rules opens
 4. 现有项目 lint/test/build
 5. Docker/Compose 配置检查
 6. `git diff --stat` 和关键文件人工审阅
+
+独立输出目录还必须执行：
+
+```bash
+test -d src/backend || test -d src/web || test -d src/wechat-miniapp
+rg --files src
+test -f docs/harness-adoption/source-import.md
+```
+
+`rg --files src` 不得只返回 `.gitkeep`；必须能看到旧项目实际源码入口。
 
 如果验证失败，先修复再交付。确实无法修复时，说明失败命令、失败原因、影响范围和建议下一步。

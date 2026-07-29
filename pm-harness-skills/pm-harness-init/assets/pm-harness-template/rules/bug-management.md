@@ -94,6 +94,8 @@ BUG-NNNN-slug/
 
 未评审 BUG **不得**写入 Sprint 四件套正式范围；仅可记入 `sprint.md`「延后项（待评审）」并提示 `/bug-review BUG-xxxx --approve`。
 
+`/sprint-propose` 成功写入正式 Sprint 四件套后，Workflow Sync MUST 将纳入的 BUG 从 `approved` 同步为 `in_sprint`，并写入 `iteration: sprint-xxx`。`sprint.yaml` `status: planning` 已满足正式纳入条件，不存在额外“未启动 Sprint”状态门禁。
+
 ### 4.2 opsx-apply 迭代纳入门禁（统一，MUST）
 
 来源于 BUG 的 OpenSpec Change 在 `/opsx-apply` 前 **MUST** 已正式纳入某个 `sprint-xxx`：
@@ -101,6 +103,7 @@ BUG-NNNN-slug/
 - BUG `trace.md` MUST 满足 `status: in_sprint`（或后续交付态）且 `iteration: sprint-xxx` 非空。
 - 对应 `iterations/change|archive/<sprint>/sprint.yaml` MUST 在 `bugs[]` 与 `changes[]` 中包含该 BUG 与 Change。
 - `/opsx-apply` MUST 先用 `--sprint auto` 或等价检查确认能解析到 Sprint；解析失败时必须停止，提示先执行 `/sprint-propose`。
+- 若解析到的 Sprint 为 `planning`，且上述双向追溯一致，`/opsx-apply` MUST 允许继续。
 
 `approved` 只表示已评审通过，可 `/bug-opsx` 与进入 Sprint 规划；不得仅凭 `approved` 直接 `/opsx-apply`。
 

@@ -1,0 +1,61 @@
+{
+  "version": "v0.1.0",
+  "release_time": "2026-07-23 00:00:00",
+  "owner": "release-owner",
+  "announcement": "announcement.mdx",
+  "formal_scope_only": true,
+  "sprints": [],
+  "requirements": [],
+  "bugs": [],
+  "changes": [],
+  "known_issues": [],
+  "upgrade_steps": [],
+  "rollback": {
+    "strategy": "restore previous image or package",
+    "data_backup_required": false,
+    "notes": ""
+  },
+  "impact_scope": {
+    "web_admin": "none",
+    "web_public": "none",
+    "miniapp": "none",
+    "backend": "none",
+    "database": "none",
+    "object_storage": "none",
+    "docker": "none"
+  },
+  "gates": {
+    "openspec_archive": {
+      "status": "na",
+      "rationale": "No versioned release scope yet."
+    },
+    "tests": {
+      "status": "na",
+      "rationale": "No versioned release scope yet."
+    },
+    "client_generation": {
+      "status": "na",
+      "rationale": "No API client change."
+    },
+    "docker_compose": {
+      "status": "na",
+      "rationale": "No deployment change."
+    },
+    "database_migration": {
+      "status": "na",
+      "rationale": "No database change."
+    },
+    "env_example": {
+      "status": "na",
+      "rationale": "No environment variable change."
+    },
+    "product_version": {
+      "status": "na",
+      "rationale": "No user-visible version file configured."
+    },
+    "announcement_preview": {
+      "status": "na",
+      "rationale": "No announcement preview required yet."
+    }
+  }
+}

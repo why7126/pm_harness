@@ -1,0 +1,45 @@
+schema: version-manifest
+version: 1.1.0
+
+fields:
+  version:
+    type: string
+    format: semver
+    required: true
+    description: 语义化版本号，遵循 output-schema.yaml 中的 versioning_rules
+
+  design_system:
+    type: string
+    required: true
+    description: 本版本使用的设计系统标识/版本；若本版本调整了设计系统本身，注明具体改动
+
+  pages:
+    type: list
+    required: true
+    item_format: "页面名: 一句话用途"
+    description: 本版本包含的全部页面清单
+
+  components:
+    type: list
+    required: true
+    description: 本版本使用的核心组件清单
+
+  stable_area:
+    type: list
+    required: true
+    description: >
+      本版本中未改动、直接沿用上一版本的页面/组件/模块清单。
+      CREATE 模式（首个版本）可填 "全部为初版"。
+      此字段是下一次 ITERATE/PATCH 判断"什么不能动"的直接依据，必须准确。
+
+  modified_area:
+    type: list
+    required: true
+    description: >
+      本版本新增或修改的页面/组件/模块清单，逐条附简要说明。
+      CREATE 模式可填 "全部为新建"。
+
+consistency_rules:
+  - stable_area 与 modified_area 合并后应覆盖 pages 与 components 中列出的全部项，不遗漏
+  - stable_area 与 modified_area 不应有交集
+  - iterate_prd_design / patch_prd_design 生成新版本时，modified_area 必须能对应到 diff-report.md 中的实际改动项

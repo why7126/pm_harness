@@ -130,11 +130,12 @@ docs/knowledge-base/
 
 | 类型 | 路径 | 说明 |
 |---|---|---|
-| 需求 | `issues/requirements/{plan,review,archive}/REQ-*` | 单个需求、用户故事、验收和追踪 |
+| 需求 | `issues/requirements/{plan,review,archive}/REQ-*` | 单个需求、PRD、用户故事、验收、原型交付包和追踪 |
 | 缺陷 | `issues/bugs/{plan,review,archive}/BUG-*` | 缺陷记录、复现、修复和回归 |
 | 迭代 | `iterations/change/sprint-xxx/` | Sprint 计划、验收报告和发布说明 |
 | OpenSpec 变更 | `openspec/changes/<change-id>/` | 提案、设计、任务和规格变更 |
 | OpenSpec 规格 | `openspec/specs/<capability>/` | 长期有效的能力规格 |
+| 设计资产 | `design-schemes/schemes/<scheme-id>/` | 可复用 UI/UE、导航栏、Design Token 和 HTML Demo |
 
 禁止为了兼容旧习惯恢复以下目录：
 

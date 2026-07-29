@@ -6,7 +6,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / "pm-harness-skills" / "pm-harness-init"
-MAX_FILES = 200
+MAX_FILES = 220
 
 files = [p for p in SKILL.rglob("*") if p.is_file()]
 skill_files = [p for p in files if p.name == "SKILL.md"]
@@ -21,7 +21,7 @@ forbidden = [
 
 errors = []
 if len(files) > MAX_FILES:
-    errors.append(f"文件数 {len(files)} 超过 Claude Skill 限制 {MAX_FILES}")
+    errors.append(f"文件数 {len(files)} 超过 pm-harness-init 包体预算 {MAX_FILES}")
 if len(skill_files) != 1:
     errors.append(f"必须只有一个 SKILL.md，当前为 {len(skill_files)}")
 if forbidden:

@@ -1,0 +1,18 @@
+# REQ 序号注册表（/capture 与 /req-capture 维护）
+# entries 仅作为索引，不替代各 REQ 目录内的 capture.md、requirement.md、acceptance.md、trace.md。
+next_id: 1
+entries: []
+
+# entry 推荐字段：
+# - id: REQ-0001-example
+#   title: 示例需求标题
+#   status: captured
+#   type: feature
+#   priority: P1
+#   lifecycle_stage: plan
+#   path: issues/requirements/plan/REQ-0001-example/
+#   created: "YYYY-MM-DD hh:mm:ss"
+#   requester: 待确认
+#   owner: 待确认
+#   target_iteration: null
+#   related_changes: []

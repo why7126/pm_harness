@@ -114,6 +114,7 @@ note: {适用范围或注意事项}
 | 产品与架构文档 | `docs/00-*` 到 `docs/08-*` | 产品、架构、部署、API、数据库、兼容、媒体、对象存储、生产镜像发布 |
 | 专项标准 | `docs/standards/` | API、认证、错误码、上传、测试等标准 |
 | 兼容模块 | `compatibility/` | 端设备、数据库、对象存储等独立兼容适配说明 |
+| 设计资产库 | `design-schemes/` | 可复用 UI/UE、导航栏和 HTML Demo 方案 |
 | 需求治理 | `issues/requirements/` | 需求捕获、PRD、验收、追踪 |
 | 缺陷治理 | `issues/bugs/` | Bug 捕获、复现、根因、修复、回归 |
 | 迭代治理 | `iterations/{change,archive}/` | Sprint 计划、执行、验收、归档 |
@@ -141,6 +142,8 @@ note: {适用范围或注意事项}
 | `docs/06-video-asset-management.md` | 媒体文档 | 视频/富媒体资产管理 | 媒体需求 | 媒体能力变化时更新 | `{DOCS_OWNER}` | 条件 |
 | `docs/07-object-storage-strategy.md` | 存储文档 | 对象存储策略 | 存储需求 / 部署配置 | 存储策略变化时更新 | `{DOCS_OWNER}` | 条件 |
 | `docs/08-production-image-release.md` | 发布文档 | 生产镜像包构建与部署 | 部署策略 / 发布记录 | 镜像构建、交付或部署流程变化时更新 | `{DOCS_OWNER}` | 条件 |
+| `design-schemes/README.md` | 设计资产库 | 设计资产库入口、使用方式和质量规则 | 设计方案沉淀 / 人工维护 | 新增、删除或调整设计方案时更新 | `{DOCS_OWNER}` | 条件 |
+| `design-schemes/registry.json` | 设计资产库 | 已沉淀设计方案索引 | 设计方案沉淀 / 自动或人工维护 | 方案 ID、路径、标签或 Demo 变化时更新 | `{DOCS_OWNER}` | 条件 |
 
 ## 5.1 兼容性模块清单 `[通用 + 条件启用]`
 
@@ -229,6 +232,18 @@ note: {适用范围或注意事项}
 | `.agents/skills/` | Agent 技能 | 命令技能、OpenSpec、workflow-sync 统一入口 | Agent 工作流治理 | 命令语义、上下文预算或工作流规则变化时更新 | 是 |
 | `{CUSTOM_SCRIPT_PATH}` | 脚本 | `{CUSTOM_SCRIPT_PURPOSE}` | `{CUSTOM_SCRIPT_SOURCE}` | `{CUSTOM_SCRIPT_UPDATE_METHOD}` | `{AI_EDIT_ALLOWED}` |
 
+## 8.1 设计资产清单 `[条件启用]`
+
+当项目维护可复用 UI/UE 或导航栏方案时启用本表。
+
+| 路径 | 类型 | 用途 | 内容来源 | 更新方式 | 是否允许 AI 修改 |
+|---|---|---|---|---|---|
+| `design-schemes/schemes/tilesfst/meta.json` | JSON | TilesFST 设计资产元信息 | 设计方案沉淀 | 来源状态、版本、标签或资产路径变化时更新 | 是 |
+| `design-schemes/schemes/tilesfst/design.json` | JSON | TilesFST 整体 UI/UE 事实源 | 设计方案沉淀 / 待源码或截图核验 | Token、组件、布局或交互规则变化时更新 | 是 |
+| `design-schemes/schemes/tilesfst/navigation.json` | JSON | TilesFST 导航栏事实源 | 设计方案沉淀 / 待源码或截图核验 | 导航结构、状态、权限或响应式行为变化时更新 | 是 |
+| `design-schemes/schemes/tilesfst/demo.html` | HTML | TilesFST 整体 UI/UE 可视化预览 | design.json 渲染 / 人工维护 | 设计 Token 或组件展示变化时更新 | 是 |
+| `design-schemes/schemes/tilesfst/navigation-demo.html` | HTML | TilesFST 导航栏可视化预览 | navigation.json 渲染 / 人工维护 | 导航结构或交互状态变化时更新 | 是 |
+
 ## 9. 条件启用模块 `[个性化]`
 
 以下模块应根据 `{ENABLED_DOC_MODULES}`、`{ENABLED_PRODUCT_FORMS}`、`{ENABLED_TECH_STACKS}` 和 `{ENABLED_GOVERNANCE_FLOWS}` 保留、删除或标记为“不适用”。
@@ -239,6 +254,7 @@ note: {适用范围或注意事项}
 | 有认证授权 | `docs/standards/authentication.md`、`docs/standards/error-codes.md` |
 | 有数据库 | `docs/04-database-design.md`、`rules/database.md`、`rules/data-management.md` |
 | 有 Web / Admin / UI | `rules/ui-design.md`、`docs/standards/frontend-test-standard.md` |
+| 有可复用 UI/UE 或导航栏资产 | `design-schemes/`、`rules/ui-design.md` |
 | 有文件上传 / 媒体 | `rules/media.md`、`docs/standards/file_upload.md`、`docs/06-video-asset-management.md` |
 | 有对象存储 | `rules/object-storage.md`、`docs/07-object-storage-strategy.md` |
 | 有兼容性承诺 | `compatibility/` 下对应端、数据库、对象存储适配文档 |

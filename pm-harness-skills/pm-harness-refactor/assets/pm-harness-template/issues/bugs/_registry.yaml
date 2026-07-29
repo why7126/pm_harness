@@ -1,0 +1,20 @@
+# BUG 序号注册表（/capture 与 /bug-capture 维护）
+# entries 仅作为索引，不替代各 BUG 目录内的 capture.md、bug.md、root-cause.md、acceptance.md、trace.md。
+next_id: 1
+entries: []
+
+# entry 推荐字段：
+# - id: BUG-0001-example
+#   title: 示例缺陷标题
+#   status: captured
+#   severity: medium
+#   priority: P2
+#   lifecycle_stage: plan
+#   path: issues/bugs/plan/BUG-0001-example/
+#   created: "YYYY-MM-DD hh:mm:ss"
+#   reporter: 待确认
+#   owner: 待确认
+#   related_requirement: null
+#   related_bug: null
+#   related_change: null
+#   iteration: null

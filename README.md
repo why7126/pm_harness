@@ -18,10 +18,35 @@ Project PM Harness 是一个面向产品经理的 AI Coding Harness 工程模板
 
 ```text
 .
+├── .agents/skills/      # 项目级已安装 Agent Skill 入口
+├── design-schemes/      # 本地设计资产库，沉淀可复用 UI/UE 与导航方案
 ├── pm-harness/          # Harness 工程模板主体，后续持续迭代该工程结构
-├── pm-harness-cases/    # Harness 使用案例，用真实或示例项目验证模板可用性
-└── pm-harness-skills/   # Harness 应用 Skill，用于初始化、生成、维护 Harness 工程
+└── pm-harness-skills/   # Harness 应用 Skill，用于初始化新工程、改造存量项目和维护 Harness 工程
 ```
+
+### design-schemes
+
+`design-schemes/` 是本地设计资产库，用于沉淀可复用的 UI/UE 设计方案、导航栏模式和可直接预览的 HTML Demo。它服务于两类场景：
+
+- 新项目初始化：从已沉淀方案中选择整体 UI/UE、导航栏或两者组合，作为 `rules/ui-design.md`、Design Token 和原型预览的输入。
+- 存量项目重构：把整体视觉语言和导航结构拆开评估，支持只替换导航栏、只替换组件风格或完整套用方案。
+
+当前目录结构：
+
+```text
+design-schemes/
+├── README.md
+├── registry.json
+└── schemes/
+    └── tilesfst/
+        ├── meta.json
+        ├── design.json
+        ├── navigation.json
+        ├── demo.html
+        └── navigation-demo.html
+```
+
+其中 `design.json` 是整体 UI/UE 事实源，`navigation.json` 是导航栏事实源，两个 HTML 文件用于让用户一眼确认方案效果。
 
 ### pm-harness
 
@@ -46,26 +71,31 @@ pm-harness/
 └── tests/               # 单元、集成、E2E、兼容性测试目录
 ```
 
-### pm-harness-cases
-
-`pm-harness-cases/` 用于存放该 Harness 工程的使用案例。案例项目应尽量保留完整闭环，包括需求、迭代、OpenSpec、实现目录、测试目录和相关文档，方便验证模板是否真正可用于产品研发流程。
-
-当前示例：
-
-```text
-pm-harness-cases/
-└── tilesfst/
-```
-
 ### pm-harness-skills
 
-`pm-harness-skills/` 用于存放该 Harness 工程的应用 Skill。例如 `pm-harness-init` 可基于模板快速初始化一个新的 PM Harness 工程。
+`pm-harness-skills/` 用于存放该 Harness 工程的应用 Skill。`pm-harness-init` 面向新项目初始化，`pm-harness-refactor` 面向存量项目的非破坏式接入、重构和治理化改造，`pm-harness-uidesign` 面向真实项目 UI/UE 设计资产提炼，`pm-prd-design` 面向 PRD、交互说明和可点击原型的工程化生成。
+
+项目根目录的 `.agents/skills/` 是当前仓库的已安装 Skill 入口；需要让本项目直接使用某个 Skill 时，从 `pm-harness-skills/` 同步到 `.agents/skills/`。
 
 ```text
 pm-harness-skills/
-└── pm-harness-init/
+├── pm-harness-init/
+│   ├── SKILL.md
+│   ├── assets/
+│   └── references/
+├── pm-harness-refactor/
+│   ├── SKILL.md
+│   ├── assets/
+│   └── references/
+├── pm-harness-uidesign/
+│   ├── SKILL.md
+│   └── references/
+└── pm-prd-design/
     ├── SKILL.md
-    └── assets/
+    ├── prompts/
+    ├── schemas/
+    ├── templates/
+    └── validators/
 ```
 
 ## 闭环模型
@@ -165,6 +195,21 @@ issues/requirements/REQ-0001-user-login/prototype/
 | HTML 原型 | 给开发和 AI Agent 提供可运行、可检查、可复用的实现参考 |
 
 建议在 `trace.md` 中显式登记原型资产路径，确保研发实现时可以从需求直接定位到视觉来源。
+
+需要从零生成或迭代 PRD + 交互 + 可点击原型交付包时，使用 `pm-prd-design` Skill。它的标准交付物包括 `requirement.md`、`interaction.md`、`prototype.html`、`prototype-context.md`、`prototype.png`、`version-manifest.md` 和 `package.zip`；ITERATE/PATCH 场景还会补充变更、差异和回归报告。具体页面原型仍应归档到对应 `issues/requirements/**/prototype/` 下，长期复用的视觉方案才进入 `design-schemes/`。
+
+## 设计资产管理
+
+除单个需求下的原型资产外，长期复用的设计方案统一沉淀到 `design-schemes/`。
+
+推荐将设计资产拆成两层：
+
+| 资产 | 文件 | 作用 |
+|---|---|---|
+| 整体 UI/UE 方案 | `design.json`、`demo.html` | 沉淀颜色、字体、间距、组件、页面密度、响应式和整体体验预览 |
+| 导航栏方案 | `navigation.json`、`navigation-demo.html` | 沉淀导航结构、菜单分组、激活态、折叠态、权限态和移动端行为 |
+
+这类资产不替代 `issues/requirements/**/prototype/` 中的具体页面原型。它更像可复用的设计系统种子：新项目初始化或已有项目重构时，可以先选方案，再将具体页面原型绑定到对应需求。
 
 ## 迭代管理
 
@@ -272,7 +317,16 @@ openspec/changes/add-user-login/
 
 ## Skill 应用
 
-本仓库提供 `pm-harness-init` Skill，用于基于模板初始化新的 Harness 工程。
+本仓库提供以下 Harness 应用 Skill：
+
+| Skill | 适用对象 | 典型用途 |
+|---|---|---|
+| `pm-harness-init` | 新项目 | 基于模板初始化新的 PM Harness 工程 |
+| `pm-harness-refactor` | 存量项目 | 将 PM Harness / OpenSpec + AI Agent 规范工程非破坏式接入已有代码仓库 |
+| `pm-harness-uidesign` | 设计资产库 | 从真实项目提炼 UI/UE、导航栏和 HTML Demo 设计资产 |
+| `pm-prd-design` | 产品需求与原型 | 工程化生成或迭代 PRD、交互说明、可点击原型和版本化交付包 |
+
+### pm-harness-init
 
 典型使用场景：
 
@@ -280,10 +334,55 @@ openspec/changes/add-user-login/
 - 生成 OpenSpec + AI Agent 规范编程项目结构。
 - 根据产品名称、项目代码、产品简介、产品形态、技术栈、能力开关、治理流程、部署方式、测试策略等信息生成可复制的工程骨架。
 
-Skill 位置：
+Skill 入口：
 
 ```text
 pm-harness-skills/pm-harness-init/SKILL.md
+```
+
+### pm-harness-refactor
+
+典型使用场景：
+
+- 将已有项目接入 PM Harness 目录、规则、文档、需求/Bug/迭代和 OpenSpec 治理。
+- 在不破坏旧项目源码、配置、CI 和文档的前提下合并 Harness 资产。
+- 将旧业务源码复制或整合到新的 Harness 输出目录，并生成 `docs/harness-adoption/` 接入记录。
+- 给存量项目补齐 `.agents/skills/` 单一 Agent 技能入口和校验脚本。
+
+Skill 入口：
+
+```text
+pm-harness-skills/pm-harness-refactor/SKILL.md
+```
+
+### pm-harness-uidesign
+
+典型使用场景：
+
+- 从本地项目代码库、GitHub 仓库或代码压缩包中提炼真实 UI/UE 设计方案。
+- 将整体视觉方案、导航栏/侧边栏、Design Token 和关键交互拆分沉淀到 `design-schemes/`。
+- 生成 `design.json`、`navigation.json`、`ui-design.md`、`demo.html` 和 `navigation-demo.html`。
+- 为后续新项目初始化或存量项目重构提供可预览、可复用的设计资产。
+
+Skill 入口：
+
+```text
+pm-harness-skills/pm-harness-uidesign/SKILL.md
+```
+
+### pm-prd-design
+
+典型使用场景：
+
+- 从零创建企业级产品的 PRD、交互说明和可点击高保真原型。
+- 在已有交付包基础上做整体迭代，并产出变更说明、差异报告和回归报告。
+- 对现有原型做小范围 PATCH，明确保留未授权修改区域，避免布局和设计系统漂移。
+- 生成可版本化的 `package.zip`，作为需求评审、研发实现和后续迭代的事实源。
+
+Skill 入口：
+
+```text
+pm-harness-skills/pm-prd-design/SKILL.md
 ```
 
 ## 适用场景
@@ -294,7 +393,9 @@ Project PM Harness 适合以下团队或项目：
 - 团队使用 OpenSpec 管理工程变更，但需要补齐产品需求和迭代闭环。
 - AI Coding 项目需要清晰的上下文、规则、验收标准和可追踪文档。
 - 研发需要从产品原型图、原型上下文和 HTML 原型中一比一复现产品设计。
+- 产品经理需要稳定生成、迭代或小范围修补 PRD + 交互 + 原型交付包。
 - 项目需要长期沉淀可复用的需求模板、迭代模板、OpenSpec 模板和 Agent Skill。
+- 项目需要沉淀可复用的 UI/UE、导航栏和 HTML 视觉预览，用于后续初始化或重构。
 
 ## 维护原则
 
@@ -303,4 +404,5 @@ Project PM Harness 适合以下团队或项目：
 - 任何 OpenSpec Change 都应能追溯到需求或基础设施建设目标。
 - 任何迭代都应能列出其包含的需求、Bug、OpenSpec Change、验收结果和发布说明。
 - 产品原型资产应和需求一起版本化，避免视觉、交互和实现上下文丢失。
+- 可复用设计资产应进入 `design-schemes/`，并同时提供结构化 JSON 和可直接打开的 HTML Demo。
 - 状态变化必须回写到追踪文档，保证人、脚本和 AI Agent 读取到同一事实。

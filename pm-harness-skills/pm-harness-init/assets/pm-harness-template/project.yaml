@@ -213,6 +213,9 @@ ai:
       - /release-propose
       - /release-prepare
       - /release-publish
+    image:
+      - /image-prepare
+      - /image-build
     bootstrap:
       - /initialize-project
       - /build-design-system

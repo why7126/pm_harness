@@ -1,0 +1,46 @@
+skill: pm-prd-design
+version: 1.1.0
+
+modes:
+  - id: create_prd_design
+    label: CREATE_PRD_DESIGN
+    description: 从0到1创建产品需求与设计原型
+    required_inputs:
+      - file: product-context.md
+        description: 产品定位、目标用户、核心场景、业务目标
+        template: templates/product-context-template.md
+      - file: ui-design.md
+        description: 设计系统——色板/字体/间距/圆角阴影/核心组件规范
+        template: templates/ui-design-template.md
+        fallback: 缺失时参照 /mnt/skills/public/frontend-design/SKILL.md 帮用户确立设计基调后落成文档
+      - file: page-request.md
+        description: 页面清单，每个页面标注核心功能点与优先级(P0/P1/P2)
+        template: templates/page-request-template.md
+    optional_inputs: []
+
+  - id: iterate_prd_design
+    label: ITERATE_PRD_DESIGN
+    description: 在已有产品设计基础上进行整体性改进/新增
+    required_inputs:
+      - file: source.zip
+        description: 上一版本完整交付包（或散落的既有设计文件）
+        note: 必须包含至少 requirement.md / interaction.md / prototype.html / version-manifest.md
+      - file: iteration-request.md
+        description: 本次迭代的目标(Goal)、具体改动(Changes)、影响范围(Impact)
+        template: templates/change-request-template.md
+    optional_inputs: []
+
+  - id: patch_prd_design
+    label: PATCH_PRD_DESIGN
+    description: 在已有版本上做范围明确的小改动，其余内容强制保留
+    required_inputs:
+      - file: source.zip
+        description: 上一版本完整交付包，作为唯一基线
+      - file: patch-request.md
+        description: 基准版本号(Version)、仅允许修改项(Only Modify)、可选的禁止项(Forbidden Changes)与保留项(Keep)
+        template: templates/patch-request-template.md
+    optional_inputs: []
+
+validation_rules:
+  - 缺少任一 required_inputs 时，不得直接生成产出，需引导用户使用对应 template 补齐或主动追问
+  - iterate_prd_design 与 patch_prd_design 若无法从上下文或 source.zip 中还原上一版本，必须如实告知用户，不得凭空构造"上一版"内容

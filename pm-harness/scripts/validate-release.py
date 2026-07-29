@@ -24,6 +24,11 @@ REQUIRED_GATES = (
     "announcement_preview",
 )
 
+IMAGE_GATES = (
+    "image_prepare",
+    "image_build",
+)
+
 IMPACT_KEYS = (
     "web_admin",
     "web_public",
@@ -131,6 +136,25 @@ def validate_database_impact_gate(data: dict[str, Any], errors: list[str]) -> No
         "database impact requires database_migration evidence to mention migration or schema SQL",
         errors,
     )
+
+
+def validate_image_gates(release_dir: Path, data: dict[str, Any], errors: list[str]) -> None:
+    gates = data.get("gates")
+    if not isinstance(gates, dict):
+        return
+    image_required = data.get("image_required") is True
+    for name in IMAGE_GATES:
+        if name in gates:
+            gate_is_passing(name, gates[name], errors)
+        elif image_required:
+            errors.append(f"gate {name} is required when image_required is true")
+
+    if not image_required:
+        return
+    plan_path = release_dir / "image-build-plan.json"
+    manifest_path = release_dir / "image-manifest.json"
+    require(plan_path.exists(), f"image_required release missing {plan_path}", errors)
+    require(manifest_path.exists(), f"image_required release missing {manifest_path}", errors)
     require(
         any(pattern.search(evidence) for pattern in DATABASE_CHECK_PATTERNS),
         "database impact requires schema drift, target database smoke, or information_schema evidence",
@@ -185,6 +209,7 @@ def validate_release(release_dir: Path, product_version_file: Path | None = None
             if name in gates:
                 gate_is_passing(name, gates[name], errors)
     validate_database_impact_gate(data, errors)
+    validate_image_gates(release_dir, data, errors)
 
     product_version = extract_product_version(product_version_file)
     if product_version is not None and version != product_version:

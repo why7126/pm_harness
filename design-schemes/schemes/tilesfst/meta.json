@@ -1,0 +1,35 @@
+{
+  "id": "tilesfst",
+  "name": "TilesFST / STONEX Design Assets",
+  "version": "0.2.0",
+  "created_at": "2026-07-28T00:00:00+08:00",
+  "updated_at": "2026-07-28T00:00:00+08:00",
+  "source_project": "TilesFST",
+  "source_repo": "local-source-redacted:tilesfst",
+  "source_status": "verified-from-local-source",
+  "inferred": false,
+  "category": "dashboard",
+  "tags": ["admin", "miniapp", "dark-flagship", "industrial", "brand-gold", "stone-texture", "collapsible-sidebar"],
+  "assets": {
+    "design": "design.json",
+    "navigation": "navigation.json",
+    "demo": "demo.html",
+    "navigation_demo": "navigation-demo.html"
+  },
+  "source_files": [
+    "rules/ui-design.md",
+    "src/shared/design-system/spec.md",
+    "src/shared/design-system/tokens/",
+    "src/web/src/styles/globals.css",
+    "src/web/src/features/admin/styles/admin-home.css",
+    "src/web/src/features/admin/components/AdminSidebar.tsx",
+    "src/web/src/features/admin/data/admin-nav.ts",
+    "src/miniapp/components/custom-navigation/",
+    "src/miniapp/custom-tab-bar/"
+  ],
+  "notes": [
+    "Replaced the initial placeholder with tokens and navigation structure extracted from the real TilesFST project.",
+    "The actual visual direction is industrial stone dark flagship, not a generic blue/white dashboard.",
+    "Web admin and Miniapp navigation are both represented in navigation.json."
+  ]
+}

@@ -186,6 +186,7 @@ note: 适用于 {PRODUCT_NAME} 项目；本文档是工程根入口，详细规�
 | `rules/` | 工程规则、编码、安全、测试、部署等约束 | 必须保留 |
 | `docs/` | 产品、架构、部署、API、数据库、标准文档 | 必须保留 |
 | `docs/standards/` | API、认证、错误码、测试、上传等专项标准 | 按能力保留 |
+| `design-schemes/` | 可复用 UI/UE、导航栏和 HTML Demo 设计资产库 | 条件启用 |
 | `issues/` | 需求与缺陷治理目录 | 必须保留 |
 | `iterations/{change,archive}/` | Sprint 与迭代治理目录 | 条件启用 |
 | `openspec/` | OpenSpec 变更与规格事实源 | 条件启用 |
@@ -232,8 +233,18 @@ AI Agent 修改本项目时必须：
 | 兼容矩阵 | `docs/05-compatibility-matrix.md` |
 | 媒体/视频资产 | `docs/06-video-asset-management.md` |
 | 对象存储策略 | `docs/07-object-storage-strategy.md` |
+| 设计资产库 | `design-schemes/README.md` |
 | 文档目录说明 | `docs/README.md` |
 | API/认证/错误码/测试等标准 | `docs/standards/` |
+
+可复用 Harness Skill 位于 `pm-harness-skills/`：
+
+| Skill | 用途 |
+|---|---|
+| `pm-harness-init` | 初始化新 PM Harness 工程 |
+| `pm-harness-refactor` | 非破坏式接入和重构存量项目 |
+| `pm-harness-uidesign` | 从真实项目提炼 UI/UE、导航栏和 HTML Demo 设计资产 |
+| `pm-prd-design` | 生成或迭代 PRD、交互说明、可点击原型和版本化交付包 |
 
 ## 11. 项目治理命令 `[通用 + 个性化]`
 
@@ -247,6 +258,7 @@ AI Agent 修改本项目时必须：
 | Sprint 治理 | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-exps`、`/sprint-archive` |
 | OpenSpec | `/opsx-explore`、`/opsx-propose`、`/opsx-apply`、`/opsx-archive` |
 | 小程序发布辅助 | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` |
+| 镜像交付 | `/image-prepare`、`/image-build` |
 | 发布治理 | `/release-propose`、`/release-prepare`、`/release-publish` |
 | 项目基线 | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
 

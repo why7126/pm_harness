@@ -32,6 +32,7 @@ note: AGENTS.md 必须引用本文档；用于防止 AI 随意新增目录或把
 | `tests/` | 测试 | 否 |
 | `scripts/` | 自动化脚本 | 否 |
 | `data/` | 本地开发、演示、测试样例和运行时数据承载 | 是，仅本地环境 |
+| `design-schemes/` | 可复用 UI/UE、导航栏和 HTML Demo 设计资产库 | 否 |
 | `models/` | 模型说明和校验信息；不得提交大模型权重 | 否 |
 | `deploy/` | 部署编排与发布脚本 | 否 |
 
@@ -71,7 +72,34 @@ releases/
 - 版本目录 SHOULD 使用 SemVer 风格，例如 `v0.1.0/`。
 - 公告发布时间字段 MUST 使用 `YYYY-MM-DD HH:mm:ss`。
 
-## 4. 源码归属规则
+## 4. `design-schemes/` 设计资产库
+
+`design-schemes/` 用于沉淀可跨项目复用的 UI/UE、导航栏和视觉预览资产，服务于新项目初始化和存量项目重构。
+
+推荐结构：
+
+```text
+design-schemes/
+├── README.md
+├── registry.json
+└── schemes/
+    └── {scheme-id}/
+        ├── meta.json
+        ├── design.json
+        ├── navigation.json
+        ├── demo.html
+        └── navigation-demo.html
+```
+
+边界：
+
+- `design.json` MUST 作为整体 UI/UE 事实源，记录颜色、字体、间距、组件、布局、响应式和交互规则。
+- `navigation.json` MUST 作为导航栏事实源，记录导航类型、菜单分组、状态、权限、折叠和移动端行为。
+- `demo.html` 与 `navigation-demo.html` MUST 是可直接打开的静态预览文件，用于让用户快速判断方案效果。
+- `design-schemes/` MUST NOT 存放具体业务页面需求、运行时截图缓存、构建产物、真实客户数据、账号、密钥或接口凭据。
+- 从来源项目抽取但尚未核对的资产 MUST 标记 `inferred: true`；基于源码、设计稿或截图核实后才可标记为 `inferred: false`。
+
+## 5. 源码归属规则
 
 后端代码推荐放在：
 
@@ -115,9 +143,10 @@ src/infrastructure/
 
 禁止把后端、前端或业务代码放到 `scripts/`、`docs/`、`tests/` 或项目根目录。共享类型、常量、错误码、SDK 应放在 `src/shared/` 或 `src/sdk/`，不得复制到多个端。
 
-## 5. 文档归属规则
+## 6. 文档归属规则
 
 - 主文档与总索引放入 `docs/`。
+- 可复用设计资产说明放入 `design-schemes/README.md` 和各方案目录 README；单个需求页面原型仍放入 `issues/requirements/{plan|review|archive}/REQ-*/prototype/`。
 - API、测试等治理细则放入 `docs/standards/`。
 - 产品需求放入 `issues/requirements/{plan|review|archive}/REQ-*`；禁止 `docs/prd/`。
 - BUG 分析放入 `issues/bugs/{plan|review|archive}/BUG-*`；禁止 `docs/bugs/`。
@@ -125,9 +154,9 @@ src/infrastructure/
 - 迭代文档放入 `iterations/{change|archive}/sprint-xxx/`。
 - 产品版本发布对象、公告源文件和发布校验记录放入 `releases/`。
 - 正式系统能力放入 `openspec/specs/`。
-- 开发中的变更放入 `openspec/changes/`；已完成变更放入 `openspec/changes/archive/`。
+- 开发中的变更放入 `openspec/changes/`；已完成变更放入 `openspec/archive/`。
 
-## 6. Docker 与部署文件
+## 7. Docker 与部署文件
 
 - 根目录只保留项目级编排文件，例如 `docker-compose.yml` 与按需启用的 `docker-compose.prod*.yml`。
 - 后端镜像构建文件放入 `src/backend/Dockerfile`。
@@ -135,7 +164,7 @@ src/infrastructure/
 - Web Nginx 配置放入 `src/web/nginx.conf`。
 - 部署脚本放入 `scripts/` 或 `deploy/`，并在 README / 部署文档中说明。
 
-## 7. AI 新增文件前检查清单
+## 8. AI 新增文件前检查清单
 
 ```text
 □ 是否已有 OpenSpec Change？
@@ -147,7 +176,7 @@ src/infrastructure/
 □ 是否需要同步客户端生成代码？
 ```
 
-## 8. 禁止事项
+## 9. 禁止事项
 
 - 禁止在根目录新增业务代码文件。
 - 禁止将测试代码放入源码目录外的临时目录。

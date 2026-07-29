@@ -1,0 +1,28 @@
+.env
+.env.local
+.venv/
+node_modules/
+dist/
+build/
+coverage/
+.pytest_cache/
+__pycache__/
+*.pyc
+.DS_Store
+*.zip
+
+# Runtime data
+*.sqlite
+*.sqlite3
+*.db
+data/runtime/**
+data/sqlite/**
+data/uploads/**
+data/processed/**
+data/tmp/**
+data/minio/**
+
+# Keep template placeholders and docs
+!**/.gitkeep
+!data/README.md
+!data/samples/**
