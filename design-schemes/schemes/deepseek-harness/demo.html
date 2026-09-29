@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeepSeek Harness UI Scheme</title>
+  <style>
+    :root {
+      --bg: rgb(255,255,255);
+      --module: rgb(245,246,247);
+      --sidebar: rgb(249,250,251);
+      --surface: rgb(255,255,255);
+      --subtle: rgb(241,243,245);
+      --overlay: rgb(233,236,242);
+      --ink: rgb(15,17,21);
+      --secondary: rgb(97,102,107);
+      --tertiary: rgb(129,133,140);
+      --dim: rgb(225,229,238);
+      --line1: rgba(0,0,0,.04);
+      --line2: rgba(0,0,0,.1);
+      --line3: rgba(0,0,0,.12);
+      --blue: rgb(65,118,230);
+      --blue-soft: rgb(228,237,253);
+      --bubble: rgb(237,243,254);
+      --green: rgb(34,197,94);
+      --amber: rgb(245,158,11);
+      --red: rgb(236,19,19);
+      --ease: cubic-bezier(.4,0,.2,1);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; height: 100vh; overflow: hidden; background: var(--bg); font-size: 14px; line-height: 22px; letter-spacing: 0; }
+    button { font: inherit; }
+    .frame { height: 100vh; display: grid; grid-template-columns: 280px minmax(0, 1fr) 320px; grid-template-rows: 100%; overflow: hidden; background: var(--bg); transition: grid-template-columns .3s var(--ease); }
+    .frame.collapsed { grid-template-columns: 56px minmax(0, 1fr) 0px; }
+    .sidebar { min-width: 0; overflow: hidden; background: var(--sidebar); border-right: 1px solid var(--line1); padding: 6px 12px; display: flex; flex-direction: column; transition: padding .3s var(--ease); }
+    .collapsed .sidebar { padding: 18px 10px 6px; }
+    .logo-row { height: 60px; padding: 8px 0 8px 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; overflow: hidden; }
+    .collapsed .logo-row { height: 36px; padding: 0; margin-bottom: 12px; justify-content: flex-start; }
+    .brand { flex: 1; min-width: 0; display: inline-flex; align-items: center; gap: 8px; border: 0; background: transparent; color: inherit; cursor: pointer; padding: 0; overflow: hidden; }
+    .mark { width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: white; display: grid; place-items: center; font-weight: 500; font-size: 13px; flex: none; }
+    .wordmark { font-weight: 500; white-space: nowrap; transition: opacity .15s var(--ease), max-width .15s var(--ease); }
+    .collapsed .wordmark { opacity: 0; max-width: 0; }
+    .icon-btn { width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--secondary); display: inline-grid; place-items: center; cursor: pointer; flex: none; }
+    .icon-btn:hover { background: rgba(38,49,72,.06); }
+    .collapsed .icon-btn { width: 36px; height: 36px; color: var(--ink); }
+    .toggle .panel { display: inline; }
+    .toggle .rail { display: none; }
+    .collapsed .toggle .panel { display: none; }
+    .collapsed .toggle .rail { display: inline; }
+    .collapsed .toggle:hover .panel { display: inline; }
+    .collapsed .toggle:hover .rail { display: none; }
+    .new-session { height: 38px; margin: 0 2px 8px; padding: 8px 16px; border: 1px solid var(--line2); border-radius: 12px; background: var(--surface); display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; cursor: pointer; overflow: hidden; }
+    .new-session:hover { background: var(--subtle); }
+    .collapsed .new-session { width: 36px; height: 36px; padding: 0; margin: 0 0 12px; border-color: transparent; background: transparent; }
+    .new-session span:last-child { white-space: nowrap; }
+    .collapsed .new-session span:last-child { display: none; }
+    .browser { flex: 1; min-height: 0; margin-left: -4px; margin-right: -12px; padding: 0 12px 0 4px; overflow: hidden; display: flex; flex-direction: column; }
+    .collapsed .browser { margin: 0; padding: 0; align-items: center; }
+    .search { height: 32px; border: 1px solid var(--line2); border-radius: 8px; background: var(--surface); display: flex; align-items: center; gap: 6px; padding: 0 8px; color: var(--tertiary); margin-bottom: 12px; }
+    .collapsed .search { width: 36px; height: 36px; justify-content: center; border-color: transparent; background: transparent; }
+    .collapsed .search span:last-child { display: none; }
+    .section-title { color: var(--tertiary); font-size: 12px; line-height: 16px; padding: 8px 8px 4px; }
+    .row { height: 32px; border-radius: 8px; display: flex; align-items: center; gap: 4px; padding: 0 8px; color: var(--secondary); white-space: nowrap; overflow: hidden; }
+    .row.project { height: 34px; color: var(--ink); font-weight: 500; }
+    .row.active { background: var(--blue-soft); color: var(--ink); }
+    .row:hover { background: rgba(38,49,72,.06); }
+    .status { width: 8px; height: 8px; border-radius: 50%; background: var(--dim); flex: none; }
+    .status.run { background: var(--green); }
+    .status.wait { background: var(--amber); }
+    .collapsed .section-title, .collapsed .row span:not(.status) { display: none; }
+    .collapsed .row { width: 36px; height: 36px; padding: 0; justify-content: center; }
+    .foot { flex: none; display: flex; flex-direction: column; gap: 4px; }
+    .center { min-width: 0; overflow: hidden; display: flex; flex-direction: column; background: var(--bg); }
+    .topline { height: 52px; border-bottom: 1px solid var(--line1); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .pill { height: 28px; padding: 0 10px; border-radius: 14px; border: 1px solid var(--line2); background: transparent; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 18px; color: var(--secondary); }
+    .chat { flex: 1; min-height: 0; overflow: auto; padding: 16px max(32px, calc((100vw - 920px) / 2)); }
+    .message { max-width: 760px; margin: 0 auto 18px; }
+    .message.user { display: flex; justify-content: flex-end; }
+    .bubble { max-width: 72%; padding: 10px 14px; border-radius: 18px; background: var(--bubble); }
+    .assistant .bubble { background: transparent; max-width: 100%; padding: 0; }
+    .tool-card { margin-top: 10px; border: 1px solid var(--line1); border-radius: 8px; overflow: hidden; background: var(--module); font-family: "SF Mono", "JetBrains Mono", Consolas, monospace; font-size: 12px; line-height: 18px; }
+    .tool-head { padding: 8px 10px; border-bottom: 1px solid var(--line1); color: var(--secondary); display: flex; justify-content: space-between; }
+    .tool-body { padding: 10px; color: var(--ink); }
+    .composer-stack { padding: 0 16px 16px; }
+    .composer { max-width: 792px; margin: 0 auto; border: 1px solid var(--line2); border-radius: 22px; background: var(--surface); padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .draft { min-height: 48px; color: var(--secondary); }
+    .composer-actions { display: flex; align-items: center; justify-content: space-between; }
+    .btn { height: 36px; border: 0; border-radius: 18px; padding: 0 14px; background: transparent; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; color: var(--ink); }
+    .btn:hover { background: rgba(38,49,72,.06); }
+    .btn.primary { background: var(--ink); color: white; }
+    .details { min-width: 0; overflow: hidden; border-left: 1px solid var(--line2); background: var(--module); transition: opacity .2s var(--ease); }
+    .collapsed .details { border-left: 0; opacity: 0; }
+    .details-inner { padding: 18px; width: 320px; }
+    .metric { border: 1px solid var(--line1); border-radius: 8px; background: var(--surface); padding: 12px; margin-bottom: 10px; }
+    .metric b { display: block; font-size: 20px; line-height: 28px; }
+    .handle { position: absolute; top: 0; bottom: 0; width: 8px; right: 316px; cursor: col-resize; }
+    .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 12px; height: 32px; border-radius: 10px; border: 1px solid var(--line2); background: var(--surface); transform: translate(-50%,-50%); opacity: 0; transition: opacity .3s var(--ease); }
+    .details:hover ~ .handle::after, .handle:hover::after { opacity: 1; }
+    @media (max-width: 860px) { .frame { grid-template-columns: 56px minmax(0,1fr) 0; } .sidebar { padding: 18px 10px 6px; } .details { display: none; } .wordmark, .new-session span:last-child, .search span:last-child, .section-title, .row span:not(.status) { display: none; } .icon-btn, .new-session, .search, .row { width: 36px; height: 36px; justify-content: center; } .chat { padding: 16px 24px; } }
+  </style>
+</head>
+<body>
+  <main id="frame" class="frame">
+    <aside class="sidebar">
+      <div class="logo-row">
+        <button class="brand" title="New session"><span class="mark">D</span><span class="wordmark">DeepSeek Harness</span></button>
+        <button class="icon-btn toggle" id="toggle" title="Collapse sidebar"><span class="panel">⇤</span><span class="rail">D</span></button>
+      </div>
+      <button class="new-session"><span>＋</span><span>New Session</span></button>
+      <div class="browser">
+        <div class="search"><span>⌕</span><span>Search sessions</span></div>
+        <div class="section-title">Workspace</div>
+        <div class="row project"><span>⌄</span><span>ProjectPmHarness</span></div>
+        <div class="row active"><span class="status run"></span><span>Extract DeepSeek UI assets</span></div>
+        <div class="row"><span class="status wait"></span><span>Review navigation behavior</span></div>
+        <div class="row"><span class="status"></span><span>Prototype verification notes</span></div>
+      </div>
+      <div class="foot">
+        <button class="icon-btn" title="Settings">⚙</button>
+      </div>
+    </aside>
+    <section class="center">
+      <header class="topline">
+        <strong>Agent workbench</strong>
+        <div><span class="pill">Model: deepseek</span> <span class="pill">Connected</span></div>
+      </header>
+      <div class="chat">
+        <article class="message user"><div class="bubble">Extract this repo's UI language into reusable PM Harness assets.</div></article>
+        <article class="message assistant">
+          <div class="bubble">
+            <p><strong>Source-backed extraction</strong></p>
+            <p>The visual system is quiet and work-focused: flat near-white surfaces, bluish neutral hairlines, compact 14px text, and DeepSeek blue reserved for selected states and AI response emphasis.</p>
+            <div class="tool-card">
+              <div class="tool-head"><span>read CSS modules</span><span>done</span></div>
+              <div class="tool-body">ui-theme / ui-layout / ui-sidebar / ui-primitives</div>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="composer-stack">
+        <div class="composer">
+          <div class="draft">Ask the agent to inspect source files, run tools, or continue implementation...</div>
+          <div class="composer-actions">
+            <div><button class="btn">＋ Attach</button><button class="btn">⌘ Tools</button></div>
+            <button class="btn primary">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <aside class="details">
+      <div class="details-inner">
+        <h2>Run Details</h2>
+        <div class="metric"><span>Context</span><b>76%</b></div>
+        <div class="metric"><span>Pending tools</span><b>0</b></div>
+        <div class="metric"><span>UI source files</span><b>11</b></div>
+      </div>
+    </aside>
+    <div class="handle"></div>
+  </main>
+  <script>
+    document.getElementById('toggle').addEventListener('click', () => {
+      document.getElementById('frame').classList.toggle('collapsed');
+    });
+  </script>
+</body>
+</html>

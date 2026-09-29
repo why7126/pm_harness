@@ -4,7 +4,7 @@ content: docs、issues、iterations、openspec 的生成、更新、同步与归
 source: AI自动生成初稿，项目团队确认
 update_method: 研发流程变化时由AI辅助更新，人工Review后合并
 created_at: 2026-06-13 00:00:00
-updated_at: 2026-07-11 16:25:13
+updated_at: 2026-08-19 11:25:48
 note: AI执行需求、BUG、技术改造前必须读取；优先级高于普通文档说明
 ---
 
@@ -25,6 +25,7 @@ docs/
 ├── NN-topic.md              # 主文档，有序号
 ├── standards/<topic>.md     # 治理细则
 ├── knowledge-base/**        # incidents / retrospectives / best-practices
+├── decision-notes/**        # 非平凡治理决策的长期理由、取舍和后果
 └── README.md                # 导航
 ```
 
@@ -40,6 +41,31 @@ docs/
 | 故障/复盘/最佳实践 | `docs/knowledge-base/{incidents,retrospectives,best-practices}/` |
 
 规则：保留 YAML Frontmatter；不确定内容标 `待确认`；产品范围、验收、架构边界、上线策略需人工确认。
+
+## 2.1 文档层级与一事实一归属
+
+每类事实 MUST 只有一个长期事实源，其他位置用链接或一句话路由指向事实源，避免复制整段规则。
+
+| 层级 | 事实源职责 |
+|---|---|
+| `AGENTS.md` | AI 必须随时知道的入口规则、读取路由和执行红线 |
+| `README.md` | 项目定位、目录说明和协作模型总览 |
+| `rules/*.md` | 可执行治理约束、边界、命令契约和安全规则 |
+| `docs/*.md` | 长期产品、架构、治理和维护说明 |
+| `docs/spec-logs/*.md` | 一次治理学习或治理优化的证据、结果和验证 |
+| `docs/decision-notes/*.md` | 长期治理决策的动机、取舍、替代方案和后果 |
+| `issues/**` | REQ/BUG 当前事实、验收、追踪和状态 |
+| `iterations/**` | Sprint 范围、承诺、验收和发布说明 |
+| `openspec/changes/**` | 待实施或实施中的工程变更事实 |
+| `openspec/specs/**` | 已归档后的稳定能力规格 |
+
+规则文档维护当前有效约束；历史原因放入 `docs/decision-notes/` 或 `docs/spec-logs/`。重复段落 SHOULD 改为相对链接，只有 AI 入口、安全红线、模板边界等必须常驻上下文的短规则 MAY 重复。
+
+## 2.2 产品数据采集与链路观测事实源
+
+产品数据采集、请求日志、行为事件、Task Trace 和端请求封装的长期事实源为 `docs/standards/product-data-collection-observability.md`；其他文档只保留入口链接、适用条件和本次变更摘要。
+
+若 REQ、BUG、Sprint 或 OpenSpec Change 涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装或 App 请求封装，MUST 复核 `product_data_collection_observability` 声明、`affected_layers` 适用层级、`reason` 原因和 `validation` 验证摘要；不适用时 MUST 写明 N/A 或 `not_applicable` 原因。
 
 ## 3. 时间与元数据（MUST）
 
@@ -169,3 +195,13 @@ python scripts/sync-workflow-status.py --event <event> [--sprint auto] [--change
 - 开发中直接修改 `openspec/specs/`。
 - 把需求、BUG、迭代、Spec 混在同一文档。
 - 生成无来源、无状态、无验收标准的需求或 BUG 文档。
+
+## 9. Issue 当前态索引
+
+`issues/requirements/CHANGELOG.md` 与 `issues/bugs/CHANGELOG.md` SHOULD 维护目录级当前态看板索引，记录 Issue 编号、标题、状态、阶段、Sprint、Change、最近更新时间、下一步和事实源。
+
+当前态索引只用于全局定位，不替代 `_registry.yaml`、单条 Issue `trace.md`、Sprint 四件套或 OpenSpec Change。
+
+## 10. 治理决策记录
+
+`docs/decision-notes/` 用于保存非平凡治理变更的长期理由。写入规则见 `rules/governance-decision-notes.md`。

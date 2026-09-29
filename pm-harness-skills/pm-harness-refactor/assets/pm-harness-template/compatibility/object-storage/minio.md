@@ -53,7 +53,7 @@ template_scope: 可作为工程初始化时的 compatibility/object-storage/mini
 | `{MINIO_CONSOLE_ENDPOINT}` | MinIO Console 地址 | 待确认 |
 | `{MINIO_REGION}` | Region | `us-east-1` / 待确认 |
 | `{MINIO_BUCKET}` | 默认 Bucket | `{PRODUCT_CODE}` |
-| `{BUCKET_POLICY}` | Bucket 策略 | 单 Bucket + 前缀 / 多 Bucket / 租户隔离 |
+| `{BUCKET_POLICY}` | Bucket 策略 | 一个项目一个 Bucket + 资源类型前缀 |
 | `{OBJECT_KEY_PREFIXES}` | 对象 Key 前缀 | images/ videos/ files/ audios/ tmp/ |
 | `{MEDIA_TYPES}` | 存储资源类型 | 图片 / 视频 / 文档 / 导入导出 |
 | `{SIGNED_URL_POLICY}` | 签名 URL 策略 | 私有读写 + 短期 URL |
@@ -117,7 +117,7 @@ SIGNED_URL_TTL_SECONDS={SIGNED_URL_TTL_SECONDS}
 
 - Access Key、Secret Key、Root Password 不得提交 Git。
 - 示例配置只能使用占位值，不得出现真实密钥。
-- 开发、测试、生产必须使用不同 Bucket、前缀或实例隔离。
+- 开发、测试、生产默认不得拆分为多个业务 Bucket；优先使用独立实例、独立凭据、权限策略或 Key 前缀隔离。
 - 生产环境必须启用 TLS 或通过受控内网/网关访问。
 
 ## 4. 部署模式与高可用 `[通用 + 条件启用]`
@@ -146,7 +146,7 @@ SIGNED_URL_TTL_SECONDS={SIGNED_URL_TTL_SECONDS}
 Bucket 策略：
 
 ```text
-{BUCKET_POLICY}
+一个项目一个 Bucket，桶内使用资源类型目录/前缀区分资源
 ```
 
 推荐默认：
@@ -157,19 +157,20 @@ bucket: {MINIO_BUCKET}
 
 环境隔离建议：
 
-| 环境 | Bucket / Prefix | 说明 |
+| 环境 | Bucket + Prefix | 说明 |
 |---|---|---|
-| local | `{PRODUCT_CODE}-local` | 本地开发 |
-| test | `{PRODUCT_CODE}-test` | 自动化测试 |
-| staging | `{PRODUCT_CODE}-staging` | 预发验证 |
-| production | `{PRODUCT_CODE}-prod` | 生产数据 |
+| local | `{MINIO_BUCKET}` + `*/local/` 前缀或独立实例 | 本地开发 |
+| test | `{MINIO_BUCKET}` + `*/test/` 前缀或独立实例 | 自动化测试 |
+| staging | `{MINIO_BUCKET}` + `*/staging/` 前缀或独立实例 | 预发验证 |
+| production | `{MINIO_BUCKET}` + `*/production/` 前缀或独立实例 | 生产数据 |
 
 规则：
 
-- 开发、测试、生产不得共享同一命名空间。
+- 开发、测试、生产不得共享同一对象命名空间；默认在同一项目 Bucket 内通过环境前缀、权限策略或独立 MinIO 实例隔离。
 - 默认使用私有 Bucket。
 - 公开读 Bucket 必须有明确业务理由、审核流程和安全边界。
-- 多租户项目必须明确按 Bucket、Prefix 或元数据权限隔离。
+- 多租户项目默认通过 Key 前缀、元数据和权限策略隔离，不得默认按租户创建 Bucket。
+- 多 Bucket 只能作为合规、生命周期、成本归集或硬权限边界要求下的 OpenSpec 例外变更。
 
 ## 6. 对象 Key 与资源前缀 `[通用 + 个性化]`
 
@@ -192,7 +193,7 @@ bucket: {MINIO_BUCKET}
 推荐 Key 结构：
 
 ```text
-{prefix}/default/{resource_type}/{uuid}.{ext}
+{resource_type_prefix}/default/{resource_type}/{uuid}.{ext}
 images/default/user/avatars/{uuid}.{ext}
 images/default/brands/logos/{uuid}.{ext}
 files/default/imports/source/{uuid}.{ext}

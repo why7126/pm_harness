@@ -1,0 +1,10 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "产品文档",
+  "navigation": [
+    {
+      "group": "当前版本",
+      "pages": []
+    }
+  ]
+}

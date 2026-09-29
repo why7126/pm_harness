@@ -13,13 +13,25 @@ note: 本文档记录数据库摘要，具体 DDL / migration 以代码仓库为
 
 ## 1. 数据库定位
 
+默认策略：
+
+```text
+开发环境以 SQLite 为主
+测试环境默认 SQLite 或临时 SQLite
+生产环境以 MySQL 为主
+```
+
+除非用户显式指定生产主库，或后续通过 OpenSpec / `project.yaml` 更新，否则不得把开发默认 SQLite 推导为生产默认。
+
 | 环境 | 数据库 | 说明 |
 |---|---|---|
-| Local | `{LOCAL_DATABASE}` | 本地开发 |
-| Test | `{TEST_DATABASE}` | 自动化测试 |
-| Production | `{PRODUCTION_DATABASE}` | 生产环境 |
+| Local | `{LOCAL_DATABASE}`（默认 SQLite） | 本地开发 |
+| Test | `{TEST_DATABASE}`（默认 SQLite / 临时库） | 自动化测试 |
+| Production | `{PRODUCTION_DATABASE}`（默认 MySQL） | 生产环境 |
 
 生产环境不得静默回退到 demo / local 数据库。
+
+如果生产环境使用 SQLite，必须记录用户确认、适用边界、并发限制、备份恢复策略和迁移计划。
 
 ## 2. Schema 来源
 
@@ -60,6 +72,7 @@ tenant_id
 - DB 结构变更必须有 migration、schema 或等价变更脚本。
 - migration 应可重复执行或有版本记录。
 - 多数据库适配写入 `compatibility/database/`。
+- 默认必须验证 SQLite(local/test) 与 MySQL(production) 的关键 SQL、类型、迁移和索引差异。
 - 高风险迁移必须有回滚说明、备份策略和验证记录。
 
 ## 6. 数据安全

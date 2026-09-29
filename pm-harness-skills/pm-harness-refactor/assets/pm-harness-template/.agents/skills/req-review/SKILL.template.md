@@ -18,7 +18,9 @@ Use this skill when the user asks to run the migrated source command `req-review
 
 **Input**：`REQ-xxxx`
 
-Flags：`--approve` | `--reject` | `--defer`（无 flag 时输出评审检查清单并 AskUserQuestion）
+Flags：`--approve` | `--reject` | `--defer`
+
+默认：无 flag 等同 `--approve`；`--approve` 作为兼容显式写法继续支持。`--reject`、`--defer` 必须显式提供。
 
 **Output**：`review.md`；`trace.md` + `requirement.md` → `status: approved|rejected|deferred`
 
@@ -64,19 +66,19 @@ result: approved | rejected | deferred
 
 填写 `lifecycle.reviewed`、`lifecycle.approved`（若 approve）
 
-## Step 5 — 目录迁移（MUST，`--approve` 时）
+## Step 5 — 目录迁移（MUST，approve 时）
 
 Read `rules/issues-lifecycle.md`。
 
 | Flag | 迁移 |
 |------|------|
-| `--approve` | `plan/` → `review/` |
+| 无 flag / `--approve` | `plan/` → `review/` |
 | `--reject` / `--defer` | **跳过**（保留 `plan/`） |
 
-`--approve` 时 **MUST** 在 Workflow Sync **之前**运行：
+approve 时 **MUST** 在 Workflow Sync **之前**运行：
 
 ```bash
-python scripts/promote-issue-stage.py --req <REQ-id> --to review --reason "/req-review --approve"
+python scripts/promote-issue-stage.py --req <REQ-id> --to review --reason "/req-review (default approve)"
 ```
 
 - Exit code **MUST** be `0`（已在 `review/` 时可 no-op）。

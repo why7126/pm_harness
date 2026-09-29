@@ -47,7 +47,9 @@ REQUIRED_DIRS = [
     ".agents",
     "rules",
     "docs",
+    "docs/decision-notes",
     "docs/standards",
+    "docs/spec-logs",
     "docs/knowledge-base",
     "docs/knowledge-base/best-practices",
     "docs/knowledge-base/incidents",
@@ -93,6 +95,13 @@ REQUIRED_DIRS = [
     "deploy",
 ]
 
+FORBIDDEN_PATHS = [
+    (
+        "openspec/changes/archive",
+        "OpenSpec 归档目录必须使用 openspec/archive，不能放在 openspec/changes/archive",
+    ),
+]
+
 ALLOWED_ROOT_FILES = {
     "AGENTS.md",
     "README.md",
@@ -120,9 +129,17 @@ ALLOWED_ROOT_DIRS = {
     "data",
     "models",
     "deploy",
+    "mintlify",
 }
 
 errors = []
+
+
+def is_ignored_local_env_file(path: Path) -> bool:
+    name = path.name
+    if name.endswith(".env.example"):
+        return False
+    return name in {".env", ".env.local"} or name.endswith(".env") or name.endswith(".env.local")
 
 for item in REQUIRED_PATHS:
     if not (ROOT / item).exists():
@@ -132,8 +149,14 @@ for item in REQUIRED_DIRS:
     if not (ROOT / item).is_dir():
         errors.append(f"缺少必需目录: {item}")
 
+for item, reason in FORBIDDEN_PATHS:
+    if (ROOT / item).exists():
+        errors.append(f"禁止路径: {item}（{reason}）")
+
 for child in ROOT.iterdir():
     if child.name.startswith(".git"):
+        continue
+    if child.is_file() and is_ignored_local_env_file(child):
         continue
     if child.is_file() and child.name not in ALLOWED_ROOT_FILES:
         errors.append(f"根目录存在未登记文件: {child.name}")

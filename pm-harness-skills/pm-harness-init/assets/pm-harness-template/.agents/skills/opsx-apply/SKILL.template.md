@@ -5,7 +5,13 @@ description: "Implement tasks from an OpenSpec change"
 
 # opsx-apply
 
-Use this skill when the user asks to run `/opsx-apply <change-id>` or implement an OpenSpec change.
+Use this skill when the user asks to run `/opsx-apply <REQ-id>`, `/opsx-apply <BUG-id>`, `/opsx-apply <change-id>`, or implement an OpenSpec change.
+
+## Target Resolution
+
+- Prefer `REQ-*` or `BUG-*` input when the Change came from an Issue; resolve the active/applied Change from the Issue `trace.md`.
+- `/opsx-apply <change-id>` is allowed for non-Issue governance Changes or when the user explicitly supplies a Change id.
+- Final next-step guidance after applying an Issue-sourced Change MUST use `/opsx-archive <REQ-id>` or `/opsx-archive <BUG-id>` rather than falling back to the raw Change id.
 
 ## Context Budget Guardrails（MUST）
 
@@ -17,6 +23,10 @@ Use this skill when the user asks to run `/opsx-apply <change-id>` or implement 
 - best-practices 只读 Cross-cutting Gate 命中的标签文件。
 - 完成一组 task 后用 `git diff -- <changed-files>` 或 `tasks.md` 片段复核，避免重复读全部上下文。
 - 命令输出优先 `max_output_tokens <= 8000`。
+
+## Product Data Observability Gate（MUST）
+
+若 Change 涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 在实现前读取 `docs/standards/product-data-collection-observability.md`，确认 Change 已声明 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation`。若不适用，MUST 有 N/A 或 `not_applicable` 原因；缺失时先补 Change 文档再改代码。
 
 ## Input
 
@@ -76,7 +86,7 @@ If any check fails, **BLOCKED**: do not implement. Tell the user to run `/sprint
 
 A resolved `sprint.yaml` with `status: planning` is eligible. Planning means `/sprint-propose` has created the official Sprint scope; it MUST NOT be treated as “Sprint not started” when the Issue trace is already `in_sprint` and the Sprint contains the linked Change.
 
-Only a Change with no linked REQ/BUG may bypass this gate; output the reason explicitly.
+No Change may bypass this gate merely because it has no linked REQ/BUG. For non-Issue governance Changes, include the Change itself in `sprint.yaml` `changes[]` before implementation.
 
 ## Cross-cutting Apply Gate（MUST before `src/`）
 
@@ -116,7 +126,7 @@ For each pending task:
 
 ## Completion Output
 
-Report change id, schema, completed tasks this session, total progress, tests/checks run, remaining tasks, and whether archive is ready.
+Report change id, schema, completed tasks this session, total progress, tests/checks run, remaining tasks, and whether archive is ready. For Issue-sourced Changes, next step MUST be `/opsx-archive <REQ-id>` or `/opsx-archive <BUG-id>`.
 
 ## Final Step — Workflow Sync（MUST）
 

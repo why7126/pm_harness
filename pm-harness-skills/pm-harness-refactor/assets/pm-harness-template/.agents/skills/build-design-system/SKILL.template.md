@@ -105,7 +105,7 @@ templates → business → shared/ui → components/ui
 **不得**重复创建已归档的 `build-design-system`。若需增量能力：
 
 ```text
-/req-capture → … → /req-review --approve → /req-opsx REQ-xxxx
+/req-capture → … → /req-review → /req-opsx REQ-xxxx
 ```
 
 delta spec **MODIFIED** 标题须与 `openspec/specs/design-system/spec.md` 一致。
@@ -124,4 +124,4 @@ delta spec **MODIFIED** 标题须与 `openspec/specs/design-system/spec.md` 一�
 ## 参考
 
 - `issues/requirements/archive/REQ-0000-build-design-system/`
-- `openspec/changes/archive/2026-06-13-add-design-system/`（如存在）
+- `openspec/archive/2026-06-13-add-design-system/`（如存在）

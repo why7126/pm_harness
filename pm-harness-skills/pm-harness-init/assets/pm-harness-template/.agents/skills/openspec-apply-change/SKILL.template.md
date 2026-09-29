@@ -58,14 +58,14 @@ Implement tasks from an OpenSpec change.
 
 5. **Check Sprint inclusion before implementation**
 
-   If the change is linked to any `REQ-*` or `BUG-*`, `/opsx-apply` is allowed only after the REQ/BUG and Change are formally included in a `sprint-xxx`.
+   `/opsx-apply` is allowed only after the Change is formally included in a `sprint-xxx`. If the change is linked to any `REQ-*` or `BUG-*`, the linked issue must also be included.
 
    - Run `python scripts/sync-workflow-status.py --event opsx.apply --change "<name>" --sprint auto --dry-run`.
    - Confirm sprint resolution succeeds; skipped/unresolved sprint is blocking.
    - Confirm the resolved `iterations/change|archive/<sprint>/sprint.yaml` contains the change in `changes[]` and the linked issue in `requirements[]` or `bugs[]`.
    - Confirm linked issue `trace.md` has `iteration: <sprint-id>` and status `in_sprint` or a later delivery state.
 
-   If this gate fails, stop before code changes and ask the user to run `/sprint-propose` first. Only non-REQ/BUG pure technical governance changes may bypass this gate, and the reason must be stated.
+   If this gate fails, stop before code changes and ask the user to run `/sprint-propose` first, or repair a known Sprint scope with `scripts/add-sprint-scope-item.py --sprint <sprint-id> --change <change-id> --rationale "<why in scope>"`.
 
 6. **Show current progress**
 

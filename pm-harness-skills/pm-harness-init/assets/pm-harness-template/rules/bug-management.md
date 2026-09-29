@@ -2,7 +2,7 @@
 purpose: 缺陷（BUG）生命周期、状态机、目录与评审门禁
 source: 项目团队 + AI v2 定稿
 update_method: 命令族变更时同步更新
-updated_at: 2026-07-11 16:25:13
+updated_at: 2026-08-21 13:16:11
 ---
 
 # 缺陷管理规范
@@ -79,7 +79,7 @@ BUG-NNNN-slug/
 | `/bug-explore` | 默认无文件 |
 | `/bug-generate` | bug.md |
 | `/bug-complete` | root-cause、workaround、acceptance、trace |
-| `/bug-review` | review.md、status |
+| `/bug-review` | review.md、status；无 flag 默认 approved |
 | `/bug-opsx` | openspec/changes/fix-* |
 
 ## 4. 门禁
@@ -92,7 +92,7 @@ BUG-NNNN-slug/
 - 纳入 Sprint 规划（`/sprint-propose`）
 - `/sprint-apply`
 
-未评审 BUG **不得**写入 Sprint 四件套正式范围；仅可记入 `sprint.md`「延后项（待评审）」并提示 `/bug-review BUG-xxxx --approve`。
+未评审 BUG **不得**写入 Sprint 四件套正式范围；仅可记入 `sprint.md`「延后项（待评审）」并提示 `/bug-review BUG-xxxx`。
 
 `/sprint-propose` 成功写入正式 Sprint 四件套后，Workflow Sync MUST 将纳入的 BUG 从 `approved` 同步为 `in_sprint`，并写入 `iteration: sprint-xxx`。`sprint.yaml` `status: planning` 已满足正式纳入条件，不存在额外“未启动 Sprint”状态门禁。
 

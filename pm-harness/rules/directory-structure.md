@@ -4,7 +4,7 @@ content: 约束 AI 与开发人员遵循当前项目目录边界、文件归属�
 source: Harness Token 优化模板
 update_method: 目录结构调整时由架构负责人确认后更新；AI 只能提出建议，不得擅自放宽规则
 created_at: 2026-06-13 00:00:00
-updated_at: 2026-07-14 00:00:00
+updated_at: 2026-08-21 22:28:02
 note: AGENTS.md 必须引用本文档；用于防止 AI 随意新增目录或把文件放错位置
 ---
 
@@ -35,6 +35,7 @@ note: AGENTS.md 必须引用本文档；用于防止 AI 随意新增目录或把
 | `design-schemes/` | 可复用 UI/UE、导航栏和 HTML Demo 设计资产库 | 否 |
 | `models/` | 模型说明和校验信息；不得提交大模型权重 | 否 |
 | `deploy/` | 部署编排与发布脚本 | 否 |
+| `mintlify/` | 公开产品手册 / Mintlify 文档站源文件和投影 | 否 |
 
 ## 3. `releases/` 产品发布目录
 
@@ -48,15 +49,25 @@ releases/
 ├── mint.json
 ├── templates/
 │   ├── release.json
-│   └── announcement.mdx
+│   ├── announcement.mdx
+│   └── usage-docs/
+│       ├── manifest.json
+│       ├── overview.mdx
+│       └── faq.mdx
 └── v0.1.0/
     ├── release.json
-    └── announcement.mdx
+    ├── announcement.mdx
+    ├── upgrade-plans/
+    │   └── fresh-to-v0.1.0.json
+    ├── image-build-plan.json
+    └── image-manifest.json
 ```
 
 边界：
 
-- `releases/` MUST 只存放产品版本发布对象、公开公告源文件、发布校验记录和静态公告站点配置。
+- `releases/` MUST 只存放产品版本发布对象、公开公告源文件、版本化 usage-docs 快照、发布校验记录和静态公告站点配置。
+- `releases/vX.Y.Z/upgrade-plans/*.json`、`image-build-plan.json` 与 `image-manifest.json` 属于发布校验材料，MUST NOT 包含真实 `.env`、密钥、数据库连接串、Authorization header、Cookie、本机绝对路径或真实客户数据。
+- 镜像 tar 包、`.sha256` 与其他大体积交付物 MUST 放在仓库外 `../releases/vX.Y.Z/images/`；仓库内 manifest 只记录相对路径、hash 与验证结论。
 - `releases/` MUST NOT 替代 `iterations/` 四件套、`issues/` 需求/BUG 文档、`openspec/changes/` 变更事实源或 `docs/` 长期技术文档。
 - `releases/` MUST NOT 存放运行时生成站点、构建产物、真实客户数据、密钥、数据库连接串、对象存储凭据或不可公开运维信息。
 - 若静态站点生成输出目录存在，MUST 在 `.gitignore` 或相邻 README 中声明提交边界。
@@ -65,7 +76,11 @@ releases/
 
 1. `/release-propose <version>` 创建或更新产品版本发布对象。
 2. `/release-prepare <version>` 执行发布前校验并生成或更新公告源文件。
-3. `/release-publish <version>` 记录发布确认结果和最终公告位置。
+3. `/image-prepare <version>` 在镜像治理适用时生成或更新镜像构建计划。
+4. `/image-build <version>` 在需要真实镜像交付时生成 manifest。
+5. `/upgrade-plan --from <fresh|version> --to <version>` 与 `/upgrade-validate --plan <path>` 在版本承诺升级路径时生成和校验升级计划。
+6. `/usage-docs-generate|update|validate <version>` 在需要产品手册时生成、更新和校验版本化手册及 Mintlify 投影。
+7. `/release-publish <version>` 记录发布确认结果和最终公告位置。
 
 命名：
 
@@ -148,6 +163,7 @@ src/infrastructure/
 - 主文档与总索引放入 `docs/`。
 - 可复用设计资产说明放入 `design-schemes/README.md` 和各方案目录 README；单个需求页面原型仍放入 `issues/requirements/{plan|review|archive}/REQ-*/prototype/`。
 - API、测试等治理细则放入 `docs/standards/`。
+- `/spec-study` 学习报告与 `/spec-opt` 治理迭代日志放入 `docs/spec-logs/`，文件名分别使用 `YYYYMMDDhhmmss-study-xxx.md` 与 `YYYYMMDDhhmmss-governance-xxx.md`；该目录不得替代 rules、standards、knowledge-base、OpenSpec Change 或正式规格。
 - 产品需求放入 `issues/requirements/{plan|review|archive}/REQ-*`；禁止 `docs/prd/`。
 - BUG 分析放入 `issues/bugs/{plan|review|archive}/BUG-*`；禁止 `docs/bugs/`。
 - 故障、复盘、最佳实践放入 `docs/knowledge-base/`。

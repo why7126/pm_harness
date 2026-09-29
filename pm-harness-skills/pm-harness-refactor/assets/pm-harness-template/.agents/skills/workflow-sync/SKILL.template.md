@@ -117,6 +117,7 @@ Guardrails:
 | bug-opsx | `bug.opsx` |
 | opsx-propose | `opsx.propose` |
 | opsx-apply | `opsx.apply` |
+| opsx-modify | `opsx.modify` |
 | opsx-archive | `opsx.archive` |
 | sprint-propose | `sprint.propose` |
 | sprint-apply | `sprint.apply` |

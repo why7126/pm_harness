@@ -82,6 +82,8 @@ note: 适用于 {PRODUCT_NAME} 项目；作为 docs 目录的第一阅读入口
 | [error-codes.md](standards/error-codes.md) | `[通用]` | 错误码分段、登记和维护规则 | 建议保留 |
 | [authentication.md](standards/authentication.md) | `[条件启用]` | 登录、认证、会话和权限入口 | 存在认证时保留 |
 | [file_upload.md](standards/file_upload.md) | `[条件启用]` | 文件上传、校验、存储和安全规则 | 存在上传能力时保留 |
+| [document-prose-hygiene.md](standards/document-prose-hygiene.md) | `[通用]` | 长期文档表达卫生、过程残留和敏感片段审计 | 建议保留 |
+| [docs/standards/product-data-collection-observability.md](standards/product-data-collection-observability.md) | `[通用 + 条件启用]` | 产品数据采集、请求日志、Task Trace、端请求封装和治理声明 | 存在 API、DB、日志审计、行为埋点或端请求封装时保留 |
 | [testing-governance.md](standards/testing-governance.md) | `[通用]` | 测试分层、准入和治理要求 | 建议保留 |
 | [unit-test-standard.md](standards/unit-test-standard.md) | `[通用]` | 单元测试边界、命名和覆盖要求 | 建议保留 |
 | [frontend-test-standard.md](standards/frontend-test-standard.md) | `[条件启用]` | 前端测试范围、交互验证和视觉检查 | 存在前端时保留 |

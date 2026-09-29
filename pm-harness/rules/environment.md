@@ -4,7 +4,7 @@ content: .env.example 维护、环境变量命名、安全边界、Docker Compos
 source: Harness Token 优化模板
 update_method: 新增服务、端口、密钥、第三方配置、对象存储、数据库或处理参数时更新
 created_at: 2026-06-13 00:00:00
-updated_at: 2026-07-14 00:00:00
+updated_at: 2026-08-04 00:00:00
 note: .env.example 可提交，.env 禁止提交
 ---
 
@@ -14,9 +14,16 @@ note: .env.example 可提交，.env 禁止提交
 
 - 根目录必须提供 `.env.example`。
 - 真实 `.env` 文件禁止提交 Git。
+- 真实 env 文件（如 `.env`、`.env.local`、`scripts/build-images.env`、`deploy/**/<id>.env`）允许存在于本地工作区；只要已被 `.gitignore` 覆盖且未进入暂存/提交，就不应阻塞 `/opsx-archive`、`/sprint-archive` 或 release 归档。
 - 新增任何环境变量时，必须同步更新 `.env.example`。
-- 新增或修改 `.env.example`、`.env.docker` 等变量时，变量上一行 SHOULD 有注释，说明用途、取值范围、默认值含义或安全边界。
+- 新增或修改 `.env.example`、`.env.docker`、`scripts/build-images.env.example` 等变量时，变量上一行 SHOULD 有注释，说明用途、取值范围、默认值含义或安全边界。
 - Docker Compose 使用的变量必须在 `.env.example` 中有说明。
+- 镜像构建使用的本地 env 示例必须放在 `scripts/build-images.env.example`；真实 `scripts/build-images.env` 禁止提交。
+- 归档、发布和验收证据 **MUST NOT** 引用真实 env 文件内容；需要说明配置时，只记录 `.env.example` / `*.env.example` 路径、脱敏变量名清单、校验命令和通过摘要。
+- `deploy/` 是本地和生产部署环境矩阵入口；新增部署环境时，必须同步 `deploy/README.md`、对应 `deploy/<domain>/README.md`、`*.env.example`、`deploy/scripts/up.sh`、`deploy/scripts/down.sh`、`docs/02-deployment.md` 和 `.env.example`。
+- 部署环境文件可使用 `python deploy/scripts/validate-env.py --domain <local|prod> --environment <id> --env-file <path>` 进行安全校验；提交的生产 `*.env.example` 可加 `--allow-example-values` 校验结构，真实生产 env 不得使用该参数，且不得使用 SQLite、示例密钥、默认密码或占位对象存储配置。
+- 常规镜像发版路径下，`scripts/build-images.env.example` SHOULD 只要求修改 `IMAGE_BUILD_TAG`；输出目录 SHOULD 由 `IMAGE_BUILD_TAG` 默认推导到仓库外 `../releases/<version>/images/`，tar 文件名 SHOULD 由 `IMAGE_BUILD_TAG` 与 `IMAGE_BUILD_PLATFORM` 默认推导。
+- `/image-prepare` MAY 从 `scripts/build-images.env.example` 创建真实本地 `scripts/build-images.env`，并 MAY 自动把安全白名单变量 `IMAGE_BUILD_TAG` 更新为当前发布版本；不得自动写入密钥、数据库连接串、对象存储凭据或任何未列入镜像构建安全摘要的变量。
 - 不允许在代码、文档示例、测试中写入真实密钥。
 - 生产环境不得静默使用本地/demo 默认配置。
 
@@ -44,12 +51,16 @@ AI 修改以下内容时，必须检查 `.env.example`：
 ```text
 □ docker-compose*.yml
 □ Dockerfile
+□ scripts/build-images.env.example
 □ 后端配置文件
 □ 前端构建配置
 □ 数据库连接
 □ 对象存储配置
+□ image plan / manifest schema 或镜像构建输入 hash 规则
 □ 上传大小限制
 □ 第三方服务配置
 ```
 
 注释不得包含真实密钥、真实生产域名、真实客户数据或无法公开的运维信息。
+
+`image-build-plan.json` 与 `image-manifest.json` 只能记录构建 env 安全摘要和输入 hash，不得记录 raw env、数据库连接串、密钥、Authorization header、Cookie、本机绝对路径或真实客户数据。

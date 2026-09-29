@@ -1,0 +1,219 @@
+{
+  "schema_version": "1.0",
+  "scheme_id": "deepseek-harness-ui",
+  "scheme_name": "DeepSeek Harness Web Client UI/UE",
+  "source_project": "DeepSeek Harness",
+  "source_repo": "https://github.com/deepseek-ai/deepseek-harness",
+  "source_files": [
+    "packages/client/ui-theme/src/styles/base.css",
+    "packages/client/ui-theme/src/styles/design-platform.css",
+    "packages/client/ui-layout/src/client/AppFrame.module.css",
+    "packages/client/ui-sidebar/src/client/SidebarRoot.module.css",
+    "packages/client/ui-primitives/src/Button.module.css",
+    "packages/client/ui-primitives/src/Input.module.css",
+    "packages/client/ui-primitives/src/Menu.module.css",
+    "packages/client/ui-workspace/src/client/WorkspaceBrowser.module.css",
+    "packages/client/ui-workspace/src/client/rows/Rows.module.css",
+    "packages/client/ui-conversation/src/client/skeleton/ConversationRoot.module.css",
+    "packages/client/ui-conversation/src/client/chat/ChatView.module.css"
+  ],
+  "inferred": false,
+  "category": "saas",
+  "colors": {
+    "background": "rgb(255, 255, 255)",
+    "module_background": "rgb(245, 246, 247)",
+    "sidebar_fill": "rgb(249, 250, 251)",
+    "surface": "rgb(255, 255, 255)",
+    "surface_subtle": "rgb(241, 243, 245)",
+    "surface_overlay": "rgb(233, 236, 242)",
+    "text_primary": "rgb(15, 17, 21)",
+    "text_secondary": "rgb(97, 102, 107)",
+    "text_tertiary": "rgb(129, 133, 140)",
+    "text_dimmed": "rgb(225, 229, 238)",
+    "border_l1": "rgba(0, 0, 0, 0.04)",
+    "border_l2": "rgba(0, 0, 0, 0.1)",
+    "border_l3": "rgba(0, 0, 0, 0.12)",
+    "brand_primary": "rgb(15, 17, 21)",
+    "deepseek_accent": "rgb(65, 118, 230)",
+    "deepseek_accent_soft": "rgb(228, 237, 253)",
+    "bubble": "rgb(237, 243, 254)",
+    "bubble_highlight": "rgb(211, 226, 255)",
+    "success": "rgb(34, 197, 94)",
+    "warning": "rgb(245, 158, 11)",
+    "danger": "rgb(236, 19, 19)",
+    "menu": "rgb(255, 255, 255)",
+    "toast": "rgb(53, 54, 56)",
+    "palette": [
+      "rgb(255, 255, 255)",
+      "rgb(249, 250, 251)",
+      "rgb(241, 243, 245)",
+      "rgb(15, 17, 21)",
+      "rgb(97, 102, 107)",
+      "rgb(65, 118, 230)",
+      "rgb(228, 237, 253)",
+      "rgb(245, 158, 11)",
+      "rgb(34, 197, 94)",
+      "rgb(236, 19, 19)"
+    ],
+    "dark_theme": {
+      "background": "rgb(21, 21, 23)",
+      "layer_1": "rgb(35, 35, 36)",
+      "layer_2": "rgb(44, 44, 46)",
+      "layer_3": "rgb(53, 54, 56)",
+      "brand_primary": "rgb(249, 250, 251)",
+      "deepseek_accent": "rgb(86, 134, 254)",
+      "border_l2": "rgba(255, 255, 255, 0.12)"
+    }
+  },
+  "typography": {
+    "font_family_body": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    "font_family_code": "'SF Mono', 'JetBrains Mono', 'Fira Code', Consolas, 'Liberation Mono', Menlo, Courier, 'PingFang SC', 'Microsoft YaHei'",
+    "font_sizes": {
+      "label": "12px",
+      "body": "14px",
+      "body_line_height": "22px",
+      "compact_menu": "12px",
+      "compact_menu_line_height": "18px",
+      "caption": "12px",
+      "caption_line_height": "16px"
+    },
+    "font_weights": {
+      "regular": 400,
+      "medium": 500,
+      "figma_510_normalized": 500
+    },
+    "letter_spacings": {
+      "normal": "0"
+    }
+  },
+  "spacing": {
+    "layout": {
+      "sidebar_expanded_width": "280px",
+      "sidebar_collapsed_width": "56px",
+      "sidebar_padding_expanded": "6px 12px",
+      "sidebar_padding_collapsed": "18px 10px 6px",
+      "sidebar_logo_row_height": "60px",
+      "rail_control_size": "36px",
+      "expanded_icon_button_size": "28px",
+      "new_session_height": "38px",
+      "composer_side_clearance": "16px",
+      "composer_dock_inset": "8px",
+      "details_handle_hit_width": "8px",
+      "details_handle_pill": "12px x 32px"
+    },
+    "border_radius": {
+      "button_md": "18px",
+      "button_sm": "14px",
+      "input": "8px",
+      "menu_card": "12px",
+      "menu_item": "10px",
+      "compact_menu_card": "7px",
+      "compact_menu_item": "5px",
+      "new_session": "12px",
+      "icon_button": "50%",
+      "details_handle": "10px"
+    },
+    "shadows": {
+      "menu": "var(--dsw-shadow-lv3)",
+      "component_default": "flat hairline surfaces; shadow reserved for elevated menus and overlays"
+    }
+  },
+  "components": {
+    "button": {
+      "variants": ["primary", "ghost", "outline", "toolbar"],
+      "height_md": "36px",
+      "height_sm": "28px",
+      "radius_md": "18px",
+      "padding_md": "0 14px",
+      "gap": "4px",
+      "primary_style": "solid brand-primary black fill with white foreground in light theme",
+      "ghost_hover": "rgba(38, 49, 72, 0.06)",
+      "disabled": "opacity 0.4 and not-allowed cursor"
+    },
+    "input": {
+      "height": "32px",
+      "padding": "0 8px",
+      "radius": "8px",
+      "border": "1px solid border_l2",
+      "focus": "border switches to brand-primary",
+      "icon_slot": "16px tertiary icon"
+    },
+    "menu": {
+      "card_radius": "12px",
+      "card_padding": "4px",
+      "min_width": "218px",
+      "portal_z_index": 1100,
+      "item_min_height": "40px",
+      "item_padding": "8px 10px",
+      "item_radius": "10px",
+      "compact_item_min_height": "26px",
+      "danger_hover": "rgba(236, 19, 19, 0.05)"
+    },
+    "sidebar": {
+      "fill": "sidebar_fill",
+      "expanded_padding": "6px 12px",
+      "collapsed_padding": "18px 10px 6px",
+      "new_session": "38px elevated button in expanded mode; 36px transparent icon control in rail mode",
+      "brand_behavior": "wordmark is clickable with pointer cursor only; no hover chrome",
+      "quiet_scrollbars": "thumb becomes transparent while pointer is outside without changing layout"
+    },
+    "workspace_rows": {
+      "project_row_height": "34px",
+      "session_row_height": "32px",
+      "row_radius": "8px",
+      "indent_step": "22px",
+      "session_cell": "8px padding, 16px status slot, 4px title gap",
+      "hover_actions": "time fades away while row actions appear"
+    },
+    "conversation": {
+      "surface": "single center column on base background",
+      "transcript_padding": "16px plus composer clearance",
+      "composer": "bottom sticky card aligned to transcript axis; input card is content width plus 32px",
+      "dock_cards": "todo, queue, approval, and question panels share the composer width system"
+    }
+  },
+  "layout": {
+    "app_shell": "CSS grid with sidebar column, center column, optional details column, and absolute drag handles.",
+    "column_resize": "8px invisible hit strip; details side also exposes a 12x32 rounded pill on hover/drag.",
+    "conversation_axis": "Transcript and composer share a centered content axis; composer card is intentionally 32px wider than transcript.",
+    "surface_density": "Compact workbench density with 14px body text, 32-40px controls, tight row rhythm, and minimal decoration."
+  },
+  "interaction": {
+    "sidebar_collapse": "Grid track animates over slow 0.3s ease-in-out; expanded content fades out for 150ms, then rail layout snaps in.",
+    "rail_expand_affordance": "Collapsed rail shows the whale/brand mark; hovering reveals the panel icon.",
+    "scrollbar_quiet_mode": "Sidebar rebinds scrollbar thumb tokens to transparent outside pointer hover while preserving scrollbar gutter.",
+    "menus": "Menus are anchored cards with viewport fit, pinned footers, optional right-side submenu bridge, and portaled z-index above modals."
+  },
+  "animation": {
+    "standard_ease": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "duration_fast": "0.1s",
+    "duration_base": "0.2s",
+    "duration_slow": "0.3s",
+    "sidebar_fade": "150ms",
+    "rail_entry": "150ms translateX(49px)",
+    "wide_entry": "200ms opacity fade",
+    "reduced_motion": "transition and animation disabled for prefers-reduced-motion"
+  },
+  "style_profile": {
+    "keywords": [
+      "quiet agent workbench",
+      "near-white bluish UI",
+      "compact rail",
+      "conversation-first",
+      "flat hairline surfaces",
+      "subtle DeepSeek blue"
+    ],
+    "primary_aesthetic": "Productive AI client shell: mostly white/neutral, precise hairlines, compact controls, and blue accents reserved for semantic emphasis.",
+    "density": "medium-high",
+    "dark_mode_support": true,
+    "avoid": [
+      "marketing hero pages",
+      "generic blue SaaS dashboards",
+      "heavy card grids",
+      "large rounded decorative panels",
+      "purple gradients",
+      "ornamental backgrounds",
+      "replacing rail hover logo swap with a static hamburger"
+    ]
+  }
+}

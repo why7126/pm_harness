@@ -13,6 +13,10 @@ Use this skill when the user asks to run the migrated source command `opsx-propo
 - 检索先定位再分段读取；大范围 `rg/find` 默认排除 Harness、模板 assets、历史 agent 目录、archive、generated、node_modules、dist、coverage。
 - 命令输出优先 `max_output_tokens <= 8000`；大 diff、OpenAPI/Orval 生成物、测试日志、Workflow Sync 输出先给摘要或命中数。
 
+## Product Data Observability Gate（MUST）
+
+若 Change 涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 读取 `docs/standards/product-data-collection-observability.md`，并在 proposal、design、tasks、trace 或 acceptance 中声明 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation`。若不适用，MUST 写明 N/A 或 `not_applicable` 原因。
+
 
 ## Command Template
 

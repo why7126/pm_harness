@@ -31,7 +31,9 @@ template_scope: 可作为工程初始化时的 compatibility/object-storage/obs.
 
 ## 2. 兼容重点 `[通用]`
 
+- 默认使用项目级唯一 Bucket，桶内通过 `images/`、`videos/`、`audios/`、`files/`、`tmp/` 等资源类型前缀区分对象。
 - OBS SDK、签名 URL、跨域、生命周期、权限策略和私有化网络访问必须实际验证。
+- 不得按资源类型、租户、业务模块或环境默认创建多个 Bucket；多 Bucket 必须通过 OpenSpec 例外变更批准。
 - 如用于信创或政企环境，必须记录客户侧网络、证书和权限边界。
 - 密钥不得进入前端或模板默认值。
 

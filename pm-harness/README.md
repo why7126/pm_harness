@@ -244,7 +244,11 @@ AI Agent 修改本项目时必须：
 | `pm-harness-init` | 初始化新 PM Harness 工程 |
 | `pm-harness-refactor` | 非破坏式接入和重构存量项目 |
 | `pm-harness-uidesign` | 从真实项目提炼 UI/UE、导航栏和 HTML Demo 设计资产 |
+| `pm-prd-position` | 完成产品定位、重新定位或定位 Patch，输出定位基线包 |
+| `pm-prd-plan` | 承接定位基线，生成产品架构、里程碑、功能清单和规划基线包 |
+| `pm-prd-mvp` | 将产品规划收敛为可验证、可交付的 MVP 基线包 |
 | `pm-prd-design` | 生成或迭代 PRD、交互说明、可点击原型和版本化交付包 |
+| `tool-info-lookup` | 联网调研工具基本情况，输出结构化工具信息卡片或对比表 |
 
 ## 11. 项目治理命令 `[通用 + 个性化]`
 
@@ -259,6 +263,7 @@ AI Agent 修改本项目时必须：
 | OpenSpec | `/opsx-explore`、`/opsx-propose`、`/opsx-apply`、`/opsx-archive` |
 | 小程序发布辅助 | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` |
 | 镜像交付 | `/image-prepare`、`/image-build` |
+| 产品手册 | `/usage-docs-generate`、`/usage-docs-update`、`/usage-docs-validate` |
 | 发布治理 | `/release-propose`、`/release-prepare`、`/release-publish` |
 | 项目基线 | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
 

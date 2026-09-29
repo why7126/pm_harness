@@ -93,6 +93,13 @@ REQUIRED_DIRS = [
     "deploy",
 ]
 
+FORBIDDEN_PATHS = [
+    (
+        "openspec/changes/archive",
+        "OpenSpec 归档目录必须使用 openspec/archive，不能放在 openspec/changes/archive",
+    ),
+]
+
 ALLOWED_ROOT_FILES = {
     "AGENTS.md",
     "README.md",
@@ -131,6 +138,10 @@ for item in REQUIRED_PATHS:
 for item in REQUIRED_DIRS:
     if not (ROOT / item).is_dir():
         errors.append(f"缺少必需目录: {item}")
+
+for item, reason in FORBIDDEN_PATHS:
+    if (ROOT / item).exists():
+        errors.append(f"禁止路径: {item}（{reason}）")
 
 for child in ROOT.iterdir():
     if child.name.startswith(".git"):

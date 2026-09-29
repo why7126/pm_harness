@@ -15,14 +15,36 @@ Use this skill when the user asks to run `/sprint-propose` or create/update a Sp
 - 复盘默认只读最近 1 份；只有 open 行动项跨 Sprint 复发或用户要求时读第 2 份。
 - `best-practices/` 只读取候选 REQ/BUG/Change 标签命中的文件。
 - 已存在 Sprint 时先读 `sprint.yaml` 和 `sprint.md` 的目标/Scope/知识库承接片段。
-- 搜索候选项默认排除 `openspec/changes/archive/**`；编号冲突只看目录名。
+- 搜索候选项默认排除 `openspec/archive/**`；编号冲突只看目录名。
 - 命令输出优先 `max_output_tokens <= 8000`。
+
+## Product Data Observability Gate（MUST）
+
+纳入 Sprint 的 REQ、BUG 或 Change 若涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 读取或确认其已引用 `docs/standards/product-data-collection-observability.md`，并在 Sprint 摘要或 trace 中保留 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation` 状态。若不适用，MUST 写明 N/A 或 `not_applicable` 原因。
 
 ## Input
 
 - `sprint-xxx`：指定 Sprint ID。
 - 自然语言目标：由 Agent 推导候选范围和编号。
 - Flags：`--req`、`--bug`、`--change`、`--duration 2w`、`--dry-run`。
+
+## Sprint ID Rules（MUST）
+
+- Sprint ID MUST 使用 `sprint-xxx` 三位数字递增格式，例如 `sprint-022`。
+- 命令在选择或创建 Sprint 前 MUST 运行：
+
+```bash
+python scripts/validate-sprint-selection.py [--sprint <sprint-id>]
+```
+
+- 当用户未指定 Sprint ID 且当前没有 `iterations/change/sprint-xxx/` active Sprint 时，MAY 自动创建下一个 Sprint。
+- 当用户未指定 Sprint ID 且当前仅有一个 `iterations/change/sprint-xxx/` active Sprint 时，MUST 默认使用该 Sprint 作为当前 Sprint。
+- 当用户未指定 Sprint ID 且当前存在两个或以上 active Sprint 时，MUST 阻断命令，并引导用户使用 `/sprint-propose --sprint <sprint-id>` 指定当前 Sprint。
+- 自动编号 MUST 同时扫描 `iterations/archive/` 与 `iterations/change/` 下符合 `sprint-[0-9]{3}` 的目录和 `sprint.yaml:sprint_id`，取最大编号加一。
+- 用户显式指定一个尚不存在的 Sprint 时，该 Sprint ID MUST 等于最大规范编号加一；不得跳号创建。
+- 如果已存在一个 active Sprint，只有当前 Sprint 容量硬阻断或用户明确拆分范围时，才允许通过 `--sprint <next-sprint>` 创建下一个连续编号 Sprint。
+- 如果已存在两个 active Sprint，MUST 禁止创建第三个 active Sprint；用户只能指定其中一个现有 active Sprint。
+- 不得使用日期、主题词或混合命名创建 Sprint。
 
 ## Must Read
 
@@ -62,7 +84,7 @@ docs/knowledge-base/best-practices/<matched>.md（按标签）
 - 不得写入 `sprint.yaml` 的 `requirements[]` / `bugs[]`。
 - 不得写入 Sprint 目标、Scope、里程碑、工作量合计、release、acceptance 正式范围。
 - 不得更新 `trace.md` `iteration`。
-- 只能列入 `sprint.md`「延后项（待评审）」并提示 `/req-review` 或 `/bug-review --approve`。
+- 只能列入 `sprint.md`「延后项（待评审）」并提示 `/req-review` 或 `/bug-review`。
 
 ### Readiness Gate
 
@@ -84,9 +106,16 @@ docs/knowledge-base/best-practices/<matched>.md（按标签）
 - `estimated_person_days > capacity_person_days * 1.2` 时 MUST 硬阻断正式规划：
   - 不得生成 `iterations/change/<sprint>/` 四件套。
   - 不得更新 `trace.md` 的 `iteration` 或 Change trace。
-  - 输出硬提示：必须拆分 Sprint、移出低优先级项或替换范围后重新运行 `/sprint-propose`。
+  - 输出硬提示：必须拆分 Sprint、移出低优先级项、替换范围，或使用 `/sprint-propose --sprint <next-sprint>` 创建下一个连续编号 Sprint 后重新规划。
+  - `<next-sprint>` MUST 通过 `scripts/validate-sprint-selection.py --sprint <next-sprint>`，不得跳号。
 - `capacity_person_days < estimated_person_days <= capacity_person_days * 1.2` 时 MAY 继续，但 MUST 写入容量风险、fix 缓冲影响和延后项建议。
 - `estimated_person_days <= capacity_person_days` 时按既有 Review Gate、Readiness Gate 和 Capacity Gate 继续。
+
+### Archived Sprint Freeze Gate（MUST）
+
+- `/sprint-propose` MUST NOT 修改 `iterations/archive/<sprint-id>/` 或其关联 REQ/BUG/Change 的交付语义。
+- 若用户指定已归档 Sprint 或目标 Issue/Change 已随所属 Sprint 归档，MUST 阻断普通规划写入，并引导将偏差作为新生命周期输入处理。
+- 归档事实只允许由 `explore`、`*-explore`、`sprint-exps`、`release-*`、`image-*`、`upgrade-*` 读取或消费；敏感信息清理、归档路径残留或状态漂移修复必须走明确授权的治理命令。
 
 ## Knowledge Intake
 
@@ -139,7 +168,29 @@ openspec/changes/<change>/trace.md（若存在）
 
 ## Output
 
-报告 Sprint ID、状态、纳入 REQ/BUG/Change 数量、估算、知识库承接、容量门禁、四件套路径、下一步。
+报告 Sprint ID、状态、纳入 REQ/BUG/Change 数量、估算、知识库承接、容量门禁、四件套路径、下一步、待用户决策/处理。
+
+若纳入范围存在已评审但尚未 Change 的 REQ/BUG，下一步输出真实可执行命令，且不在「待用户决策/处理」重复要求确认同一组命令。
+
+正例：
+
+```text
+下一步：
+- /req-opsx REQ-0123-upload-stage-trace-spans
+- /bug-opsx BUG-0144-miniapp-usage-events-overreporting
+待用户决策/处理：
+- 无
+```
+
+若 Sprint 编号、容量策略或范围取舍尚未确定，下一步被用户决策阻塞。
+
+正例：
+
+```text
+下一步：暂无可推进下一步
+待用户决策/处理：
+- 请选择目标 sprint-xxx，或确认是否创建下一编号 Sprint。
+```
 
 ## Final Step — Workflow Sync（MUST）
 

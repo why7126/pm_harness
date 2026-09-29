@@ -6,7 +6,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / "pm-harness-skills" / "pm-harness-init"
-MAX_FILES = 220
+MAX_FILES = 270
 
 files = [p for p in SKILL.rglob("*") if p.is_file()]
 skill_files = [p for p in files if p.name == "SKILL.md"]

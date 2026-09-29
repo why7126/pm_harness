@@ -82,13 +82,18 @@ technology:
     package_manager: "{FRONTEND_PACKAGE_MANAGER}"
   database:
     enabled: "{DATABASE_ENABLED}"
-    primary: "{DATABASE_STACK}"
+    stack: "{DATABASE_STACK}"
+    default_policy: "development_sqlite_production_mysql"
+    local: "{LOCAL_DATABASE}"
+    test: "{TEST_DATABASE}"
+    production_primary: "{PRODUCTION_DATABASE}"
+    user_override_allowed: true
     migration: "{MIGRATION_STRATEGY}"
     schema_source: "{SCHEMA_SOURCE}"
   object_storage:
     enabled: "{OBJECT_STORAGE_ENABLED}"
     provider: "{OBJECT_STORAGE_PROVIDER}"
-    mode: "{OBJECT_STORAGE_MODE}" # single_bucket_with_prefix | multi_bucket | local_filesystem | external_service
+    mode: "{OBJECT_STORAGE_MODE}" # default: single_bucket_with_resource_type_prefix
   media:
     enabled: "{MEDIA_ENABLED}"
     types:
@@ -113,6 +118,32 @@ technology:
 deployment:
   # [通用 + 个性化] 部署事实源，应与 docs/02-deployment.md、docker-compose.yml、deploy/ 一致
   mode: "{DEPLOYMENT_STACK}" # docker-compose | kubernetes | serverless | paas | static | manual
+  default_stack: "docker-compose"
+  default_compose_modes:
+    - mode: self_hosted_object_storage_sqlite
+      object_storage: self_hosted
+      database: sqlite
+      profiles: ["object-storage"]
+    - mode: external_object_storage_sqlite
+      object_storage: external
+      database: sqlite
+      profiles: []
+    - mode: self_hosted_object_storage_self_hosted_mysql
+      object_storage: self_hosted
+      database: self_hosted_mysql
+      profiles: ["object-storage", "database"]
+    - mode: self_hosted_object_storage_external_mysql
+      object_storage: self_hosted
+      database: external_mysql
+      profiles: ["object-storage"]
+    - mode: external_object_storage_self_hosted_mysql
+      object_storage: external
+      database: self_hosted_mysql
+      profiles: ["database"]
+    - mode: external_object_storage_external_mysql
+      object_storage: external
+      database: external_mysql
+      profiles: []
   environments:
     - name: local
       purpose: 本地开发
@@ -151,8 +182,10 @@ object_storage:
   enabled: "{OBJECT_STORAGE_ENABLED}"
   strategy: "{OBJECT_STORAGE_MODE}"
   default_bucket: "{DEFAULT_BUCKET}"
-  bucket_naming_rule: "{BUCKET_NAMING_RULE}"
-  key_pattern: "{prefix}/default/{resource_type}/{uuid}.{ext}"
+  bucket_policy: "one_project_one_bucket"
+  bucket_naming_rule: "{PRODUCT_CODE}"
+  prefix_strategy: "resource_type_prefix"
+  key_pattern: "{resource_type_prefix}/default/{resource_type}/{uuid}.{ext}"
   public_access_policy: "{PUBLIC_ACCESS_POLICY}"
   signed_url_ttl: "{SIGNED_URL_TTL}"
   cdn_enabled: "{CDN_ENABLED}"
@@ -162,6 +195,14 @@ object_storage:
     audios: "audios/"
     files: "files/"
     tmp: "tmp/"
+  multi_bucket_exception:
+    allowed: false
+    requires_openspec_change: true
+    allowed_reasons:
+      - compliance_isolation
+      - incompatible_lifecycle_policy
+      - cost_accounting
+      - hard_permission_boundary
 
 data_management:
   # [通用 + 个性化] 数据和运行时文件边界
@@ -213,6 +254,9 @@ ai:
       - /release-propose
       - /release-prepare
       - /release-publish
+    image:
+      - /image-prepare
+      - /image-build
     bootstrap:
       - /initialize-project
       - /build-design-system

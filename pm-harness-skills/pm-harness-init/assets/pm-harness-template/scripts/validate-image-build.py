@@ -78,10 +78,7 @@ def now_text() -> str:
 
 def rel_path(path: Path) -> str:
     resolved = path.resolve()
-    try:
-        return resolved.relative_to(ROOT).as_posix()
-    except ValueError:
-        return resolved.as_posix()
+    return os.path.relpath(resolved, ROOT)
 
 
 def read_json(path: Path) -> dict[str, Any]:
@@ -123,6 +120,45 @@ def parse_env(path: Path) -> dict[str, str]:
     return values
 
 
+def ensure_safe_env_value(path: Path, key: str, value: str, *, template: Path = ENV_EXAMPLE_FILE) -> bool:
+    if key not in SAFE_ENV_KEYS:
+        raise ImageBuildError(f"{key} is not allowed for automatic env updates")
+
+    if path.exists():
+        lines = path.read_text(encoding="utf-8").splitlines()
+    elif template.exists():
+        lines = template.read_text(encoding="utf-8").splitlines()
+    else:
+        lines = []
+
+    assignment = f"{key}={value}"
+    pattern = re.compile(rf"^\s*{re.escape(key)}\s*=")
+    found = False
+    changed = False
+    updated_lines: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#") and pattern.match(line):
+            found = True
+            if line != assignment:
+                changed = True
+            updated_lines.append(assignment)
+        else:
+            updated_lines.append(line)
+
+    if not found:
+        if updated_lines and updated_lines[-1] != "":
+            updated_lines.append("")
+        updated_lines.append(assignment)
+        changed = True
+
+    if changed or not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("\n".join(updated_lines) + "\n", encoding="utf-8")
+        return True
+    return False
+
+
 def safe_env_summary(path: Path) -> dict[str, Any]:
     values = parse_env(path)
     sanitized: dict[str, str] = {}
@@ -146,8 +182,35 @@ def impact_requires_image(release_data: dict[str, Any]) -> bool:
     return any(str(impact.get(key, "")).strip().lower() not in NO_IMPACT_VALUES for key in IMAGE_IMPACT_KEYS)
 
 
+def stable_release_input(release_data: dict[str, Any]) -> dict[str, Any]:
+    """Return release fields that should invalidate an image plan when changed.
+
+    Prepare/publish commands update gate evidence and status fields in release.json.
+    Those mutable bookkeeping fields must not make an already generated image plan
+    stale, otherwise release-prepare and image-prepare form a circular dependency.
+    """
+
+    return {
+        "version": release_data.get("version"),
+        "image_required": release_data.get("image_required"),
+        "image_required_rationale": release_data.get("image_required_rationale", ""),
+        "image_tag": release_data.get("image_tag"),
+        "sprints": release_data.get("sprints", []),
+        "requirements": release_data.get("requirements", []),
+        "bugs": release_data.get("bugs", []),
+        "changes": release_data.get("changes", []),
+        "impact_scope": release_data.get("impact_scope", {}),
+        "announcement": release_data.get("announcement", "announcement.mdx"),
+    }
+
+
+def stable_release_input_hash(release_data: dict[str, Any]) -> str:
+    payload = json.dumps(stable_release_input(release_data), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def input_files_for_release(release_dir: Path) -> list[Path]:
-    files = [release_dir / "release.json"]
+    files: list[Path] = []
     announcement = read_json(release_dir / "release.json").get("announcement", "announcement.mdx")
     files.append(release_dir / str(announcement))
     files.extend(ROOT / item for item in INPUT_FILE_CANDIDATES)
@@ -160,7 +223,7 @@ def current_input_hashes(paths: list[Path]) -> dict[str, str]:
 
 def compose_tag_defaults() -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
-    pattern = re.compile(r"\$\{(?:IMAGE_BUILD_TAG|[A-Z0-9_]+_IMAGE_TAG):-([^}]+)\}")
+    pattern = re.compile(r"\$\{(?:[A-Z0-9_]+_)?IMAGE_TAG:-([^}]+)\}")
     for relative in ("docker-compose.prod.yml", "docker-compose.prod.external.yml"):
         path = ROOT / relative
         if path.exists():
@@ -202,17 +265,40 @@ def prepare_plan(version: str, release_dir: Path | None = None, env_file: Path =
     example_values = parse_env(ENV_EXAMPLE_FILE)
     env_values = parse_env(env_file)
     image_required = impact_requires_image(release_data)
-    image_tag = env_values.get("IMAGE_BUILD_TAG") or example_values.get("IMAGE_BUILD_TAG") or version
-    platform = env_values.get("IMAGE_BUILD_PLATFORM") or example_values.get("IMAGE_BUILD_PLATFORM") or "linux/amd64"
     blockers: list[dict[str, str]] = []
+    warnings: list[dict[str, str]] = []
+    auto_actions: list[dict[str, str]] = []
 
     if image_required and not env_file.exists():
-        blockers.append(
-            {
-                "code": "build_env_missing",
-                "message": "scripts/build-images.env is missing; copy scripts/build-images.env.example before image-build.",
-            }
-        )
+        if ENV_EXAMPLE_FILE.exists():
+            if ensure_safe_env_value(env_file, "IMAGE_BUILD_TAG", version):
+                auto_actions.append(
+                    {
+                        "code": "build_env_created",
+                        "message": f"Created {rel_path(env_file)} from the template and set IMAGE_BUILD_TAG to {version}.",
+                    }
+                )
+            env_values = parse_env(env_file)
+        else:
+            blockers.append(
+                {
+                    "code": "build_env_missing",
+                    "message": "scripts/build-images.env is missing; copy scripts/build-images.env.example before image-build.",
+                }
+            )
+
+    if image_required and env_file.exists() and env_values.get("IMAGE_BUILD_TAG") != version:
+        if ensure_safe_env_value(env_file, "IMAGE_BUILD_TAG", version):
+            auto_actions.append(
+                {
+                    "code": "image_tag_normalized",
+                    "message": f"Set IMAGE_BUILD_TAG to {version} in {rel_path(env_file)}.",
+                }
+            )
+        env_values = parse_env(env_file)
+
+    image_tag = env_values.get("IMAGE_BUILD_TAG") or example_values.get("IMAGE_BUILD_TAG") or version
+    platform = env_values.get("IMAGE_BUILD_PLATFORM") or example_values.get("IMAGE_BUILD_PLATFORM") or "linux/amd64"
     if image_required and image_tag != version:
         blockers.append(
             {
@@ -232,10 +318,10 @@ def prepare_plan(version: str, release_dir: Path | None = None, env_file: Path =
     for compose_file, tags in compose_defaults.items():
         for tag in tags:
             if tag != version:
-                blockers.append(
+                warnings.append(
                     {
-                        "code": "compose_default_tag_mismatch",
-                        "message": f"{compose_file} default image tag is {tag}, expected {version} or explicit release rationale.",
+                        "code": "compose_default_tag_fallback_mismatch",
+                        "message": f"{compose_file} fallback image tag is {tag}; release deploy env must set the project image tag variable to {version}.",
                     }
                 )
 
@@ -252,6 +338,11 @@ def prepare_plan(version: str, release_dir: Path | None = None, env_file: Path =
             "requirements": release_data.get("requirements", []),
             "bugs": release_data.get("bugs", []),
             "changes": release_data.get("changes", []),
+        },
+        "release_input": {
+            "source": "release.json stable fields",
+            "hash": stable_release_input_hash(release_data),
+            "fields": stable_release_input(release_data),
         },
         "build_env": {
             "default": safe_env_summary(env_file),
@@ -280,6 +371,8 @@ def prepare_plan(version: str, release_dir: Path | None = None, env_file: Path =
         },
         "compose_tag_defaults": compose_defaults,
         "required_commands": build_required_commands(version, env_file),
+        "auto_actions": auto_actions,
+        "warnings": warnings,
         "blockers": blockers,
     }
     assert_public_safe(plan, artifact="image-build-plan.json")
@@ -297,7 +390,7 @@ def validate_plan(version: str, release_dir: Path | None = None, *, require_unbl
         return [str(exc)]
     if plan.get("version") != version:
         errors.append(f"image-build-plan.json version must be {version}")
-    for key in ("image_required", "image_tag", "source_scope", "build_env", "input_files", "input_hashes", "database_impact", "required_commands", "blockers"):
+    for key in ("image_required", "image_tag", "source_scope", "release_input", "build_env", "input_files", "input_hashes", "database_impact", "required_commands", "auto_actions", "warnings", "blockers"):
         if key not in plan:
             errors.append(f"image-build-plan.json missing {key}")
     if require_unblocked and plan.get("blockers"):
@@ -308,6 +401,15 @@ def validate_plan(version: str, release_dir: Path | None = None, *, require_unbl
         actual = current_hashes.get(path)
         if actual != expected:
             errors.append(f"input hash drift: {path}")
+    try:
+        release_data = read_json(release_dir / "release.json")
+    except ImageBuildError as exc:
+        errors.append(str(exc))
+    else:
+        expected_release_hash = plan.get("release_input", {}).get("hash")
+        actual_release_hash = stable_release_input_hash(release_data)
+        if actual_release_hash != expected_release_hash:
+            errors.append("release stable input drift: release.json")
     return errors
 
 
@@ -354,8 +456,12 @@ def build_images(version: str, release_dir: Path | None = None, env_file: Path =
     platform = str(plan.get("platform") or env_values.get("IMAGE_BUILD_PLATFORM") or "linux/amd64")
     backend_name = env_values.get("IMAGE_BUILD_BACKEND_IMAGE", "pm-harness-backend")
     web_name = env_values.get("IMAGE_BUILD_WEB_IMAGE", "pm-harness-web")
+    output_dir = env_values.get("IMAGE_BUILD_RELEASE_DIR")
+    output_release_dir = Path(output_dir) if output_dir else ROOT.parent / "releases" / tag
+    if not output_release_dir.is_absolute():
+        output_release_dir = ROOT / output_release_dir
     tar_name = env_values.get("IMAGE_BUILD_TAR_NAME") or f"pm-harness-{tag}-{platform.replace('/', '-')}.tar.gz"
-    tar_path = release_dir / "images" / tar_name
+    tar_path = output_release_dir / "images" / tar_name
     tarball = {
         "path": rel_path(tar_path),
         "sha256": tar_sha256_from_sidecar(tar_path),
@@ -416,6 +522,8 @@ def main() -> int:
             plan = prepare_plan(args.release, release_dir, env_file)
             print_summary("Plan", args.release, release_dir / "image-build-plan.json")
             print(f"image_required: {plan['image_required']}")
+            print(f"auto_action_count: {len(plan.get('auto_actions', []))}")
+            print(f"warning_count: {len(plan.get('warnings', []))}")
             print(f"blocker_count: {len(plan['blockers'])}")
             return 0
         if args.command == "validate-plan":

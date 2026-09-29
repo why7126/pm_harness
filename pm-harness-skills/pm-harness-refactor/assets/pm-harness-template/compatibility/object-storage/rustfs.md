@@ -31,7 +31,9 @@ template_scope: 可作为工程初始化时的 compatibility/object-storage/rust
 
 ## 2. 兼容重点 `[通用]`
 
+- 默认使用项目级唯一 Bucket，桶内通过 `images/`、`videos/`、`audios/`、`files/`、`tmp/` 等资源类型前缀区分对象。
 - RustFS 的 S3 兼容能力必须按项目实际使用 API 验证。
+- 不得按资源类型、租户、业务模块或环境默认创建多个 Bucket；多 Bucket 必须通过 OpenSpec 例外变更批准。
 - 分片上传、签名 URL、生命周期、元数据和权限策略不得默认等同 MinIO 或 AWS S3。
 - 私有化部署必须记录备份、恢复、监控和容量策略。
 

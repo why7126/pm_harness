@@ -71,3 +71,15 @@ UI 变更完成前必须说明：
 □ 是否运行构建、截图、视觉检查或组件预览
 □ 是否需要补充交互、可访问性或响应式测试
 ```
+
+## 6. Prototype-driven UI Gate
+
+当 Change 包含 `prototype/`、`prototype_refs`、UI Skeleton、Golden Reference 或明确视觉参照时，MUST 追加读取 `docs/standards/prototype-ui-acceptance.md`。
+
+实现与归档阶段 SHOULD 记录 UI Contract、Skeleton 首轮确认、1440px 桌面视觉证据、高风险差异的 computed style 或等价断言、Mock/API 边界和最终文档一致性。证据缺失时必须记录豁免原因。
+
+## 7. UI 返修附件截图对照
+
+UI 型 `/opsx-modify` 若验收反馈包含附件截图、标注图、原型截图或实际截图，MUST 在返修前建立逐项视觉对照表。对照表至少包含截图编号、页面/状态、期望表现、实际表现、偏差项、检查方式、处置结论和证据入口。
+
+对照表证据不足时先补证，不得直接返修。返修完成后 SHOULD 复验对应截图项，并在 Change `tasks.md` 或 `trace.md` 记录结果。

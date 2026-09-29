@@ -44,8 +44,10 @@ template_scope: 可作为工程初始化时的 compatibility/database/test-matri
 | `{PRODUCT_NAME}` | 产品或项目名称 | 待确认 |
 | `{PRODUCT_CODE}` | 项目代码，建议 kebab-case | 待确认 |
 | `{DATABASE_OWNER}` | 数据库负责人或维护角色 | 待确认 |
-| `{DATABASE_STACK}` | 主数据库、版本、驱动、ORM/DAO | SQLite + SQLAlchemy |
-| `{DB_PRIMARY}` | 主关系型数据库 | SQLite |
+| `{DATABASE_STACK}` | 各环境数据库、版本、驱动、ORM/DAO | SQLite(local/test) + MySQL(production) |
+| `{DB_PRIMARY}` | 生产主关系型数据库 | MySQL |
+| `{LOCAL_DATABASE}` | 本地开发数据库 | SQLite |
+| `{TEST_DATABASE}` | 自动化测试数据库 | SQLite / 临时 SQLite |
 | `{XINCHUANG_DATABASES}` | 信创或兼容数据库目标 | 无 / 达梦 / 海量 / PostgreSQL |
 | `{ORM_STACK}` | ORM 或 DAO 技术栈 | SQLAlchemy / Prisma / Drizzle / 手写 SQL |
 | `{MIGRATION_TOOL}` | 迁移工具 | Alembic / Prisma / 手写 SQL |
@@ -72,10 +74,9 @@ template_scope: 可作为工程初始化时的 compatibility/database/test-matri
 
 | 数据库 | 版本 | 驱动/ORM | 使用场景 | 是否必测 | 说明 |
 |---|---|---|---|---|---|
-| `{DB_PRIMARY}` | `{DB_PRIMARY_VERSION}` | `{DB_PRIMARY_DRIVER}` | 主数据库 | 是 | 主路径必须覆盖 |
-| SQLite | `{SQLITE_VERSION}` | `{SQLITE_DRIVER}` | local/test/desktop | 条件启用 | 使用 SQLite 时启用 |
+| MySQL | `{MYSQL_VERSION}` | `{MYSQL_DRIVER}` | production | 是 | 默认生产主库必须覆盖 |
+| SQLite | `{SQLITE_VERSION}` | `{SQLITE_DRIVER}` | local/test/desktop | 是 | 默认开发/测试路径必须覆盖 |
 | PostgreSQL | `{POSTGRES_VERSION}` | `{POSTGRES_DRIVER}` | 生产/兼容 | 条件启用 | 声明支持时启用 |
-| MySQL | `{MYSQL_VERSION}` | `{MYSQL_DRIVER}` | 生产/兼容 | 条件启用 | 声明支持时启用 |
 | 达梦 | `{DM_VERSION}` | `{DM_DRIVER}` | 信创 | 条件启用 | 声明支持时启用 |
 | 海量 | `{HIGHGO_VERSION}` | `{HIGHGO_DRIVER}` | 信创 | 条件启用 | 声明支持时启用 |
 
@@ -177,7 +178,7 @@ Repository/DAO 必须覆盖：
 | JSON 查询 | key 存在、数组、嵌套字段 | JSON 函数差异 |
 | 聚合 | count、sum、group by、having | 类型和空值差异 |
 
-多数据库兼容项目不得只在 SQLite 上验证查询正确性。
+默认不得只在 SQLite 上验证查询正确性；影响生产数据路径的变更必须覆盖 MySQL。
 
 ## 8. 类型映射与数据边界 `[通用 + 个性化]`
 

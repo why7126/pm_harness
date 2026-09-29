@@ -18,3 +18,12 @@ note: 适用于{PRODUCT_NAME}项目模板
 - OpenSpec 解析关键字 MAY 保留英文，例如 `Requirement`、`Scenario`、`MUST`、`SHALL`、`WHEN`、`THEN`、`AND`，以保证 CLI 校验稳定。
 - API 路径、HTTP 方法、数据库表名、字段名、枚举值、代码类名、文件路径、命令、产品英文专名（如 客户端生成、Mintlify、Docker、Swagger）MAY 保留英文。
 - 归档后生成的 `Purpose` 不得保留 `TBD - created by archiving...` 等脚手架占位文案；应改为中文能力说明。
+
+OpenSpec Change 文档可以使用脚本执行中文优先校验：
+
+```bash
+python scripts/validate-openspec-language.py --root .
+python scripts/validate-openspec-language.py --root . --include-archive
+```
+
+校验范围包括 `proposal.md`、`design.md`、`tasks.md`、`trace.md`、`acceptance.md`、`test-plan.md` 以及 specs delta 文档；命令、路径和代码标识符可保留英文。

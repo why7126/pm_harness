@@ -50,3 +50,13 @@ AI 生成代码时不得：
 □ 生成危险命令执行逻辑
 □ 把生产域名、连接串或客户数据写进文档示例
 ```
+
+## 6. Git 安全门禁
+
+提交或推送前 SHOULD 运行：
+
+```bash
+python scripts/git-check.py
+```
+
+`/git-check` 默认扫描 staged + tracked 文件。真实 env、运行时数据、数据库文件、密钥、Token、连接串、本机绝对路径和大型本地产物出现 error 时不得继续提交；报告必须脱敏。

@@ -4,7 +4,7 @@ content: 发布对象、公告、版本号、发布前门禁和回滚记录
 source: Harness Token 优化模板
 update_method: 发布流程、版本策略或发布命令族变化时更新
 created_at: 2026-06-13 00:00:00
-updated_at: 2026-07-14 00:00:00
+updated_at: 2026-08-21 22:28:02
 note: 适用于启用 releases/ 的项目
 ---
 
@@ -52,18 +52,63 @@ releases/vX.Y.Z/announcement.mdx
 
 ## 4. 发布前门禁
 
+## 4.1 版本部署升级与回滚治理
+
+发布治理 MUST 区分“目标版本已发布”和“某条升级路径已验证”。`releases/<version>/release.json`、`image-build-plan.json`、`image-manifest.json` 表达目标版本事实；升级路径 MUST 额外表达 `from_version -> to_version` 的来源版本、支持级别、执行步骤、验证证据和回滚证据。
+
+升级路径计划默认放在：
+
+```text
+releases/<to-version>/upgrade-plans/<from-version>-to-<to-version>.json
+```
+
+`from_version=fresh` 表示首次部署。升级计划 MUST 至少包含：
+
+- `from_version`、`to_version`、`support_level`、`source_confidence`。
+- `version_facts`：目标 release、目标 image manifest、产品版本或 image tag 摘要。
+- `impact_summary`：DB、env、Docker、API、对象存储和维护任务影响。
+- `env_diff`：只输出变量名、分类、说明和建议，不输出真实 env 值。
+- `required_checks`、`steps`、`rollback`、`blockers`、`warnings`、`evidence`。
+
+支持级别含义：
+
+| 支持级别 | 含义 |
+|---|---|
+| `fresh-install-supported` | 目标版本支持空环境首次部署。 |
+| `adjacent-upgrade-supported` | 支持从上一发布版本升级到目标版本。 |
+| `cross-version-upgrade-supported` | 支持从指定旧版本跨多个版本升级到目标版本，且已有完整演练与回滚证据。 |
+| `cross-version-upgrade-requires-manual-review` | 跨版本升级理论上可规划，但缺少完整演练、中间版本事实源或存在 DB/env/object storage 等人工复核项。 |
+| `unsupported` | 不支持直接升级，需要专项迁移、先升中间版本或人工方案。 |
+
+缺少中间版本 release 事实源、缺少跨版本演练、缺少 DB drift/smoke、缺少 env diff、缺少对象存储审计或缺少回滚证据时，MUST NOT 将跨版本升级标记为 `cross-version-upgrade-supported`。
+
+推荐命令：
+
+```text
+/upgrade-plan --from <fresh|version> --to <version>
+/upgrade-validate --plan releases/<version>/upgrade-plans/<from>-to-<version>.json
+python scripts/validate-release-upgrade.py plan --from <fresh|version> --to <version>
+python scripts/validate-release-upgrade.py validate-plan --plan releases/<version>/upgrade-plans/<from>-to-<version>.json
+```
+
+upgrade 命令只生成计划和校验结果，MUST NOT 自动执行生产升级、自动修改真实生产 env、自动执行数据库写入迁移、DB restore 或对象存储写入维护任务。
+
+## 4.2 发布前门禁
+
 | 门禁 | 要求 |
 |---|---|
 | OpenSpec | 关联 Change 已 archive，相关能力已合并到 `openspec/specs/`；未归档项不得进入正式发布范围 |
 | 测试 | 按变更范围执行并记录结果 |
-| API / 客户端 | 涉及 API 变更时，OpenAPI 与客户端生成物已同步 |
+| API / 客户端 | 涉及 API 变更时，OpenAPI 与客户端生成物（如 Orval）已同步 |
 | Docker Compose | 涉及部署变更时，Compose 配置与部署文档已同步 |
-| 数据库 | 涉及数据库迁移或 schema 影响时，迁移脚本、数据库文档、目标数据库校验证据、回滚或备份说明已同步 |
+| 数据库 | 涉及数据库迁移或 schema 影响时，迁移脚本、数据库文档、目标 MySQL schema drift / smoke 或等价校验证据、回滚或备份说明已同步 |
 | 环境变量 | 涉及环境变量时，`.env.example` 与注释已同步 |
 | 产品版本 | 用户可见版本号与发布对象版本一致；如不更新，必须记录原因 |
 | 公告预览 | 公告 build、preview 或等价静态文档校验通过 |
+| 产品手册 | 若 `usage_docs.status=generated`，`releases/<version>/usage-docs/manifest.json`、Mintlify 投影、站点导航/链接和公开安全校验必须通过；若跳过，必须记录确认人、时间和理由 |
 | 镜像准备 | 当 `image_required=true` 时，`releases/<version>/image-build-plan.json` 已生成、校验通过并被 `release.json` 引用 |
 | 镜像构建 | 当 `image_required=true` 或包含离线镜像交付时，`releases/<version>/image-manifest.json` 已生成、未过期并被 `release.json` 引用；外部构建证据必须受控 |
+| 升级计划 | 当版本承诺首次部署、相邻升级或跨版本升级路径时，对应 `upgrade-plans/*.json` 已生成并通过校验；跨版本缺少演练证据时必须保留人工复核或 unsupported |
 
 任一必填门禁失败时，发布流程 MUST 阻断，并输出失败原因与修复建议。
 
@@ -77,22 +122,26 @@ releases/vX.Y.Z/announcement.mdx
   -> /release-publish <version>
 ```
 
-`/image-prepare` 只生成或更新 `releases/<version>/image-build-plan.json`，记录版本、image tag、source scope、build env 安全摘要、Dockerfile、Compose、构建脚本、构建 env 示例、Nginx、schema、migration、数据库文档 input hash、required commands 和 blockers。Docker 不可用、网络不可用或缺少 `scripts/build-images.env` 时可以写 blocked plan，但不得写 pass 证据。
+`/image-prepare` 只生成或更新 `releases/<version>/image-build-plan.json`，记录版本、image tag、source scope、release stable input hash、build env 安全摘要、Dockerfile、Compose、构建脚本、构建 env 示例、Nginx、schema、migration、数据库文档 input hash、required commands、auto actions、warnings 和 blockers。默认构建 env 缺失或 `IMAGE_BUILD_TAG` 与版本不一致时，命令 MAY 只自动创建/更新安全白名单变量并记录 auto action。Compose fallback image tag 与当前版本不同但实际发布 env 明确设置项目级 image tag 变量时 SHOULD 记录 warning，不得作为 blocker 要求每次 release 改 Compose 默认值。Docker 不可用、网络不可用、构建 env 示例异常、自动修正后仍版本不一致或真实构建前置条件不满足时可以写 blocked plan，但不得写 pass 证据。
 
-`/image-build` MUST 读取有效且未过期的 image build plan 后再复用 `scripts/build-images.sh` 执行真实构建。构建成功后写入 `releases/<version>/image-manifest.json`，记录 version、image_tag、built_at、platform、backend_image、web_image、tarball、input_hashes、validation 和 source_plan。缺少 plan、plan blocked、版本/tag 不一致、input hash 漂移、Docker/buildx/网络/基础镜像源/验证/tar/sha256 失败时 MUST 阻断，不得伪造成功 manifest。
+`/image-build` MUST 读取有效且未过期的 image build plan 后再复用 `scripts/build-images.sh` 执行真实构建。构建成功后写入 `releases/<version>/image-manifest.json`，记录 version、image_tag、built_at、platform、backend_image、web_image、tarball、input_hashes、validation 和 source_plan。镜像 tar 包与 `.sha256` MUST 默认输出到仓库外 `../releases/<version>/images/`，不得提交到仓库内 `releases/`。缺少 plan、plan blocked、版本/tag 不一致、input hash 漂移、Docker/buildx/网络/基础镜像源/验证/tar/sha256 失败时 MUST 阻断，不得伪造成功 manifest。
 
 发布确认阶段 MUST 重新校验 manifest 的版本、tag、source plan 和 input hashes。manifest 生成后 Dockerfile、构建脚本、schema、migration、Compose 或 release input 漂移时，镜像证据失效，必须重新执行 `/image-prepare` 与 `/image-build`，或记录经批准的外部构建证据。
 
-数据库影响不允许只记录本地轻量数据库测试或文档同步证据。`impact_scope.database` 非 `none` / `na` / `不涉及` 时，`database_migration` 门禁 MUST 为 `pass`，且 evidence MUST 明确包含：
+外部构建证据只可作为受控替代证据，必须记录来源、版本、image tag、平台、镜像 digest 或 tarball sha256、校验方式、负责人确认和风险说明；不得绕过公开安全扫描、版本一致性校验或 input hash 漂移校验。
 
-- 迁移脚本或目标 schema SQL 证据。
-- schema drift、目标数据库 smoke、`information_schema` 校验或等价证据。
+数据库影响不允许只记录 SQLite、本地测试或文档同步证据。`impact_scope.database` 非 `none` / `na` / `不涉及` 时，`database_migration` 门禁 MUST 为 `pass`，且 evidence MUST 明确包含：
+
+- MySQL 或 `schema.mysql.sql` 目标路径证据。
+- MySQL schema drift、目标 MySQL smoke、`information_schema` 校验或等价证据。
 - 数据库回滚或备份证据。
 
 发布对象和公告安全校验：
 
 ```bash
-python scripts/validate-release.py --release-dir releases/vX.Y.Z
+python scripts/validate-release.py --release-dir releases/vX.Y.Z --stage prepare
+python scripts/validate-release.py --release-dir releases/vX.Y.Z --stage publish
+python scripts/validate-mintlify-site.py
 ```
 
 ## 5. 发布命令族
@@ -105,4 +154,6 @@ python scripts/validate-release.py --release-dir releases/vX.Y.Z
 | `/release-prepare <version>` | 执行发布前校验，生成或更新公告源文件 |
 | `/image-prepare <version>` | 生成镜像构建计划并校验 release、tag、Compose、Dockerfile、schema/migration 等输入 |
 | `/image-build <version>` | 基于有效构建计划执行真实镜像构建、验证、离线包导出并生成 manifest |
+| `/upgrade-plan --from <fresh\|version> --to <version>` | 生成首次部署、相邻升级或跨版本升级计划 |
+| `/upgrade-validate --plan <path>` | 校验升级与回滚计划 |
 | `/release-publish <version>` | 记录发布确认结果和最终公告位置 |

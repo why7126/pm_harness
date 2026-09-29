@@ -8,19 +8,22 @@
 
 | 命令族 | 默认命令 | 阶段/作用 | 是否生成文档 | 是否生成代码 |
 |---|---|---|---:|---:|
+| 通用探索 / 治理优化 | `/explore`、`/spec-opt`、`/spec-study` | 开放问题只读探索、治理规范/技能/脚本优化、跨项目 Harness 学习应用 | explore 否；spec-opt/spec-study 是 | 否 |
 | 综合捕获 | `/capture` | 未分类反馈的需求/BUG 分析、拆分与路由捕获 | 是 | 否 |
 | 需求治理 | `/req-capture`、`/req-explore`、`/req-generate`、`/req-complete`、`/req-review`、`/req-opsx` | 记录/必要拆分、探索、生成、完善、评审、转 OpenSpec | 除 explore 外是 | 否 |
 | 缺陷治理 | `/bug-capture`、`/bug-explore`、`/bug-generate`、`/bug-complete`、`/bug-review`、`/bug-opsx` | 记录/必要拆分、分析、生成、完善、评审、转 OpenSpec | 除 explore 外是 | 否 |
 | Sprint 治理 | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-exps`、`/sprint-archive` | 规划、分析、执行、经验沉淀、归档 | 视命令而定 | 仅 apply |
-| OpenSpec | `/opsx-explore`、`/opsx-propose`、`/opsx-apply`、`/opsx-archive` | 探索、提案、实现、归档 | 视命令而定 | 仅 apply |
+| OpenSpec | `/opsx-explore`、`/opsx-propose`、`/opsx-apply`、`/opsx-modify`、`/opsx-archive` | 探索、提案、实现、验收返修、归档 | 视命令而定 | apply / modify |
 | 小程序发布辅助 | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` | 切换环境、发布前检查、体验/正式验证确认、发布后恢复 | 是 | 否 |
 | 镜像交付 | `/image-prepare`、`/image-build` | 生成镜像构建计划、执行镜像构建、验证并生成 manifest | 是 | build 会执行构建 |
+| 产品手册 | `/usage-docs-generate`、`/usage-docs-update`、`/usage-docs-validate` | 生成、更新、校验版本化 usage docs 与 Mintlify 投影 | 是 | 否 |
 | 发布治理 | `/release-propose`、`/release-prepare`、`/release-publish` | 创建产品版本发布对象、执行发布门禁、生成/确认公告 | 是 | 否 |
+| 升级治理 | `/upgrade-plan`、`/upgrade-validate` | 生成和校验首次部署、相邻升级或跨版本升级与回滚计划 | 是 | 否 |
 | 项目基线 | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` | 初始化或建立治理标准 | 是 | 否 |
 
 ## 条件启用
 
-- 综合捕获、需求、缺陷、Sprint、OpenSpec、小程序发布辅助、镜像交付、发布治理与项目基线默认启用。
+- 通用探索 / 治理优化、综合捕获、需求、缺陷、Sprint、OpenSpec、小程序发布辅助、镜像交付、产品手册、发布治理、升级治理与项目基线默认启用。
 - 用户明确禁用某一治理流程时，删除该流程命令、目录、强制规则与相关检查项，或标记为 `planned`。
 - 未知命令不得伪造；记录为 `待确认`。
 - 需求或缺陷未完成评审、评审未通过或状态不是 `approved`/`in_sprint` 时，MUST 停止在评审门禁：不得 `/req-opsx` 或 `/bug-opsx`，不得 `/sprint-apply` 或等价开发，也不得写入 Sprint 规划文件。
@@ -28,7 +31,7 @@
 
 ## Workflow Sync 钩子
 
-除 `*-explore` 和项目基线命令外，`/capture` 以及所有 `req-*`、`bug-*`、`sprint-*`、`opsx-*` 命令末尾必须保留 `Final Step — Workflow Sync (MUST)`，并调用：
+除 `/explore`、`*-explore`、`/spec-opt` 与 `/spec-study` 的纯只读分析路径和项目基线命令外，`/capture` 以及所有 `req-*`、`bug-*`、`sprint-*`、`opsx-*` 命令末尾必须保留 `Final Step — Workflow Sync (MUST)`，并调用：
 
 ```bash
 python scripts/sync-workflow-status.py --event <event> [--req REQ-xxxx] [--bug BUG-xxxx] [--change change-id] [--sprint sprint-xxx|auto]

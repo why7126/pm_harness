@@ -1,0 +1,38 @@
+{
+  "id": "deepseek-harness",
+  "name": "DeepSeek Harness Web Client",
+  "source_project": "DeepSeek Harness",
+  "source_repo": "https://github.com/deepseek-ai/deepseek-harness",
+  "source_type": "github_repo",
+  "source_files": [
+    "packages/client/ui-theme/src/styles/base.css",
+    "packages/client/ui-theme/src/styles/design-platform.css",
+    "packages/client/ui-layout/src/client/AppFrame.module.css",
+    "packages/client/ui-sidebar/src/client/SidebarRoot.module.css",
+    "packages/client/ui-primitives/src/Button.module.css",
+    "packages/client/ui-primitives/src/Input.module.css",
+    "packages/client/ui-primitives/src/Menu.module.css",
+    "packages/client/ui-workspace/src/client/WorkspaceBrowser.module.css",
+    "packages/client/ui-workspace/src/client/rows/Rows.module.css",
+    "packages/client/ui-conversation/src/client/skeleton/ConversationRoot.module.css",
+    "packages/client/ui-conversation/src/client/chat/ChatView.module.css"
+  ],
+  "category": "saas",
+  "tags": [
+    "agent-ui",
+    "web-client",
+    "collapsible-sidebar",
+    "conversation",
+    "near-white",
+    "deepseek-blue",
+    "compact-rail",
+    "css-modules"
+  ],
+  "created_at": "2026-08-14T00:00:00+08:00",
+  "demo_path": "demo.html",
+  "navigation_demo_path": "navigation-demo.html",
+  "design_summary": "DeepSeek Harness web client UI extracted from source CSS modules: near-white bluish surfaces, restrained black primary actions, DeepSeek blue semantic accents, centered conversation composer, and a sliding/fading collapsible sidebar rail.",
+  "inferred": false,
+  "navigation_applicability": "extracted",
+  "navigation_notes": "Reusable for agent workbench, chat IDE, workspace/session browser, or tool-running products that need a collapsible left rail plus conversation center."
+}

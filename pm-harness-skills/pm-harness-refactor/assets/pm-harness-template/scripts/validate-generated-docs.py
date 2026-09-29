@@ -56,6 +56,7 @@ TEMPLATE_META_RE = re.compile(
 )
 
 YAML_PENDING_SCALAR_RE = re.compile(r":\s*[\"']?待确认(?:（[^\"']*）)?[\"']?\s*(?:#.*)?$")
+LEGACY_OPENSPEC_ARCHIVE_RE = re.compile(r"openspec/changes/archive")
 
 
 @dataclass
@@ -104,6 +105,16 @@ def scan_file(root: Path, path: Path) -> list[Finding]:
             findings.append(Finding("error", rel, index, "关键入口文件不得残留待确认", stripped))
         if path.suffix in {".yaml", ".yml"} and not stripped.startswith("#") and YAML_PENDING_SCALAR_RE.search(line):
             findings.append(Finding("error", rel, index, "YAML 配置不得使用待确认作为标量值", stripped))
+        if LEGACY_OPENSPEC_ARCHIVE_RE.search(line):
+            findings.append(
+                Finding(
+                    "error",
+                    rel,
+                    index,
+                    "OpenSpec 归档目录必须使用 openspec/archive，不得使用 openspec/changes/archive",
+                    stripped,
+                )
+            )
 
     return findings
 

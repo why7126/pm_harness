@@ -42,7 +42,7 @@ processed assets
 
 ```text
 bucket: {OBJECT_STORAGE_BUCKET}
-key: {prefix}/{tenant}/{resource_type}/{uuid}.{ext}
+key: {resource_type_prefix}/{tenant}/{resource_type}/{uuid}.{ext}
 ```
 
 对象前缀和 Key 规则见 [07-object-storage-strategy.md](07-object-storage-strategy.md) 与 `rules/object-storage.md`。

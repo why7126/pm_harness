@@ -15,7 +15,7 @@ note: 适用于 {PRODUCT_NAME} 项目；无 API 项目可保留为未来启用�
 
 本文档定义项目 API 的长期治理规则，覆盖 API 设计原则、资源命名、URL、HTTP Method、版本、请求响应、错误码、认证授权、分页排序、幂等、文件上传、OpenAPI 契约、客户端生成、测试验收和维护流程。
 
-本文档是 `rules/api.md` 的落地细则，应与 `docs/03-api-index.md`、`docs/standards/openapi-rules.md`、`docs/standards/error-codes.md`、`docs/standards/authentication.md`、`docs/standards/file_upload.md` 保持一致。
+本文档是 `rules/api.md` 的落地细则，应与 `docs/03-api-index.md`、`docs/standards/openapi-rules.md`、`docs/standards/error-codes.md`、`docs/standards/authentication.md`、`docs/standards/file_upload.md`、`docs/standards/product-data-collection-observability.md` 保持一致。API 变更若涉及请求日志、行为埋点、Task Trace、端请求封装或日志审计，MUST 声明 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation`；不适用时写明 N/A 或 `not_applicable` 原因。
 
 ## 1. 生成参数 `[个性化]`
 

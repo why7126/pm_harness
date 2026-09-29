@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import re
 import sys
@@ -12,16 +13,22 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASES_DIR = ROOT / "releases"
+PRODUCT_VERSION_FILE = ROOT / "src" / "shared" / "product-version.ts"
 
 REQUIRED_GATES = (
     "openspec_archive",
     "tests",
-    "client_generation",
+    "orval",
     "docker_compose",
     "database_migration",
     "env_example",
     "product_version",
-    "announcement_preview",
+    "mintlify_preview",
+)
+
+IMAGE_GATES = (
+    "image_prepare",
+    "image_build",
 )
 
 IMPACT_KEYS = (
@@ -37,24 +44,24 @@ IMPACT_KEYS = (
 SENSITIVE_PATTERNS = (
     re.compile(r"\bAPP_SECRET_KEY\s*=", re.I),
     re.compile(r"\bDATABASE_URL\s*=", re.I),
-    re.compile(r"\b[A-Za-z0-9_]+://[^/\s:]+:[^@\s]+@", re.I),
+    re.compile(r"mysql(\+\w+)?://", re.I),
     re.compile(r"\bMINIO_SECRET_KEY\s*=", re.I),
     re.compile(r"\bBearer\s+[A-Za-z0-9._-]+", re.I),
     re.compile(r"\bpassword\s*=", re.I),
 )
 
 NO_IMPACT_VALUES = {"", "none", "na", "n/a", "not_applicable", "not applicable", "无", "不涉及"}
-DATABASE_EVIDENCE_PATTERNS = (
-    re.compile(r"schema\.[A-Za-z0-9_-]+\.sql", re.I),
-    re.compile(r"\bmigration\b", re.I),
-    re.compile(r"迁移"),
+MYSQL_EVIDENCE_PATTERNS = (
+    re.compile(r"\bmysql\b", re.I),
+    re.compile(r"schema\.mysql\.sql", re.I),
 )
-DATABASE_CHECK_PATTERNS = (
+MYSQL_CHECK_PATTERNS = (
+    re.compile(r"check-mysql-schema-drift\.py", re.I),
     re.compile(r"schema\s*drift", re.I),
     re.compile(r"information_schema", re.I),
-    re.compile(r"\bsmoke\b", re.I),
-    re.compile(r"目标数据库"),
-    re.compile(r"生产数据库"),
+    re.compile(r"mysql\s+smoke", re.I),
+    re.compile(r"目标\s*mysql", re.I),
+    re.compile(r"生产\s*mysql", re.I),
 )
 DATABASE_ROLLBACK_PATTERNS = (
     re.compile(r"rollback", re.I),
@@ -62,6 +69,18 @@ DATABASE_ROLLBACK_PATTERNS = (
     re.compile(r"回滚"),
     re.compile(r"备份"),
 )
+DATABASE_GATE_EFFECTIVE_AT = "2026-07-21 00:00:00"
+IMAGE_GATE_EFFECTIVE_AT = "2026-07-29 15:51:41"
+
+
+def load_image_validator() -> Any:
+    script = ROOT / "scripts" / "validate-image-build.py"
+    spec = importlib.util.spec_from_file_location("validate_image_build_script", script)
+    if spec is None or spec.loader is None:
+        raise ValueError(f"cannot load image validator: {script}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -76,13 +95,13 @@ def load_json(path: Path) -> dict[str, Any]:
     return data
 
 
-def extract_product_version(path: Path | None) -> str | None:
-    if path is None or not path.exists():
+def extract_product_version(path: Path) -> str | None:
+    if not path.exists():
         return None
     text = path.read_text(encoding="utf-8")
     match = re.search(r"PRODUCT_VERSION\s*=\s*['\"]([^'\"]+)['\"]", text)
     if not match:
-        raise ValueError(f"PRODUCT_VERSION not found in {path}")
+        return None
     return match.group(1)
 
 
@@ -109,10 +128,22 @@ def impact_value_requires_gate(value: Any) -> bool:
     return str(value or "").strip().lower() not in NO_IMPACT_VALUES
 
 
+def release_requires_image(data: dict[str, Any]) -> bool:
+    explicit = data.get("image_required")
+    if isinstance(explicit, bool):
+        return explicit
+    impact = data.get("impact_scope")
+    if not isinstance(impact, dict):
+        return False
+    return any(impact_value_requires_gate(impact.get(key)) for key in ("backend", "database", "docker", "object_storage"))
+
+
 def validate_database_impact_gate(data: dict[str, Any], errors: list[str]) -> None:
     impact = data.get("impact_scope")
     gates = data.get("gates")
     if not isinstance(impact, dict) or not isinstance(gates, dict):
+        return
+    if str(data.get("release_time", "")) < DATABASE_GATE_EFFECTIVE_AT:
         return
     if not impact_value_requires_gate(impact.get("database")):
         return
@@ -127,13 +158,13 @@ def validate_database_impact_gate(data: dict[str, Any], errors: list[str]) -> No
 
     evidence = str(gate.get("evidence", ""))
     require(
-        any(pattern.search(evidence) for pattern in DATABASE_EVIDENCE_PATTERNS),
-        "database impact requires database_migration evidence to mention migration or schema SQL",
+        any(pattern.search(evidence) for pattern in MYSQL_EVIDENCE_PATTERNS),
+        "database impact requires database_migration evidence to mention MySQL or schema.mysql.sql",
         errors,
     )
     require(
-        any(pattern.search(evidence) for pattern in DATABASE_CHECK_PATTERNS),
-        "database impact requires schema drift, target database smoke, or information_schema evidence",
+        any(pattern.search(evidence) for pattern in MYSQL_CHECK_PATTERNS),
+        "database impact requires MySQL schema drift or target MySQL smoke evidence",
         errors,
     )
     require(
@@ -155,8 +186,48 @@ def scan_public_safety(release_dir: Path, release_data: dict[str, Any], errors: 
             errors.append(f"public announcement or metadata contains sensitive pattern: {pattern.pattern}")
 
 
-def validate_release(release_dir: Path, product_version_file: Path | None = None) -> list[str]:
+def validate_image_gates(release_dir: Path, data: dict[str, Any], errors: list[str], *, stage: str) -> None:
+    if str(data.get("release_time", "")) < IMAGE_GATE_EFFECTIVE_AT and "image_required" not in data:
+        return
+    image_required = release_requires_image(data)
+    if "image_required" not in data:
+        errors.append("image_required is required for image-governed releases")
+        return
+    if not image_required:
+        require(bool(data.get("image_required_rationale")), "image_required false requires image_required_rationale", errors)
+        return
+
+    gates = data.get("gates")
+    if not isinstance(gates, dict):
+        return
+    for name in IMAGE_GATES:
+        require(name in gates, f"gate {name} is required when image_required is true", errors)
+        if name in gates:
+            gate_is_passing(name, gates[name], errors)
+
+    plan_path = release_dir / str(data.get("image_plan", "image-build-plan.json"))
+    manifest_path = release_dir / str(data.get("image_manifest", "image-manifest.json"))
+    require(plan_path.exists(), f"image_required true requires image build plan: {plan_path}", errors)
+    if stage == "publish":
+        require(manifest_path.exists(), f"image_required true requires image manifest: {manifest_path}", errors)
+
+    if plan_path.exists():
+        image_validator = load_image_validator()
+        errors.extend(image_validator.validate_plan(str(data.get("version")), release_dir, require_unblocked=False))
+    if manifest_path.exists():
+        image_validator = load_image_validator()
+        errors.extend(image_validator.validate_manifest(str(data.get("version")), release_dir))
+
+
+def validate_release(
+    release_dir: Path,
+    product_version_file: Path = PRODUCT_VERSION_FILE,
+    *,
+    stage: str = "prepare",
+) -> list[str]:
     errors: list[str] = []
+    if stage not in {"prepare", "publish"}:
+        return [f"stage must be prepare or publish, got {stage}"]
     data = load_json(release_dir / "release.json")
 
     version = str(data.get("version", ""))
@@ -166,7 +237,7 @@ def validate_release(release_dir: Path, product_version_file: Path | None = None
     require(data.get("formal_scope_only") is True, "formal_scope_only must be true", errors)
 
     sprints = data.get("sprints")
-    require(isinstance(sprints, list), "sprints must be a list", errors)
+    require(isinstance(sprints, list) and bool(sprints), "sprints must be a non-empty list", errors)
     for key in ("requirements", "bugs", "changes", "known_issues", "upgrade_steps"):
         require(isinstance(data.get(key), list), f"{key} must be a list", errors)
     require(isinstance(data.get("rollback"), dict), "rollback must be an object", errors)
@@ -184,13 +255,15 @@ def validate_release(release_dir: Path, product_version_file: Path | None = None
             require(name in gates, f"gate {name} is required", errors)
             if name in gates:
                 gate_is_passing(name, gates[name], errors)
+    validate_image_gates(release_dir, data, errors, stage=stage)
     validate_database_impact_gate(data, errors)
 
     product_version = extract_product_version(product_version_file)
     if product_version is not None and version != product_version:
         require(bool(data.get("version_change_rationale")), "version differs from PRODUCT_VERSION and version_change_rationale is empty", errors)
 
-    require((release_dir.parent / "mint.json").exists(), f"release docs config missing: {release_dir.parent / 'mint.json'}", errors)
+    mint_config = release_dir.parent / "mint.json"
+    require(mint_config.exists(), f"Mintlify config missing: {mint_config}", errors)
     scan_public_safety(release_dir, data, errors)
     return errors
 
@@ -206,7 +279,13 @@ def release_dirs_from_args(path: str | None) -> list[Path]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate product release metadata and announcement source.")
     parser.add_argument("--release-dir", help="Release directory such as releases/v0.1.0")
-    parser.add_argument("--product-version-file", help="Optional source file containing PRODUCT_VERSION")
+    parser.add_argument("--product-version-file", default=str(PRODUCT_VERSION_FILE))
+    parser.add_argument(
+        "--stage",
+        choices=("prepare", "publish"),
+        default="prepare",
+        help="Validation stage. prepare requires a valid image plan; publish also requires a manifest.",
+    )
     args = parser.parse_args()
 
     release_dirs = release_dirs_from_args(args.release_dir)
@@ -215,9 +294,9 @@ def main() -> int:
         return 0
 
     all_errors: list[str] = []
-    product_version_file = Path(args.product_version_file).resolve() if args.product_version_file else None
+    product_version_file = Path(args.product_version_file).resolve()
     for release_dir in release_dirs:
-        errors = validate_release(release_dir, product_version_file)
+        errors = validate_release(release_dir, product_version_file, stage=args.stage)
         if errors:
             all_errors.append(f"{release_dir}:")
             all_errors.extend(f"  - {error}" for error in errors)

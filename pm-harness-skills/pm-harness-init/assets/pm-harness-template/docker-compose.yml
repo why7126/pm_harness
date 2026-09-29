@@ -24,7 +24,8 @@ x-common-env: &common-env
 x-common-service: &common-service
   restart: unless-stopped
   env_file:
-    - .env
+    - path: .env
+      required: false
   networks:
     - app-network
 
@@ -40,7 +41,12 @@ services:
       <<: *common-env
       SERVICE_NAME: backend
       DATABASE_URL: ${DATABASE_URL:-{DATABASE_URL}}
+      DATABASE_URL_PRODUCTION: ${DATABASE_URL_PRODUCTION:-}
+      DATABASE_MODE: ${DATABASE_MODE:-sqlite}
       OBJECT_STORAGE_ENDPOINT: ${OBJECT_STORAGE_ENDPOINT:-{OBJECT_STORAGE_ENDPOINT}}
+      OBJECT_STORAGE_EXTERNAL_ENDPOINT: ${OBJECT_STORAGE_EXTERNAL_ENDPOINT:-}
+      OBJECT_STORAGE_DEPLOYMENT_MODE: ${OBJECT_STORAGE_DEPLOYMENT_MODE:-self_hosted}
+      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:-{PRODUCT_CODE}}
     ports:
       - "${HOST_PORT_BACKEND:-{HOST_PORT_BACKEND}}:${BACKEND_CONTAINER_PORT:-{BACKEND_CONTAINER_PORT}}"
     volumes:
@@ -90,9 +96,9 @@ services:
     ports:
       - "${HOST_PORT_DATABASE:-{HOST_PORT_DATABASE}}:${DATABASE_CONTAINER_PORT:-{DATABASE_CONTAINER_PORT}}"
     volumes:
-      - database-data:/var/lib/database
+      - database-data:${DATABASE_DATA_DIR:-/var/lib/mysql}
     healthcheck:
-      test: ["CMD-SHELL", "${DATABASE_HEALTHCHECK_CMD:-echo database healthcheck pending}"]
+      test: ["CMD-SHELL", "${DATABASE_HEALTHCHECK_CMD:-mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD}}"]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -107,8 +113,9 @@ services:
     command: ${OBJECT_STORAGE_COMMAND:-{OBJECT_STORAGE_COMMAND}}
     environment:
       <<: *common-env
-      OBJECT_STORAGE_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY:-{OBJECT_STORAGE_ACCESS_KEY}}
-      OBJECT_STORAGE_ROOT_PASSWORD: ${OBJECT_STORAGE_SECRET_KEY:-{OBJECT_STORAGE_SECRET_KEY}}
+      MINIO_ROOT_USER: ${OBJECT_STORAGE_ACCESS_KEY:-{OBJECT_STORAGE_ACCESS_KEY}}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORAGE_SECRET_KEY:-{OBJECT_STORAGE_SECRET_KEY}}
+      OBJECT_STORAGE_BUCKET: ${OBJECT_STORAGE_BUCKET:-{PRODUCT_CODE}}
     ports:
       - "${HOST_PORT_OBJECT_STORAGE_API:-{HOST_PORT_OBJECT_STORAGE_API}}:${OBJECT_STORAGE_API_PORT:-{OBJECT_STORAGE_API_PORT}}"
       - "${HOST_PORT_OBJECT_STORAGE_CONSOLE:-{HOST_PORT_OBJECT_STORAGE_CONSOLE}}:${OBJECT_STORAGE_CONSOLE_PORT:-{OBJECT_STORAGE_CONSOLE_PORT}}"

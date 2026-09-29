@@ -26,7 +26,7 @@
 | 10 | 本地模型 | `LOCAL_MODEL_INCLUDED` | 单选：`包含`、`不包含`。 | 必填；默认 `不包含`。
 | 11 | 后端技术栈 | `BACKEND_STACK` | 单选：`Python + FastAPI + Pydantic + uv`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `Python + FastAPI + Pydantic + uv`。
 | 12 | 前端技术栈 | `FRONTEND_STACK` | 单选：`React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `React + TypeScript + TailWind + Shadcn/UI + Axios + Orval + pnpm`。
-| 13 | 主关系型数据库 | `DB_PRIMARY`、`DATABASE_STACK` | 单选：`SQLite`、`MySQL`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `SQLite`。
+| 13 | 生产主关系型数据库 | `DB_PRIMARY`、`PRODUCTION_DATABASE`、`DATABASE_STACK` | 单选：`MySQL`、`SQLite`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填；默认 `MySQL`。开发环境默认固定派生 `SQLite`，不在此步骤重复询问。
 | 14 | 信创数据库 | `XINCHUANG_DATABASES` | 多选：`无`、`达梦`、`海量`、`Postgresql`、`其他`。选中“其他”时追加文本输入。 | 必填，至少一项；`无` 与 `达梦/海量/Postgresql` 互斥。
 | 15 | UI 设计 | `UI_DESIGN_INPUT_MODE`、`UI_DESIGN_SOURCE_PATH`、`UI_DESIGN_SOURCE_CONTENT`、`UI_STYLE_BRIEF` | 二选一：`上传 ui-design.md` 或 `手工输入 UI 设计风格`。上传时读取完整文档；手工输入时显示下方的填写引导。 | 必填；两种方式必须且只能选择一种。
 
@@ -76,13 +76,19 @@
 
 - `OBJECT_STORAGE_TYPES=[无]`：`OBJECT_STORAGE_ENABLED=false`、`UPLOAD_ENABLED=false`、`MEDIA_ENABLED=false`、`OBJECT_STORAGE_STACK=不适用`。
 - 选中任一 `文档/图片/音频/视频/其他`：`OBJECT_STORAGE_ENABLED=true`、`UPLOAD_ENABLED=true`；图片、音频或视频会使 `MEDIA_ENABLED=true`。
-- 对象存储供应商、Bucket、Key 规则和上传限制由 AI 作为初始建议派生，明确标注 `待确认`，不单独向用户提问。
+- 对象存储供应商和上传限制由 AI 作为初始建议派生，明确标注 `待确认`，不单独向用户提问。
+- 对象存储 Bucket 策略默认固定为：**一个项目一个 Bucket，桶内使用资源类型目录/前缀区分图片、视频、音频、文档、临时文件等资源**。
+- 默认派生：`OBJECT_STORAGE_MODE=single_bucket_with_resource_type_prefix`、`DEFAULT_BUCKET={PRODUCT_CODE}`、`BUCKET_POLICY=single_project_bucket_with_resource_type_prefix`、`OBJECT_KEY_PREFIXES=images/ videos/ audios/ files/ tmp/`。
+- 不得按资源类型、租户或环境默认派生多个 Bucket；多 Bucket 只能作为合规、生命周期、成本归集或硬隔离需求下的 OpenSpec 例外变更。
 
 ### 技术栈与数据库派生
 
 - 默认后端栈派生：`BACKEND_LANGUAGE=Python`、`BACKEND_FRAMEWORK=FastAPI`、`BACKEND_DATA_VALIDATION=Pydantic`、`BACKEND_PACKAGE_MANAGER=uv`、`API_STYLE=REST`。
 - 默认前端栈派生：`FRONTEND_FRAMEWORK=React`、`FRONTEND_LANGUAGE=TypeScript`、`STYLE_SYSTEM=TailWind`、`COMPONENT_LIBRARY=Shadcn/UI`、`HTTP_CLIENT=Axios`、`API_CLIENT_GENERATOR=Orval`、`FRONTEND_PACKAGE_MANAGER=pnpm`。
-- `DATABASE_STACK` 由 `DB_PRIMARY` 与 `XINCHUANG_DATABASES` 组合生成；若信创数据库包含主库同名项，保留一次并在兼容矩阵中标注“主库兼容目标”。
+- 数据库默认策略固定为：**开发环境以 SQLite 为主，生产环境以 MySQL 为主**；除非用户在第 13 步显式指定其他生产主库，或后续通过 OpenSpec/项目配置更新。
+- 默认派生：`LOCAL_DATABASE=SQLite`、`TEST_DATABASE=SQLite`、`DB_PRIMARY=MySQL`、`PRODUCTION_DATABASE=MySQL`、`DATABASE_STACK=SQLite(local/test) + MySQL(production)`。
+- `DATABASE_STACK` 由 `LOCAL_DATABASE`、`TEST_DATABASE`、`DB_PRIMARY` 与 `XINCHUANG_DATABASES` 组合生成；若信创数据库包含生产主库同名项，保留一次并在兼容矩阵中标注“生产主库兼容目标”。
+- 若用户显式选择 `SQLite` 作为生产主库，必须在推导摘要、`docs/04-database-design.md` 和 `docs/pending-decisions.md` 中标注生产适用边界、并发/备份风险和确认依据；不得静默把开发默认 SQLite 当作生产默认。
 - `LOCAL_MODEL_INCLUDED=包含` 时：`HAS_ALGORITHM=true`、`AI_OR_ALGORITHM_ENABLED=true`、`MODEL_ASSET_POLICY=models/ 本地模型资产，具体模型待确认`；否则均为 `false` 或 `不适用`。
 
 ### Agent 技能入口
@@ -107,7 +113,20 @@
 | Agent | `AGENT_SKILL_ENTRYPOINT` | 固定为 `.agents/skills/`，不再派生多 Agent 工具目录或命令同步策略。 |
 | 固定目录 | `REQ_ROOT_DIR`、`BUG_ROOT_DIR`、`SPRINT_ROOT_DIR`、`CHANGE_ROOT_DIR`、`SPEC_ROOT_DIR`、`TEST_ROOT_DIR` | 固定为 `issues/requirements`、`issues/bugs`、`iterations`、`openspec/changes`、`openspec/specs`、`tests`。 |
 | 治理与验证 | OpenSpec、需求、Bug、Sprint、项目基线、文档和测试治理 | 默认启用；验证命令由已选技术栈生成。 |
-| 部署 | `DEPLOYMENT_STACK`、`DOCKER_COMPOSE_ENABLED` | 默认 `docker-compose` 与本地开发；生产配置标记 `待确认`。 |
+| 部署 | `DEPLOYMENT_STACK`、`DOCKER_COMPOSE_ENABLED`、`DEPLOYMENT_MODE`、`COMPOSE_PROFILES`、`DATABASE_MODE`、`OBJECT_STORAGE_DEPLOYMENT_MODE` | 默认 `docker-compose`。必须支持 6 种 compose 模式：自建对象存储 + SQLite、外部对象存储 + SQLite、自建对象存储 + 自建 MySQL、自建对象存储 + 外部 MySQL、外部对象存储 + 自建 MySQL、外部对象存储 + 外部 MySQL。 |
+
+Docker Compose 默认模式矩阵：
+
+| `DEPLOYMENT_MODE` | 对象存储 | 数据库 | `COMPOSE_PROFILES` |
+|---|---|---|---|
+| `self_hosted_object_storage_sqlite` | 自建对象存储（默认 MinIO） | SQLite | `object-storage` |
+| `external_object_storage_sqlite` | 外部对象存储 | SQLite | 空 |
+| `self_hosted_object_storage_self_hosted_mysql` | 自建对象存储（默认 MinIO） | 自建 MySQL | `object-storage,database` |
+| `self_hosted_object_storage_external_mysql` | 自建对象存储（默认 MinIO） | 外部 MySQL | `object-storage` |
+| `external_object_storage_self_hosted_mysql` | 外部对象存储 | 自建 MySQL | `database` |
+| `external_object_storage_external_mysql` | 外部对象存储 | 外部 MySQL | 空 |
+
+生成 `.env.example`、`docker-compose.yml`、`docs/02-deployment.md` 和 `project.yaml` 时必须保持该矩阵一致。自建服务通过 compose profile 启用；外部服务不得生成本地容器依赖，必须由 `.env` 注入 endpoint、连接串和凭据。
 
 ## 推导配置摘要
 

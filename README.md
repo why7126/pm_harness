@@ -20,9 +20,23 @@ Project PM Harness 是一个面向产品经理的 AI Coding Harness 工程模板
 .
 ├── .agents/skills/      # 项目级已安装 Agent Skill 入口
 ├── design-schemes/      # 本地设计资产库，沉淀可复用 UI/UE 与导航方案
-├── pm-harness/          # Harness 工程模板主体，后续持续迭代该工程结构
+├── docs/                # 当前脚手架工程自身的长期产品、架构、治理和维护文档
+├── issues/              # 当前脚手架工程自身的需求和 BUG 池
+├── iterations/          # 当前脚手架工程自身的 Sprint / 迭代记录
+├── openspec/            # 当前脚手架工程自身的 OpenSpec 事实源
+├── pm-harness/          # 生成新项目用的 Harness 工程模板主体
 └── pm-harness-skills/   # Harness 应用 Skill，用于初始化新工程、改造存量项目和维护 Harness 工程
 ```
+
+### docs 与 spec-logs
+
+根目录 `docs/` 属于当前 ProjectPmHarness 脚手架工程自身：
+
+- `docs/` 沉淀长期稳定的产品、架构、治理和维护文档。
+- `issues/`、`iterations/`、`openspec/` 分别承载当前脚手架工程自身的需求/BUG、Sprint 和 OpenSpec 变更事实源。
+- `docs/spec-logs/` 记录一次次 spec 学习、治理优化和规范迭代过程。
+
+`pm-harness/` 是生成新项目用的模板目录，不承载当前 ProjectPmHarness 的实际项目数据。模板内的 `pm-harness/docs/` 与 `pm-harness/docs/spec-logs/` 只代表未来生成项目的默认结构。
 
 ### design-schemes
 
@@ -50,7 +64,7 @@ design-schemes/
 
 ### pm-harness
 
-`pm-harness/` 是标准 Harness 工程目录结构，包含需求、Bug、迭代、OpenSpec、规则、文档、专项标准、源码、模型资产、部署配置和测试等模块。后续对 Harness 能力的增强，优先在这里沉淀。
+`pm-harness/` 是标准 Harness 工程模板目录结构，包含需求、Bug、迭代、OpenSpec、规则、文档、专项标准、源码、模型资产、部署配置和测试等模块。只有确认会作为新项目默认能力交付的规范、脚本、技能、目录和模板文件，才同步进入这里。
 
 核心目录：
 
@@ -73,7 +87,7 @@ pm-harness/
 
 ### pm-harness-skills
 
-`pm-harness-skills/` 用于存放该 Harness 工程的应用 Skill。`pm-harness-init` 面向新项目初始化，`pm-harness-refactor` 面向存量项目的非破坏式接入、重构和治理化改造，`pm-harness-uidesign` 面向真实项目 UI/UE 设计资产提炼，`pm-prd-design` 面向 PRD、交互说明和可点击原型的工程化生成。
+`pm-harness-skills/` 用于存放该 Harness 工程的应用 Skill。`pm-harness-init` 面向新项目初始化，`pm-harness-refactor` 面向存量项目的非破坏式接入、重构和治理化改造，`pm-harness-uidesign` 面向真实项目 UI/UE 设计资产提炼，`pm-prd-position`、`pm-prd-plan`、`pm-prd-mvp`、`pm-prd-design` 共同覆盖从产品定位、产品规划、MVP 收敛到 PRD 与可点击原型交付的产品设计链路，`tool-info-lookup` 面向工具信息调研与结构化信息卡片输出。
 
 项目根目录的 `.agents/skills/` 是当前仓库的已安装 Skill 入口；需要让本项目直接使用某个 Skill 时，从 `pm-harness-skills/` 同步到 `.agents/skills/`。
 
@@ -90,12 +104,26 @@ pm-harness-skills/
 ├── pm-harness-uidesign/
 │   ├── SKILL.md
 │   └── references/
-└── pm-prd-design/
-    ├── SKILL.md
-    ├── prompts/
-    ├── schemas/
-    ├── templates/
-    └── validators/
+├── pm-prd-position/
+│   ├── SKILL.md
+│   └── README.md
+├── pm-prd-plan/
+│   ├── SKILL.md
+│   ├── assets/
+│   └── references/
+├── pm-prd-mvp/
+│   ├── SKILL.md
+│   ├── assets/
+│   ├── references/
+│   └── scripts/
+├── pm-prd-design/
+│   ├── SKILL.md
+│   ├── prompts/
+│   ├── schemas/
+│   ├── templates/
+│   └── validators/
+└── tool-info-lookup/
+    └── SKILL.md
 ```
 
 ## 闭环模型
@@ -197,6 +225,8 @@ issues/requirements/REQ-0001-user-login/prototype/
 建议在 `trace.md` 中显式登记原型资产路径，确保研发实现时可以从需求直接定位到视觉来源。
 
 需要从零生成或迭代 PRD + 交互 + 可点击原型交付包时，使用 `pm-prd-design` Skill。它的标准交付物包括 `requirement.md`、`interaction.md`、`prototype.html`、`prototype-context.md`、`prototype.png`、`version-manifest.md` 和 `package.zip`；ITERATE/PATCH 场景还会补充变更、差异和回归报告。具体页面原型仍应归档到对应 `issues/requirements/**/prototype/` 下，长期复用的视觉方案才进入 `design-schemes/`。
+
+当产品仍处于早期定义阶段时，建议先按 `pm-prd-position → pm-prd-plan → pm-prd-mvp → pm-prd-design` 顺序推进：先冻结定位，再形成规划基线，再收敛 MVP，最后进入详细 PRD 和交互原型。
 
 ## 设计资产管理
 
@@ -324,7 +354,11 @@ openspec/changes/add-user-login/
 | `pm-harness-init` | 新项目 | 基于模板初始化新的 PM Harness 工程 |
 | `pm-harness-refactor` | 存量项目 | 将 PM Harness / OpenSpec + AI Agent 规范工程非破坏式接入已有代码仓库 |
 | `pm-harness-uidesign` | 设计资产库 | 从真实项目提炼 UI/UE、导航栏和 HTML Demo 设计资产 |
+| `pm-prd-position` | 产品定位 | 通过反问、假设挑战和决策记录生成产品定位基线包 |
+| `pm-prd-plan` | 产品规划 | 承接定位基线，生成产品架构、里程碑、功能清单、边界和规划基线包 |
+| `pm-prd-mvp` | MVP 收敛 | 将完整规划收敛为可验证、可交付、可进入详细设计的 MVP 基线包 |
 | `pm-prd-design` | 产品需求与原型 | 工程化生成或迭代 PRD、交互说明、可点击原型和版本化交付包 |
+| `tool-info-lookup` | 工具调研 | 联网调研工具基本情况，输出固定字段的信息卡片或对比表 |
 
 ### pm-harness-init
 
@@ -370,6 +404,51 @@ Skill 入口：
 pm-harness-skills/pm-harness-uidesign/SKILL.md
 ```
 
+### pm-prd-position
+
+典型使用场景：
+
+- 从一句产品想法开始建立完整产品定位。
+- 对现有产品做重新定位或局部定位 Patch。
+- 明确产品定义、目标用户、核心问题、价值主张、市场、竞争、商业交付和产品边界。
+- 输出可交接给 `pm-prd-plan` 的产品定位基线包。
+
+Skill 入口：
+
+```text
+pm-harness-skills/pm-prd-position/SKILL.md
+```
+
+### pm-prd-plan
+
+典型使用场景：
+
+- 承接产品定位基线，规划产品域、功能模块和核心能力。
+- 生成产品里程碑、功能清单、范围边界、依赖风险和设计交接说明。
+- 对已有规划做重新规划或局部 Patch。
+- 输出可交接给 `pm-prd-mvp` 或 `pm-prd-design` 的规划基线包。
+
+Skill 入口：
+
+```text
+pm-harness-skills/pm-prd-plan/SKILL.md
+```
+
+### pm-prd-mvp
+
+典型使用场景：
+
+- 将完整产品规划收敛为首个可验证版本。
+- 明确 MVP 目标、核心假设、最小业务闭环、范围取舍、递进版本和验证方案。
+- 重新评估 MVP 或对 MVP 范围做局部 Patch。
+- 输出可交接给 `pm-prd-design` 的 MVP 基线包。
+
+Skill 入口：
+
+```text
+pm-harness-skills/pm-prd-mvp/SKILL.md
+```
+
 ### pm-prd-design
 
 典型使用场景：
@@ -383,6 +462,21 @@ Skill 入口：
 
 ```text
 pm-harness-skills/pm-prd-design/SKILL.md
+```
+
+### tool-info-lookup
+
+典型使用场景：
+
+- 快速调研一个软件、工具或产品的基本情况。
+- 查询工具是否开源、GitHub 地址、星数、官网、文档、Demo、适用平台、价格和所属公司。
+- 生成包含 17 个固定字段的工具信息卡片。
+- 多工具选型时输出同字段对比表。
+
+Skill 入口：
+
+```text
+pm-harness-skills/tool-info-lookup/SKILL.md
 ```
 
 ## 适用场景

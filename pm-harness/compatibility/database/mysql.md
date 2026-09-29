@@ -19,6 +19,8 @@ template_scope: 可作为工程初始化时的 compatibility/database/mysql.md �
 
 本文定义 `{PRODUCT_NAME}` 支持 MySQL 时的版本、驱动、字符集、排序规则、迁移、类型映射、事务和测试要求。
 
+PM Harness 默认数据库策略中，MySQL 是生产环境默认主库；除非用户显式指定其他生产主库，生产配置、迁移门禁和发布验证都必须覆盖 MySQL。
+
 ## 1. 初始化参数 `[个性化]`
 
 | 参数 | 说明 | 示例 |
@@ -32,6 +34,8 @@ template_scope: 可作为工程初始化时的 compatibility/database/mysql.md �
 
 ## 2. 兼容重点 `[通用 + 个性化]`
 
+- 生产环境默认使用 MySQL，不得静默复用本地 SQLite 连接串。
+- MySQL 与 SQLite(local/test) 的类型、事务、索引、排序、分页和迁移差异必须在兼容测试中覆盖。
 - 字符集必须支持中文、emoji 和特殊符号。
 - 时间字段、布尔字段、JSON 字段、小数字段必须有应用层映射测试。
 - 分页、大小写匹配、排序规则、NULL 排序必须与其他数据库兼容验证。

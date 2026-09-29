@@ -119,7 +119,7 @@ scripts/docker-down.sh
 若 REQ-0000 目录不存在：
 
 ```text
-/req-capture → /req-generate → /req-complete → /req-review --approve
+/req-capture → /req-generate → /req-complete → /req-review
 /req-opsx REQ-0000-build-* 
 /opsx-apply → /opsx-archive
 ```

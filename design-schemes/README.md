@@ -15,6 +15,7 @@
 | 方案 | 路径 | 用途 |
 |---|---|---|
 | TilesFST | `schemes/tilesfst/` | 沉淀 TilesFST 的整体 UI/UX 风格和导航资产。 |
+| DeepSeek Harness | `schemes/deepseek-harness/` | 沉淀 DeepSeek Harness Web Client 的 Agent 工作台视觉语言和可折叠侧边栏导航资产。 |
 
 ## 使用方式
 

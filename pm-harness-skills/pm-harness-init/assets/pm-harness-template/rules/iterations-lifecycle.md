@@ -73,6 +73,8 @@ capacity_usage = estimated_person_days / capacity_person_days
 
 `/sprint-propose` 一旦通过门禁并生成正式四件套，MUST 立即执行 Workflow Sync，将正式纳入的 REQ/BUG `trace.md` 同步为 `status: in_sprint` 与 `iteration: <sprint-id>`；不得留下 `approved + iteration` 的半纳入状态。
 
+若 Sprint 纳入项涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 读取 `docs/standards/product-data-collection-observability.md`，并在 Sprint 或关联 Change 证据中保留 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation`；不适用时写明 N/A 或 `not_applicable` 原因。
+
 ## 3.2 opsx-apply 迭代纳入门禁（MUST）
 
 `/opsx-apply <change-id>` 对来源于 REQ/BUG 的 Change 执行前，目标 Change **MUST** 已纳入某个 `sprint-xxx` 正式范围。门禁判定以 Sprint 四件套与 Issue trace 双向一致为准：
@@ -100,6 +102,28 @@ AI 在执行下列命令并成功后 **MUST** 移动目录（`git mv` 或等价�
 - 单 Change `/opsx-archive` → Sprint 目录 **不** 单独迁移（整 Sprint 归档时一并迁移）
 
 迁移后 **SHOULD** 运行 `python scripts/sync-workflow-status.py --check`。
+
+Sprint 归档前 **MUST** 校验 `sprint.yaml` 正式范围与 `sprint.md` Scope 派生区一致：
+
+```bash
+python scripts/validate-sprint-scope.py sprint-xxx
+```
+
+校验失败时必须先修复 Workflow Sync 或 Sprint 四件套，不得把缺失 REQ/BUG/Change 的 Sprint 归档。
+
+Sprint 归档前 **MUST** 再运行归档 readiness gate：
+
+```bash
+python scripts/validate-sprint-archive-readiness.py --sprint sprint-xxx
+```
+
+该 gate 会检查 Change 目录/任务完成度、已归档 Change 的 `trace.md` 或 `## 归档验证摘要` 兜底证据、Sprint close 四件套与关联 Issue 顶层文档中的陈旧中间态文案。若需要聚焦诊断陈旧文案，运行：
+
+```bash
+python scripts/check-sprint-close-stale-scan.py --sprint sprint-xxx
+```
+
+不得通过手改 workflow-sync marker block 绕过该检查；应先重跑 Workflow Sync 或只修正人工维护段落。
 
 ## 5. sprint.yaml 字段
 
@@ -134,6 +158,15 @@ lifecycle_stage: change | archive
 
 Sprint 归档 **MUST** 在 `/sprint-archive` 时同步：Change → `openspec/archive/`，关联 REQ/BUG → `issues/*/archive/`（若尚未迁入）。
 
+Sprint 迁入 `iterations/archive/` 且 Workflow Sync / issue promotion 成功后，**MUST** 运行归档路径残留检查：
+
+```bash
+python scripts/check-archived-path-residuals.py --sprint sprint-xxx
+python scripts/check-sprint-close-stale-scan.py --sprint sprint-xxx
+```
+
+检查范围来自 `sprint.yaml` 中的 requirements / bugs / changes 与 Sprint 四件套；发现 `iterations/change/<sprint>/`、active `openspec/changes/<change>/` 或 legacy `openspec/changes/archive/` 引用时，必须修正后重跑。
+
 ## 8. AI 检查清单
 
 ```text
@@ -141,5 +174,8 @@ Sprint 归档 **MUST** 在 `/sprint-archive` 时同步：Change → `openspec/ar
 □ sprint-archive 后是否迁入 archive/ ？
 □ sprint.yaml 是否更新 lifecycle_stage ？
 □ 路径引用是否使用 change/ 或 archive/ 前缀？
+□ sprint.md Scope 是否通过 validate-sprint-scope.py？
+□ sprint archive readiness / stale scan 是否通过？
+□ archive 后是否通过 archived path residual check？
 □ 是否运行 sync-workflow-status.py --check ？
 ```

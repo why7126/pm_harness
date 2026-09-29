@@ -14,6 +14,10 @@ Use this skill when the user asks to run the migrated source command `req-opsx`.
 - 检索先定位再分段读取；大范围 `rg/find` 默认排除 Harness、模板 assets、历史 agent 目录、archive、generated、node_modules、dist、coverage。
 - 命令输出优先 `max_output_tokens <= 8000`；大 diff、OpenAPI/Orval 生成物、测试日志、Workflow Sync 输出先给摘要或命中数。
 
+## Product Data Observability Gate（MUST）
+
+若 REQ 涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 读取 `docs/standards/product-data-collection-observability.md`，并把 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation` 从 REQ 传播到 Change proposal、design、tasks、trace 或 acceptance。若不适用，MUST 写明 N/A 或 `not_applicable` 原因。
+
 
 ## Command Template
 
@@ -70,7 +74,7 @@ REQ 目录：requirement.md、user-stories.md、business-flow.md、acceptance.md
 | `approved` | 继续 |
 | `in_sprint` | 可继续（须已完成 `/req-review`） |
 | `done` | 可继续（追溯/补建 change） |
-| `pending_review` / `draft` / `captured` / `enriching` / … | **立即停止** → `/req-review REQ-xxxx --approve` |
+| `pending_review` / `draft` / `captured` / `enriching` / … | **立即停止** → `/req-review REQ-xxxx` |
 
 未评审 **不得** opsx；**不得**因 Sprint 规划已写入而 bypass（见 `rules/requirement-management.md` §4.1）。
 
@@ -157,7 +161,7 @@ openspec_changes:
 ## Req → OpenSpec 完成
 **REQ:** …
 **Change:** …
-**Next:** /opsx-apply <change> 或 /sprint-apply sprint-xxx
+**Next:** /opsx-apply <REQ-id> 或 /sprint-apply sprint-xxx
 ```
 
 ---
@@ -177,7 +181,7 @@ openspec_changes:
 
 - `.agents/skills/req-complete/SKILL.md`
 - `.agents/skills/opsx-apply/SKILL.md`、`opsx-archive.md`、`opsx-explore.md`
-- 归档样例：`openspec/changes/archive/`
+- 归档样例：`openspec/archive/`
 
 ---
 

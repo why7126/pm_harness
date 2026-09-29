@@ -70,7 +70,7 @@ REQ 目录：requirement.md、user-stories.md、business-flow.md、acceptance.md
 | `approved` | 继续 |
 | `in_sprint` | 可继续（须已完成 `/req-review`） |
 | `done` | 可继续（追溯/补建 change） |
-| `pending_review` / `draft` / `captured` / `enriching` / … | **立即停止** → `/req-review REQ-xxxx --approve` |
+| `pending_review` / `draft` / `captured` / `enriching` / … | **立即停止** → `/req-review REQ-xxxx` |
 
 未评审 **不得** opsx；**不得**因 Sprint 规划已写入而 bypass（见 `rules/requirement-management.md` §4.1）。
 
@@ -177,7 +177,7 @@ openspec_changes:
 
 - `.agents/skills/req-complete/SKILL.md`
 - `.agents/skills/opsx-apply/SKILL.md`、`opsx-archive.md`、`opsx-explore.md`
-- 归档样例：`openspec/changes/archive/`
+- 归档样例：`openspec/archive/`
 
 ---
 

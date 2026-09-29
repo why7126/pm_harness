@@ -45,7 +45,8 @@ Rules:
 Session input discovery:
 
 - Prefer explicit `--session-jsonl <local-session.jsonl>` when available.
-- Otherwise the hook checks `AI_USAGE_SESSION_JSONL`, then `CODEX_SESSION_JSONL`.
+- Otherwise the hook checks `AI_USAGE_SESSION_JSONL`, then `CODEX_SESSION_JSONL`, then `AI_USAGE_SESSIONS_DIR`, then the local default Codex sessions directory.
+- Auto-discovered session paths and raw JSONL content remain local-only; command output may report `session_input: auto` but must not print the discovered absolute path.
 - Raw session files remain local-only and MUST NOT be copied into the repository.
 
 | Flag | Purpose |
@@ -67,7 +68,9 @@ Session input discovery:
 
 When sprint sync is skipped, the script still updates the target issue `trace.md`, `_registry.yaml`, and parent requirement related-bug index when applicable.
 
-For `opsx.apply`, sprint sync skipped/unresolved is a **blocking precondition failure** for REQ/BUG-sourced changes. The parent command MUST stop before implementation and ask to run `/sprint-propose` first, unless the Change is explicitly documented as a non-REQ/BUG pure technical governance Change.
+For `opsx.apply`, sprint sync skipped/unresolved is a **blocking precondition failure** for all Changes, including non-REQ/BUG pure technical governance Changes. The parent command MUST stop before implementation and ask to run `/sprint-propose` first, or repair a known Sprint scope with `scripts/add-sprint-scope-item.py --change <change-id> ...`.
+
+If the user already selected a target Sprint or previously ran `/sprint-propose`, skipped/unresolved sync usually means `sprint.yaml` machine scope was not persisted or lacks the Change. Repair with `scripts/add-sprint-scope-item.py`, then rerun Workflow Sync and `validate-sprint-scope.py`; do not rely on `sprint.md` Scope text alone.
 
 ### Issue subdocument residual status reconcile
 
@@ -96,7 +99,7 @@ Use `--bug BUG-xxxx-slug` and `--event bug.archive` for BUGs.
 Guardrails:
 
 1. Always run dry-run first and inspect file path, source, old status, target status, and `updated_at`.
-2. Reconcile is only for already-closed issues. If the report says the issue trace, linked Change, or linked Sprint is not closed, run the upstream workflow command first.
+2. Reconcile is only for already-closed issues. If the report says the issue trace or linked Change is not closed, run the upstream workflow command first. A single REQ/BUG may reconcile and promote after all of its linked Changes are archived even when its Sprint is still planning/in_progress; Sprint completion remains a `/sprint-archive` gate.
 3. Reconcile MUST NOT be used to bypass review, acceptance, `/opsx-archive`, or `/sprint-archive`.
 4. Successful reconcile refreshes modified Markdown `updated_at` and reports changed file/field counts.
 
@@ -117,6 +120,7 @@ Guardrails:
 | bug-opsx | `bug.opsx` |
 | opsx-propose | `opsx.propose` |
 | opsx-apply | `opsx.apply` |
+| opsx-modify | `opsx.modify` |
 | opsx-archive | `opsx.archive` |
 | sprint-propose | `sprint.propose` |
 | sprint-apply | `sprint.apply` |
@@ -129,9 +133,21 @@ Guardrails:
 3. Do **not** hand-edit `sprint.md` Scope marker blocks; use the script.
 4. Marker blocks: `<!-- workflow-sync:scope-*:start/end -->`.
 5. Scope 表 archived 时间与 §里程碑「目标日期」MUST 为 `YYYY-MM-DD HH:mm:ss` 且时分秒 MUST 非 `00:00:00`（见 `rules/document-governance.md` §6.1）。
-6. §Sprint 目标 不在 sync 范围；纳入 REQ/BUG 时 MUST 同步更新 **编号列表** 与 **`### xxx 要点`** 两处。
-7. Issue `trace.md` 的 `## 变更记录` MUST 保持表头紧跟章节标题；若历史记录行出现在表头前，脚本 SHOULD 自动归一化并在报告中体现 delta。
-8. `/opsx-apply` 前 MUST confirm linked REQ/BUG is in a `sprint-xxx`; `--sprint auto` unresolved means do not run apply.
+6. `sprint.md` `## 2. Scope` 主表 MUST 使用六列：`类型 | 编号 | 标题 | 状态 | 估算 | 说明`。Workflow Sync MUST migrate legacy/narrow tables, including `范围项 | 状态 | 估算`, back to this format.
+7. 同一 Sprint 的多个范围项更新 MUST 串行写入 `sprint.yaml`；不要并行运行多个 `scripts/add-sprint-scope-item.py`。
+8. §Sprint 目标 不在 sync marker 范围；纳入 REQ/BUG/必要纯 Change 时，发起命令 MUST 同步更新 **Sprint 目标编号列表** 与 **`### xxx 要点`** 两处。Workflow Sync 继续维护 `## 2. Scope` 主表和 marker 分组表；最终必须通过 `validate-sprint-scope.py` 兜底发现目标编号列表与正式 Scope 的不一致。
+9. Issue `trace.md` 的 `## 变更记录` MUST 保持表头紧跟章节标题；若历史记录行出现在表头前，脚本 SHOULD 自动归一化并在报告中体现 delta。
+10. `/opsx-apply` 前 MUST confirm linked REQ/BUG is in a `sprint-xxx`; `--sprint auto` unresolved means do not run apply.
+
+## Issue Output and Next-step Derivation
+
+When Workflow Sync applies Issue subdocument updates, the summary SHOULD report updated file count, updated field count, acceptance block status, and security synchronization status.
+
+After `req.opsx` or `bug.opsx` links a new Change back to an Issue, the Issue current-state view SHOULD refresh its derived next step to `/opsx-apply <REQ-full-id>` or `/opsx-apply <BUG-full-id>`. Do not leave the next step at `/req-opsx` or `/bug-opsx` after the Change has already been created.
+
+## Command Execution Review Hook
+
+Parent workflow commands MUST include `执行链路复盘` after Workflow Sync and AI Usage handling. The status MUST be based on evidence, and follow-up Issue/Change MUST NOT be created automatically unless the user explicitly authorizes capture in the current command.
 
 ## Refreshed artifacts
 

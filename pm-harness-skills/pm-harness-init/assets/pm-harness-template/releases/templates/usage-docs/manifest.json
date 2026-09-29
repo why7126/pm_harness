@@ -1,0 +1,22 @@
+{
+  "version": "{{VERSION}}",
+  "generated_at": "{{GENERATED_AT}}",
+  "source_version": "{{SOURCE_VERSION}}",
+  "pages": [
+    "overview.mdx",
+    "faq.mdx"
+  ],
+  "screenshots": [],
+  "coverage": {
+    "release_impact_scope": {
+      "status": "draft",
+      "notes": "根据 release.json impact_scope 补齐。"
+    }
+  },
+  "manual_overrides": [],
+  "automation_policy": {
+    "current_version": "generated files may be updated by automation after explicit generation decision",
+    "old_versions": "content is locked by default; public-safety fixes are allowed with trace",
+    "content_corrections_require_authorization": true
+  }
+}

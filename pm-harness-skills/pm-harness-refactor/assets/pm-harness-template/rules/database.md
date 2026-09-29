@@ -14,7 +14,19 @@ note: 数据库变更必须同步 docs/04-database-design.md、迁移和测试
 
 项目数据库栈由 `{DATABASE_STACK}` 决定。初始化后必须在 `docs/04-database-design.md` 中明确本地、测试、生产使用的数据库类型和连接方式。
 
+默认策略：
+
+```text
+开发环境：SQLite
+测试环境：SQLite 或临时 SQLite
+生产环境：MySQL
+```
+
+除非用户显式指定生产主库，或后续通过 OpenSpec / `project.yaml` 更新，否则不得把开发默认 SQLite 当作生产默认。
+
 生产环境不得静默回退到演示或本地数据库；连接串和凭据必须通过环境变量或密钥系统注入。
+
+生产环境使用 SQLite 必须有明确用户确认、适用边界、并发限制、备份恢复策略和后续迁移计划。
 
 ## 2. 表设计要求
 
@@ -28,6 +40,7 @@ note: 数据库变更必须同步 docs/04-database-design.md、迁移和测试
 - DB 结构变更必须有 migration、schema 或等价变更脚本。
 - migration 应可重复执行或有版本记录。
 - 禁止在业务代码中拼接未参数化 SQL。
+- 默认必须维护 SQLite(local/test) 与 MySQL(production) 的迁移、类型、事务、索引、排序和分页差异。
 - 多数据库适配必须把差异写入 `compatibility/database/`。
 
 ## 4. AI 更新清单

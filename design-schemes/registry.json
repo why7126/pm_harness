@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updated_at": "2026-07-28T00:00:00+08:00",
+  "updated_at": "2026-08-14T00:00:00+08:00",
   "schemes": [
     {
       "id": "tilesfst",
@@ -14,6 +14,20 @@
       "demo_path": "schemes/tilesfst/demo.html",
       "navigation_demo_path": "schemes/tilesfst/navigation-demo.html",
       "design_summary": "TilesFST real STONEX industrial dark flagship UI/UX and navigation assets extracted from the local source project.",
+      "inferred": false
+    },
+    {
+      "id": "deepseek-harness",
+      "name": "DeepSeek Harness Web Client",
+      "category": "saas",
+      "tags": ["agent-ui", "web-client", "collapsible-sidebar", "conversation", "near-white", "deepseek-blue", "compact-rail", "css-modules"],
+      "created_at": "2026-08-14T00:00:00+08:00",
+      "path": "schemes/deepseek-harness",
+      "design_path": "schemes/deepseek-harness/design.json",
+      "navigation_path": "schemes/deepseek-harness/navigation.json",
+      "demo_path": "schemes/deepseek-harness/demo.html",
+      "navigation_demo_path": "schemes/deepseek-harness/navigation-demo.html",
+      "design_summary": "DeepSeek Harness web client UI extracted from source CSS modules: near-white bluish surfaces, restrained black primary actions, DeepSeek blue semantic accents, centered conversation composer, and a sliding/fading collapsible sidebar rail.",
       "inferred": false
     }
   ]

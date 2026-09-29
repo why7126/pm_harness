@@ -2,8 +2,19 @@
   "version": "v0.1.0",
   "release_time": "2026-07-23 00:00:00",
   "owner": "release-owner",
+  "summary": "产品版本发布摘要",
   "announcement": "announcement.mdx",
   "formal_scope_only": true,
+  "version_change_rationale": "",
+  "image_required": false,
+  "image_required_rationale": "模板文件，正式发布时按 backend / Web build / Dockerfile / Compose / 构建脚本 / env / DB / API 客户端 / 离线镜像交付影响判断。",
+  "image_tag": "v0.1.0",
+  "image_plan": "image-build-plan.json",
+  "image_manifest": "image-manifest.json",
+  "external_image_build_evidence": {
+    "status": "na",
+    "rationale": "模板文件；仅 Docker 或外部构建系统场景使用，必须记录来源、校验方式、sha256、负责人确认和风险说明。"
+  },
   "sprints": [],
   "requirements": [],
   "bugs": [],
@@ -33,7 +44,7 @@
       "status": "na",
       "rationale": "No versioned release scope yet."
     },
-    "client_generation": {
+    "orval": {
       "status": "na",
       "rationale": "No API client change."
     },
@@ -53,9 +64,17 @@
       "status": "na",
       "rationale": "No user-visible version file configured."
     },
-    "announcement_preview": {
+    "mintlify_preview": {
       "status": "na",
       "rationale": "No announcement preview required yet."
+    },
+    "image_prepare": {
+      "status": "na",
+      "rationale": "image_required is false."
+    },
+    "image_build": {
+      "status": "na",
+      "rationale": "image_required is false."
     }
   }
 }

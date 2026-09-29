@@ -44,8 +44,10 @@ template_scope: 可作为工程初始化时的 compatibility/database/sqlite.md 
 | `{PRODUCT_NAME}` | 产品或项目名称 | 待确认 |
 | `{PRODUCT_CODE}` | 项目代码，建议 kebab-case | 待确认 |
 | `{DATABASE_OWNER}` | 数据库负责人或维护角色 | 待确认 |
-| `{DB_PRIMARY}` | 主关系型数据库 | SQLite |
-| `{DATABASE_STACK}` | 数据库技术栈 | SQLite + SQLAlchemy |
+| `{DB_PRIMARY}` | 生产主关系型数据库 | MySQL |
+| `{LOCAL_DATABASE}` | 本地开发数据库 | SQLite |
+| `{TEST_DATABASE}` | 自动化测试数据库 | SQLite / 临时 SQLite |
+| `{DATABASE_STACK}` | 数据库技术栈 | SQLite(local/test) + MySQL(production) |
 | `{SQLITE_VERSION}` | SQLite 版本 | 待确认 |
 | `{SQLITE_DRIVER}` | SQLite 驱动 | sqlite3 / aiosqlite / better-sqlite3 |
 | `{ORM_STACK}` | ORM 或 DAO 技术栈 | SQLAlchemy / Prisma / Drizzle / 手写 SQL |
@@ -78,17 +80,18 @@ template_scope: 可作为工程初始化时的 compatibility/database/sqlite.md 
 
 | 场景 | 是否推荐 | 说明 |
 |---|---|---|
-| 本地开发 | 推荐 | 零依赖、启动快、适合个人开发 |
-| 自动化测试 | 推荐 | 可使用临时文件或内存库，便于隔离 |
+| 本地开发 | 默认推荐 | 零依赖、启动快、适合个人开发 |
+| 自动化测试 | 默认推荐 | 可使用临时文件或内存库，便于隔离 |
 | 桌面端/单机应用 | 推荐 | 数据随应用本地存储 |
 | 轻量私有化部署 | 条件推荐 | 低并发、小数据量、明确备份策略时可用 |
-| 多实例服务端生产 | 谨慎 | 需要评估锁、备份、文件系统和并发写入 |
+| 多实例服务端生产 | 默认不推荐 | 默认生产主库为 MySQL；使用 SQLite 必须有用户确认、边界说明和迁移计划 |
 | 高并发写入 | 不推荐 | 应考虑 PostgreSQL、MySQL 或项目指定生产库 |
 
 初始化生成规则：
 
-- 当用户选择主数据库为 `SQLite` 时，本文作为主数据库适配说明保留。
-- 当 SQLite 仅用于测试或本地开发时，本文必须明确生产数据库另行适配。
+- PM Harness 默认将 SQLite 用于 local/test，将 MySQL 用于 production。
+- 当用户选择生产主数据库为 `SQLite` 时，本文作为生产主数据库适配说明保留，并必须记录风险确认。
+- 当 SQLite 仅用于测试或本地开发时，本文必须明确生产数据库默认为 MySQL 或用户指定生产库。
 - 当项目同时选择信创数据库或 PostgreSQL/MySQL 时，本文必须记录 SQLite 与兼容目标的差异。
 
 ## 3. 版本、驱动与连接配置 `[通用 + 个性化]`

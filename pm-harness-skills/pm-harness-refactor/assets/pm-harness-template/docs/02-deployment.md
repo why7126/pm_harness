@@ -49,7 +49,32 @@ cp .env.example .env
 
 如项目不使用 Docker Compose，应在初始化后替换为真实启动命令。
 
-## 4. 数据持久化
+## 4. Docker Compose 默认部署模式
+
+默认部署栈必须支持以下 6 种组合。`database` profile 表示自建 MySQL 容器；`object-storage` profile 表示自建对象存储容器（默认 MinIO）。未启用对应 profile 时，应通过 `.env` 注入外部服务连接信息。
+
+| 模式 | 对象存储 | 数据库 | `COMPOSE_PROFILES` | 关键配置 |
+|---|---|---|---|---|
+| `self_hosted_object_storage_sqlite` | 自建 MinIO | SQLite | `object-storage` | `DATABASE_URL=sqlite:////app/data/sqlite/{PRODUCT_CODE}.db`、`OBJECT_STORAGE_ENDPOINT=http://object-storage:9000` |
+| `external_object_storage_sqlite` | 外部对象存储 | SQLite | 空 | `DATABASE_URL=sqlite:////app/data/sqlite/{PRODUCT_CODE}.db`、`OBJECT_STORAGE_ENDPOINT` 指向外部服务 |
+| `self_hosted_object_storage_self_hosted_mysql` | 自建 MinIO | 自建 MySQL | `object-storage,database` | `DATABASE_URL` 指向 `database:3306`、`OBJECT_STORAGE_ENDPOINT=http://object-storage:9000` |
+| `self_hosted_object_storage_external_mysql` | 自建 MinIO | 外部 MySQL | `object-storage` | `DATABASE_URL` 指向外部 MySQL、`OBJECT_STORAGE_ENDPOINT=http://object-storage:9000` |
+| `external_object_storage_self_hosted_mysql` | 外部对象存储 | 自建 MySQL | `database` | `DATABASE_URL` 指向 `database:3306`、`OBJECT_STORAGE_ENDPOINT` 指向外部服务 |
+| `external_object_storage_external_mysql` | 外部对象存储 | 外部 MySQL | 空 | `DATABASE_URL` 和 `OBJECT_STORAGE_ENDPOINT` 均指向外部服务 |
+
+切换模式时必须同步：
+
+```text
+DEPLOYMENT_MODE
+COMPOSE_PROFILES
+DATABASE_MODE
+DATABASE_URL
+OBJECT_STORAGE_DEPLOYMENT_MODE
+OBJECT_STORAGE_ENDPOINT
+OBJECT_STORAGE_BUCKET
+```
+
+## 5. 数据持久化
 
 | 路径 | 职责 | 提交边界 |
 |---|---|---|
@@ -60,7 +85,7 @@ cp .env.example .env
 
 实际路径以 `.env.example`、`docker-compose*.yml` 和 `data/README.md` 为准。
 
-## 5. 生产部署
+## 6. 生产部署
 
 生产部署必须确认：
 
@@ -75,7 +100,7 @@ cp .env.example .env
 
 生产镜像包、离线交付或云服务器部署流程见 [08-production-image-release.md](08-production-image-release.md)。
 
-## 6. 冒烟校验
+## 7. 冒烟校验
 
 部署后至少验证：
 
@@ -88,7 +113,7 @@ cp .env.example .env
 □ 重启后数据库与对象存储数据仍可访问
 ```
 
-## 7. 安全要求
+## 8. 安全要求
 
 - `.env.example` 只能包含示例值。
 - 文档、Issue、截图、日志不得暴露真实密钥、连接串、客户数据或内部域名。

@@ -16,10 +16,12 @@ note: 默认推荐一个项目一个 Bucket，桶内使用目录前缀区分业�
 
 ```text
 一个项目一个 Bucket
-桶内按对象前缀区分资源类型
+桶内按资源类型目录/前缀区分图片、视频、音频、文档、临时文件等资源
 ```
 
 项目初始化后必须在 `.env.example` 中明确 Bucket、Endpoint、访问方式和安全边界。
+
+默认不得按资源类型、租户、业务模块或环境创建多个 Bucket。环境隔离优先使用独立实例、独立凭据、权限策略或 Key 前缀；多 Bucket 只能作为 OpenSpec 明确批准的例外。
 
 ## 2. 标准对象前缀
 
@@ -42,7 +44,7 @@ videos/transcoded/
 推荐形态：
 
 ```text
-{prefix}/{tenant}/{resource_type}/{uuid}.{ext}
+{resource_type_prefix}/{tenant}/{resource_type}/{uuid}.{ext}
 ```
 
 MUST NOT 使用用户原始文件名、真实身份信息或未经校验的路径片段。
@@ -58,3 +60,5 @@ AI 在新增文件上传、视频上传、图片处理、导入导出能力时�
 □ 更新媒体资源相关 OpenSpec 和文档
 □ 补充对象 Key 生成逻辑和测试
 ```
+
+多 Bucket 例外必须记录合规、生命周期、成本归集或硬权限边界理由，并同步更新 `project.yaml`、`.env.example`、`docs/07-object-storage-strategy.md` 和 `compatibility/object-storage/`。

@@ -1,0 +1,13 @@
+interface:
+  display_name: 产品规划设计
+  short_description: 从产品定位推导产品架构、里程碑、功能清单与规划基线
+  default_prompt: 使用 $pm-prd-plan 基于产品定位基线完成产品架构、里程碑和功能清单规划。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

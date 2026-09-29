@@ -13,12 +13,18 @@ Use this skill when the user asks to run the migrated source command `req-review
 - 检索先定位再分段读取；大范围 `rg/find` 默认排除 Harness、模板 assets、历史 agent 目录、archive、generated、node_modules、dist、coverage。
 - 命令输出优先 `max_output_tokens <= 8000`；大 diff、OpenAPI/Orval 生成物、测试日志、Workflow Sync 输出先给摘要或命中数。
 
+## Product Data Observability Gate（MUST）
+
+若需求涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 按 `docs/standards/product-data-collection-observability.md` 评审 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation` 是否充分。若不适用，MUST 有 N/A 或 `not_applicable` 原因；缺失时不得 approve。
+
 
 ## Command Template
 
 **Input**：`REQ-xxxx`
 
-Flags：`--approve` | `--reject` | `--defer`（无 flag 时输出评审检查清单并 AskUserQuestion）
+Flags：`--approve` | `--reject` | `--defer`
+
+默认：无 flag 等同 `--approve`；`--approve` 作为兼容显式写法继续支持。`--reject`、`--defer` 必须显式提供。
 
 **Output**：`review.md`；`trace.md` + `requirement.md` → `status: approved|rejected|deferred`
 
@@ -64,19 +70,19 @@ result: approved | rejected | deferred
 
 填写 `lifecycle.reviewed`、`lifecycle.approved`（若 approve）
 
-## Step 5 — 目录迁移（MUST，`--approve` 时）
+## Step 5 — 目录迁移（MUST，approve 时）
 
 Read `rules/issues-lifecycle.md`。
 
 | Flag | 迁移 |
 |------|------|
-| `--approve` | `plan/` → `review/` |
+| 无 flag / `--approve` | `plan/` → `review/` |
 | `--reject` / `--defer` | **跳过**（保留 `plan/`） |
 
-`--approve` 时 **MUST** 在 Workflow Sync **之前**运行：
+approve 时 **MUST** 在 Workflow Sync **之前**运行：
 
 ```bash
-python scripts/promote-issue-stage.py --req <REQ-id> --to review --reason "/req-review --approve"
+python scripts/promote-issue-stage.py --req <REQ-id> --to review --reason "/req-review (default approve)"
 ```
 
 - Exit code **MUST** be `0`（已在 `review/` 时可 no-op）。

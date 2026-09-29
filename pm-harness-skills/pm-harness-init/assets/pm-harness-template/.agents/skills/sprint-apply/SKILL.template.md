@@ -16,6 +16,10 @@ Use this skill when the user asks to run `/sprint-apply <sprint-id>`.
 - UI gate 只读取命中标签的 best-practices。
 - Queue report 输出摘要；大 diff/test 输出分段读取。
 
+## Product Data Observability Gate（MUST）
+
+批量执行前，若 Sprint 内 Change 涉及 API、DB、日志审计、行为埋点、Task Trace、Web 请求封装、小程序请求封装、App 请求封装或工作流治理，MUST 读取 `docs/standards/product-data-collection-observability.md`，并确认对应 Change 有 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation`；不适用项 MUST 有 N/A 或 `not_applicable` 原因。
+
 ## Input
 
 - `<sprint-id>` required unless only one active Sprint exists.

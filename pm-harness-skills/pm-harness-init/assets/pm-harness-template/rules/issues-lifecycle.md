@@ -4,7 +4,7 @@ content: plan / review / archive 三阶段目录职责、准入条件、迁移�
 source: 项目团队确认
 update_method: 需求/BUG 流程或目录边界变化时同步更新
 created_at: 2026-06-27 22:24:39
-updated_at: 2026-06-27 23:45:00
+updated_at: 2026-08-21 13:16:11
 note: REQ 与 BUG 共用；registry 与 _registry.yaml 仍位于 issues/* 根下
 ---
 
@@ -63,7 +63,7 @@ AI 在执行下列命令并成功后 **MUST** 移动目录（`git mv` 或等价�
 | 事件 | 命令示例 | 自 → 至 |
 |---|---|---|
 | 新建 | `/req-capture`、`/bug-capture`、`/capture` | — → `plan/` |
-| 评审通过 | `/req-review --approve`、`/bug-review --approve` | `plan/` → `review/` |
+| 评审通过 | `/req-review`、`/bug-review`（无 flag 默认 approve；`--approve` 兼容） | `plan/` → `review/` |
 | 归档闭环 | `/opsx-archive`、`/sprint-archive`（条目 status → done） | `review/` → `archive/` |
 
 **`/opsx-archive` / `/sprint-archive` 归档 hook（MUST）**：
@@ -88,7 +88,7 @@ promote 门禁：issue 全部关联 Change 已 archive，且 `status ∈ { done,
 lifecycle_stage: plan | review | archive
 ```
 
-`## 变更记录` **SHOULD** 记录迁移，例如：`plan → review（/req-review --approve）`。
+`## 变更记录` **SHOULD** 记录迁移，例如：`plan → review（/req-review）`。
 
 ## 6. 路径引用
 
@@ -120,3 +120,9 @@ lifecycle_stage: plan | review | archive
 □ _registry.yaml 是否仍在 issues 根目录？
 □ 是否运行 sync-workflow-status.py？
 ```
+
+## 9. 当前态 CHANGELOG
+
+`issues/requirements/CHANGELOG.md` 与 `issues/bugs/CHANGELOG.md` SHOULD 维护每个 Issue 一行的当前态快照，覆盖状态、阶段、Sprint、Change、最近更新时间、下一步和事实源路径。
+
+该索引不参与机器状态判断；脚本、Agent 和人工评审 MUST 继续以 `_registry.yaml`、单条 Issue `trace.md`、Sprint 四件套和 OpenSpec Change 为事实源。

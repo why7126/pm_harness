@@ -1,0 +1,13 @@
+interface:
+  display_name: pm prd solution
+  short_description: 通过持续反问与多方案比较，系统收敛可交付的产品业务方案
+  default_prompt: 使用 $pm-prd-solution 探索、比较并收敛一个产品需求的业务解决方案。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

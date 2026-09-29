@@ -39,13 +39,18 @@ rules/agent-context-budget.md
 | 任务类型 | 追加读取 |
 |---|---|
 | REQ / BUG 流程 | `rules/requirement-management.md`、`rules/bug-management.md`、`rules/issues-lifecycle.md`、对应 `issues/**/<REQ|BUG-*` |
-| Sprint 流程 | `rules/iterations-lifecycle.md`、相关 `iterations/change|archive/<sprint>/` 片段 |
-| OpenSpec Change | 当前 `openspec/changes/<change-id>/`、`rules/document-governance.md` |
+| Sprint 流程 | `rules/iterations-lifecycle.md`、相关 `iterations/change|archive/<sprint>/` 片段、`scripts/validate-sprint-scope.py`、`scripts/validate-sprint-archive-readiness.py`、`scripts/check-sprint-close-stale-scan.py`、`scripts/check-archived-path-residuals.py` |
+| OpenSpec Change | 当前 `openspec/changes/<change-id>/`、`rules/document-governance.md`、`scripts/validate-archive-evidence.py`、`scripts/validate-openspec-language.py` |
 | 代码实现 | `rules/coding.md`、`rules/testing.md`、相关模块 README/AGENTS；涉及契约时追加 API/DB/UI 等专项规则 |
 | API 变更 | `rules/api.md`、`docs/03-api-index.md`、OpenAPI 来源、客户端生成配置 |
 | DB / 数据模型 | `rules/database.md`、`docs/04-database-design.md` 相关表段、schema / migration 文件 |
 | UI / Design System | `rules/ui-design.md`、前端 README、Design Token、组件库、视觉验收入口 |
-| Docker / 发布部署 | `rules/environment.md`、`rules/port-management.md`、`rules/release.md`、`docs/02-deployment.md`、`docs/08-production-image-release.md`、`docker-compose*.yml`、`releases/README.md`、`scripts/build-images.sh`、`scripts/build-images.env.example`、`scripts/validate-image-build.py` |
+| UI / Prototype 验收 | `rules/ui-design.md`、`docs/standards/prototype-ui-acceptance.md` |
+| 产品数据采集 / 链路观测 | `docs/standards/product-data-collection-observability.md`、相关 REQ/BUG/Change/Sprint 中的 `product_data_collection_observability` 声明 |
+| 命令顺序 / 工作流编排 | `docs/08-command-execution-order.md`、相关 `.agents/skills/<command>/SKILL.md` |
+| 安全 / Git 检查 | `rules/security.md`、`.agents/skills/git-check/SKILL.md`、`scripts/git-check.py` |
+| Docker / 发布部署 | `rules/environment.md`、`rules/port-management.md`、`rules/release.md`、`docs/02-deployment.md`、`docs/08-production-image-release.md`、`docker-compose*.yml`、`deploy/`、`releases/README.md`、`scripts/build-images.sh`、`scripts/build-images.env.example`、`scripts/validate-image-build.py`、`scripts/validate-release-upgrade.py` |
+| 产品手册 / Mintlify | `rules/release.md`、`rules/security.md`、`mintlify/README.md`、`releases/<version>/usage-docs/manifest.json`、`scripts/generate-usage-docs.py`、`scripts/validate-usage-docs.py`、`scripts/validate-mintlify-site.py` |
 | data / media / object storage | `rules/data-management.md`、`rules/media.md`、`rules/object-storage.md`、相关存储策略文档 |
 | 安全 / 权限 / 敏感数据 | `rules/security.md`，以及 API、数据、部署相关规则 |
 | 兼容性 / 私有化 | `rules/compatibility.md`、`compatibility/`、部署矩阵 |
@@ -89,9 +94,13 @@ idea / bug / change
 | 缺陷 | `/bug-capture` -> `/bug-generate` -> `/bug-complete` -> `/bug-review --approve` -> `/bug-opsx` |
 | Change | `/opsx-propose`、`/opsx-explore`、`/opsx-apply`、`/opsx-archive` |
 | Sprint | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive`、`/sprint-exps` |
+| 通用探索 / 治理优化 | `/explore`、`/spec-opt`、`/spec-study` |
+| Git 安全 | `/git-check` |
 | MiniApp | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` |
 | Image | `/image-prepare <version>`、`/image-build <version>` |
+| Usage Docs | `/usage-docs-generate <version>`、`/usage-docs-update <version>`、`/usage-docs-validate <version>` |
 | Release | `/release-propose <version>`、`/release-prepare <version>`、`/release-publish <version>` |
+| Upgrade | `/upgrade-plan --from <fresh\|version> --to <version>`、`/upgrade-validate --plan <path>` |
 | Bootstrap | `/initialize-project`、`/build-design-system`、`/build-api-standard`、`/build-test-framework` |
 
 工作流状态变化后运行：
@@ -100,11 +109,21 @@ idea / bug / change
 python scripts/sync-workflow-status.py --event <event> [--req REQ-xxxx] [--bug BUG-xxxx] [--change change-id] [--sprint sprint-xxx|auto]
 ```
 
+命令下一步推荐 MUST 遵守 `docs/08-command-execution-order.md`。当命令需要用户选择、确认、补充信息或处理阻塞时，SHOULD 使用“结构化选项 + 推荐项 + 可补充说明”的引导式反馈；每轮聚焦 1-3 个关键决策。
+
 归档涉及 Issue 物理阶段迁移时继续运行：
 
 ```bash
 python scripts/promote-issue-stage.py --to archive [--change change-id] [--sprint sprint-xxx] --reason "<event>"
 ```
+
+若 Workflow Sync 报告 Sprint scope skipped/unresolved，但目标 Sprint 已明确，应先串行修复 `sprint.yaml` 机器范围：
+
+```bash
+python scripts/add-sprint-scope-item.py --sprint sprint-xxx --change <change-id> --rationale "<why in scope>"
+```
+
+然后重跑 Workflow Sync 和 `python scripts/validate-sprint-scope.py sprint-xxx`。
 
 ## 6. 强制红线
 
@@ -114,10 +133,13 @@ python scripts/promote-issue-stage.py --to archive [--change change-id] [--sprin
 - 来源于 REQ/BUG 的 OpenSpec Change 在 `/opsx-apply` 前必须先纳入某个 `sprint-xxx`。
 - 新建业务代码不得放根目录；目录边界以 `rules/directory-structure.md` 为准。
 - 禁止把需求、BUG、迭代计划散落到 `docs/` 根目录。
-- `.env`、真实密钥、真实客户数据、运行时数据库文件、临时大文件不得提交。
+- `.env`、`.env.local`、`scripts/build-images.env`、`deploy/**/<id>.env` 等真实 env 文件允许本地存在，但不得提交、不得贴出内容、不得写入归档或 release 证据；只要未暂存/提交，不因其存在阻塞 `/opsx-archive`、`/sprint-archive` 或发布归档。
+- 真实密钥、真实客户数据、运行时数据库文件、临时大文件不得提交。
+- 提交或推送前 SHOULD 运行 `python scripts/git-check.py`。
 - API 变更必须同步 OpenAPI / 客户端生成物 / docs / tests。
 - DB 结构变更必须同步 schema、数据库文档和测试。
 - UI 变更必须遵守 Design System token 与组件复用规则。
+- 涉及 API、DB、日志审计、行为埋点、Task Trace、Web / 小程序 / App 请求封装或工作流治理的数据采集变更，MUST 按 `docs/standards/product-data-collection-observability.md` 声明 `product_data_collection_observability`、`affected_layers`、`reason`、`validation`；不适用时 MUST 写明 N/A 或 `not_applicable` 原因。
 - 完成前必须运行相关验证命令；无法运行时必须说明原因。
 
 ## 7. 文档与时间规范
@@ -140,6 +162,7 @@ python scripts/promote-issue-stage.py --to archive [--change change-id] [--sprin
 | OpenSpec 变更 | `openspec/changes/<change-id>/` |
 | 正式规格 | `openspec/specs/<capability>/spec.md` |
 | 复盘 / 事故知识 | `docs/knowledge-base/` |
+| 规范工程日志 | `docs/spec-logs/YYYYMMDDhhmmss-study-xxx.md`、`docs/spec-logs/YYYYMMDDhhmmss-governance-xxx.md` |
 | 发布对象 | `releases/vX.Y.Z/` |
 | 本地数据 | `data/`（不得提交真实客户数据和运行时数据库） |
 

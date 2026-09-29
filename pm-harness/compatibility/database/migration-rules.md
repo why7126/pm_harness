@@ -45,8 +45,10 @@ template_scope: 可作为工程初始化时的 compatibility/database/migration-
 | `{PRODUCT_NAME}` | 产品或项目名称 | 待确认 |
 | `{PRODUCT_CODE}` | 项目代码，建议 kebab-case | 待确认 |
 | `{DATABASE_OWNER}` | 数据库负责人或维护角色 | 待确认 |
-| `{DATABASE_STACK}` | 主数据库、版本、驱动、ORM/DAO | SQLite / PostgreSQL / MySQL / 达梦 |
-| `{DB_PRIMARY}` | 主关系型数据库 | SQLite |
+| `{DATABASE_STACK}` | 各环境数据库、版本、驱动、ORM/DAO | SQLite(local/test) + MySQL(production) |
+| `{DB_PRIMARY}` | 生产主关系型数据库 | MySQL |
+| `{LOCAL_DATABASE}` | 本地开发数据库 | SQLite |
+| `{TEST_DATABASE}` | 自动化测试数据库 | SQLite / 临时 SQLite |
 | `{XINCHUANG_DATABASES}` | 信创或兼容数据库目标 | 无 / 达梦 / 海量 / PostgreSQL |
 | `{MIGRATION_TOOL}` | 迁移工具 | Alembic / Prisma / Flyway / Liquibase / 手写 SQL |
 | `{MIGRATION_STRATEGY}` | 迁移策略 | versioned migration / repeatable migration / ORM migration |

@@ -4,7 +4,7 @@ content: 约束 AI 与开发人员遵循当前项目目录边界、文件归属�
 source: Harness Token 优化模板
 update_method: 目录结构调整时由架构负责人确认后更新；AI 只能提出建议，不得擅自放宽规则
 created_at: 2026-06-13 00:00:00
-updated_at: 2026-07-14 00:00:00
+updated_at: 2026-07-31 17:10:00
 note: AGENTS.md 必须引用本文档；用于防止 AI 随意新增目录或把文件放错位置
 ---
 
@@ -51,12 +51,16 @@ releases/
 │   └── announcement.mdx
 └── v0.1.0/
     ├── release.json
-    └── announcement.mdx
+    ├── announcement.mdx
+    ├── image-build-plan.json
+    └── image-manifest.json
 ```
 
 边界：
 
 - `releases/` MUST 只存放产品版本发布对象、公开公告源文件、发布校验记录和静态公告站点配置。
+- `releases/vX.Y.Z/image-build-plan.json` 与 `image-manifest.json` 属于发布校验材料，MUST NOT 包含真实 `.env`、密钥、数据库连接串、Authorization header、Cookie、本机绝对路径或真实客户数据。
+- 镜像 tar 包、`.sha256` 与其他大体积交付物 MUST 放在仓库外 `../releases/vX.Y.Z/images/`；仓库内 manifest 只记录相对路径、hash 与验证结论。
 - `releases/` MUST NOT 替代 `iterations/` 四件套、`issues/` 需求/BUG 文档、`openspec/changes/` 变更事实源或 `docs/` 长期技术文档。
 - `releases/` MUST NOT 存放运行时生成站点、构建产物、真实客户数据、密钥、数据库连接串、对象存储凭据或不可公开运维信息。
 - 若静态站点生成输出目录存在，MUST 在 `.gitignore` 或相邻 README 中声明提交边界。
@@ -65,7 +69,9 @@ releases/
 
 1. `/release-propose <version>` 创建或更新产品版本发布对象。
 2. `/release-prepare <version>` 执行发布前校验并生成或更新公告源文件。
-3. `/release-publish <version>` 记录发布确认结果和最终公告位置。
+3. `/image-prepare <version>` 在镜像治理适用时生成或更新镜像构建计划。
+4. `/image-build <version>` 在需要真实镜像交付时生成 manifest。
+5. `/release-publish <version>` 记录发布确认结果和最终公告位置。
 
 命名：
 

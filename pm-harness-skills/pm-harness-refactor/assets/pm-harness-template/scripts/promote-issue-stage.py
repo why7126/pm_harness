@@ -22,6 +22,7 @@ ISSUE_TYPES = {
 
 STAGES = ("plan", "review", "archive")
 DATETIME_RE = re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
+ARCHIVED_CHANGE_DIR_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-(.+)$")
 
 
 @dataclass
@@ -80,6 +81,12 @@ def write_text(path: Path, text: str) -> None:
 
 def clean_scalar(value: str) -> str:
     return value.split("#", 1)[0].strip().strip("'\"")
+
+
+def normalize_change_ref(value: str) -> str:
+    value = clean_scalar(value)
+    match = ARCHIVED_CHANGE_DIR_RE.match(value)
+    return match.group(1) if match else value
 
 
 def list_item_ids(lines: list[str], key: str) -> list[str]:
@@ -154,10 +161,12 @@ def change_refs_from_trace(text: str) -> list[str]:
     patterns = [
         r"(?m)^\s*change_id:\s*['\"]?([A-Za-z0-9_.-]+)",
         r"(?m)^\s*-\s*change_id:\s*['\"]?([A-Za-z0-9_.-]+)",
-        r"openspec/changes/(?:archive/[^/`|)\s]+/)?([^/`|)\s]+)/",
+        r"openspec/archive/([^/`|)\s]+)/",
+        r"openspec/changes/archive/([^/`|)\s]+)/",
+        r"openspec/changes/([^/`|)\s]+)/",
     ]
     for pattern in patterns:
-        refs.extend(clean_scalar(ref) for ref in re.findall(pattern, text))
+        refs.extend(normalize_change_ref(ref) for ref in re.findall(pattern, text))
     refs.extend(list_item_ids(lines, "related_changes"))
     refs.extend(list_item_ids(lines, "openspec_changes"))
     ignored = {"archive", "changes", "待确认", "null", "none", "无"}
@@ -221,7 +230,7 @@ def collect_candidates(root: Path, args: argparse.Namespace) -> list[IssueCandid
 
 
 def find_archived_change(root: Path, change_id: str) -> Path | None:
-    archive_root = root / "openspec" / "changes" / "archive"
+    archive_root = root / "openspec" / "archive"
     if not archive_root.exists():
         return None
     for path in archive_root.rglob("*"):

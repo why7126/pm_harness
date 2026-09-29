@@ -4,6 +4,7 @@
 from pathlib import Path
 import filecmp
 import sys
+import re
 
 ROOT = Path(__file__).resolve().parents[2]
 MAIN = ROOT / "pm-harness"
@@ -25,6 +26,7 @@ SYNC_PATHS = [
     "compatibility",
     "data",
     "deploy",
+    "mintlify",
     "issues",
     "iterations",
     "models",
@@ -36,6 +38,15 @@ SYNC_PATHS = [
 ]
 
 errors = []
+
+
+def should_skip_generated_record(rel: Path, rel_item: Path) -> bool:
+    return (
+        rel == Path("docs")
+        and rel_item.parts[:1] == ("spec-logs",)
+        and rel_item.suffix == ".md"
+        and re.match(r"^\d{14}-(study|governance)-", rel_item.name)
+    )
 
 
 def mapped_asset_path(base: Path, rel_item: Path) -> Path:
@@ -60,6 +71,8 @@ for rel in SYNC_PATHS:
         if item.is_dir():
             continue
         rel_item = item.relative_to(left)
+        if should_skip_generated_record(Path(rel), rel_item):
+            continue
         other = mapped_asset_path(right, rel_item)
         if item.name == ".DS_Store" or "__pycache__" in item.parts or item.suffix == ".pyc":
             errors.append(f"主模板包含缓存文件: {rel}/{rel_item}")

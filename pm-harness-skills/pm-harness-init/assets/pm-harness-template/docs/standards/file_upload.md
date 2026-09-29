@@ -32,7 +32,7 @@ note: 适用于 {PRODUCT_NAME} 项目；无文件上传能力时可保留为未�
 | `{AUTH_STRATEGY}` | 鉴权策略 | Token / Session / API Key / none |
 | `{OBJECT_STORAGE_ENABLED}` | 是否启用对象存储 | true / false |
 | `{OBJECT_STORAGE_STACK}` | 对象存储或文件存储方案 | S3 compatible / OSS / COS / OBS / local filesystem / none |
-| `{BUCKET_POLICY}` | 桶/容器策略 | 单桶 + 前缀 / 多桶 / 按租户隔离 |
+| `{BUCKET_POLICY}` | 桶/容器策略 | 一个项目一个 Bucket + 资源类型前缀 |
 | `{OBJECT_KEY_PATTERN}` | 对象 Key 规则 | 待确认 |
 | `{UPLOAD_ALLOWED_TYPES}` | 文件类型白名单 | 待确认 |
 | `{UPLOAD_MAX_SIZE_POLICY}` | 大小限制 | 待确认 |
@@ -206,7 +206,7 @@ Content-Type: application/json
 
 ```text
 {OBJECT_STORAGE_STACK}
-{BUCKET_POLICY}
+默认：一个项目一个 Bucket，桶内使用资源类型目录/前缀区分资源
 ```
 
 对象 Key 规则：
@@ -218,7 +218,7 @@ Content-Type: application/json
 推荐结构：
 
 ```text
-{prefix}/default/{resource_type}/{uuid}.{ext}
+{resource_type_prefix}/default/{resource_type}/{uuid}.{ext}
 images/default/user/avatars/{uuid}.{ext}
 images/default/brands/logos/{uuid}.{ext}
 files/default/imports/source/{uuid}.{ext}
@@ -228,8 +228,9 @@ tmp/{upload_id}/{part_id}
 
 规则：
 
-- 正式业务对象 Key MUST 使用 `{prefix}/default/{resource_type}/{uuid}.{ext}`。
-- `prefix` MUST 是资源大类，例如 `images`、`videos`、`files`、`audios`；不得使用 `original`、`processed`、`thumbnails` 作为顶层前缀。
+- 正式业务对象 Key MUST 使用 `{resource_type_prefix}/default/{resource_type}/{uuid}.{ext}`。
+- `resource_type_prefix` MUST 是资源大类，例如 `images`、`videos`、`files`、`audios`；不得使用 `original`、`processed`、`thumbnails` 作为顶层前缀。
+- 默认不得按资源类型、租户、业务模块或环境新增多个 Bucket；多 Bucket 只能作为 OpenSpec 例外变更。
 - `default` MUST 保留为默认租户/命名空间占位。
 - `resource_type` MUST 是业务资源路径，例如 `user/avatars`、`brands/logos`、`imports/source`。
 - 对象 Key 必须由服务端生成。

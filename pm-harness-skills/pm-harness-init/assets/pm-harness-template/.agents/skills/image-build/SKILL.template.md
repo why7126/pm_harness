@@ -24,6 +24,7 @@ Use this skill when the user asks `/image-build <version>` or wants to build rel
 
 - `<version>`：必填，例如 `v0.2.0`。
 - Optional：`--env-file <path>` 指定本地构建 env；默认 `scripts/build-images.env`。
+- 本地真实 env 文件可存在并用于构建输入；它必须保持 ignored / uncommitted，且不得被要求删除作为归档前置条件。
 
 ## Must Read
 
@@ -50,6 +51,7 @@ scripts/validate-image-build.py
 - 构建成功后生成或更新 `releases/<version>/image-manifest.json`。
 - Docker、buildx、网络、基础镜像源、依赖安装、镜像验证、tar 导出或 checksum 失败时记录 blocker，不写成功 manifest。
 - 不写入真实 `.env` 内容、密钥、数据库连接串、Authorization header、Cookie、真实客户数据或本机绝对路径。
+- Manifest / release 证据只能记录安全摘要、变量名、hash 和示例文件路径；不得记录 raw env 内容。
 
 ## Command
 

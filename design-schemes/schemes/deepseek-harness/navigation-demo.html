@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeepSeek Harness Navigation Demo</title>
+  <style>
+    :root { --bg: #fff; --sidebar: rgb(249,250,251); --surface: #fff; --hover: rgba(38,49,72,.06); --active: rgb(228,237,253); --ink: rgb(15,17,21); --muted: rgb(97,102,107); --line1: rgba(0,0,0,.04); --line2: rgba(0,0,0,.1); --green: rgb(34,197,94); --amber: rgb(245,158,11); --blue: rgb(65,118,230); --ease: cubic-bezier(.4,0,.2,1); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; height: 100vh; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 22px; letter-spacing: 0; }
+    .shell { height: 100%; display: grid; grid-template-columns: 280px 1fr; transition: grid-template-columns .3s var(--ease); }
+    .shell.collapsed { grid-template-columns: 56px 1fr; }
+    .sidebar { background: var(--sidebar); border-right: 1px solid var(--line1); padding: 6px 12px; overflow: hidden; display: flex; flex-direction: column; }
+    .collapsed .sidebar { padding: 18px 10px 6px; }
+    .logo { height: 60px; padding: 8px 0 8px 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .collapsed .logo { height: 36px; padding: 0; margin-bottom: 12px; justify-content: flex-start; }
+    button { font: inherit; cursor: pointer; }
+    .brand { flex: 1; min-width: 0; border: 0; background: transparent; display: flex; align-items: center; gap: 8px; padding: 0; color: inherit; }
+    .brand-mark { width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: white; display: grid; place-items: center; font-size: 13px; flex: none; }
+    .brand-name { font-weight: 500; white-space: nowrap; }
+    .icon { border: 0; background: transparent; border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; color: var(--muted); }
+    .icon:hover { background: var(--hover); }
+    .collapsed .icon { width: 36px; height: 36px; color: var(--ink); }
+    .toggle .rail { display: none; }
+    .collapsed .brand-name { display: none; }
+    .collapsed .toggle .panel { display: none; }
+    .collapsed .toggle .rail { display: inline; }
+    .collapsed .toggle:hover .panel { display: inline; }
+    .collapsed .toggle:hover .rail { display: none; }
+    .new { height: 38px; margin: 0 2px 8px; padding: 8px 16px; border: 1px solid var(--line2); border-radius: 12px; background: var(--surface); display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; }
+    .new:hover { background: rgb(241,243,245); }
+    .collapsed .new { width: 36px; height: 36px; padding: 0; margin: 0 0 12px; border-color: transparent; background: transparent; }
+    .collapsed .new span:last-child { display: none; }
+    .region { flex: 1; min-height: 0; margin-left: -4px; margin-right: -12px; padding: 0 12px 0 4px; overflow: auto; scrollbar-gutter: stable; }
+    .section { color: rgb(129,133,140); font-size: 12px; line-height: 16px; padding: 8px 8px 4px; }
+    .row { height: 32px; border-radius: 8px; display: flex; align-items: center; gap: 4px; padding: 0 8px; color: var(--muted); white-space: nowrap; }
+    .project { height: 34px; color: var(--ink); font-weight: 500; }
+    .active { background: var(--active); color: var(--ink); }
+    .row:hover { background: var(--hover); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgb(225,229,238); flex: none; }
+    .dot.run { background: var(--green); }
+    .dot.wait { background: var(--amber); }
+    .row .actions { margin-left: auto; display: none; color: var(--muted); }
+    .row:hover .actions { display: inline; }
+    .collapsed .region { margin: 0; padding: 0; overflow: hidden; }
+    .collapsed .section, .collapsed .row span:not(.dot) { display: none; }
+    .collapsed .row { width: 36px; height: 36px; padding: 0; justify-content: center; margin-bottom: 2px; }
+    .foot { display: flex; flex-direction: column; align-items: stretch; }
+    .collapsed .foot { align-items: center; }
+    .stage { padding: 32px; background: #fff; }
+    .card { width: 360px; border: 1px solid var(--line2); border-radius: 12px; padding: 4px; background: var(--surface); box-shadow: 0 16px 48px rgba(15,17,21,.12); }
+    .menu-item { min-height: 40px; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--ink); }
+    .menu-item:hover { background: var(--hover); }
+    .menu-item small { margin-left: auto; color: var(--muted); }
+    .note { max-width: 720px; color: var(--muted); margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <main id="shell" class="shell">
+    <nav class="sidebar" aria-label="Workspace sessions">
+      <div class="logo">
+        <button class="brand" aria-label="Start a new session"><span class="brand-mark">D</span><span class="brand-name">DeepSeek Harness</span></button>
+        <button id="toggle" class="icon toggle" aria-label="Toggle sidebar"><span class="panel">⇤</span><span class="rail">D</span></button>
+      </div>
+      <button class="new"><span>＋</span><span>New Session</span></button>
+      <div class="region">
+        <div class="section">Workspace</div>
+        <div class="row project"><span>⌄</span><span>deepseek-harness</span></div>
+        <div class="row active"><span class="dot run"></span><span>Current extraction</span><span class="actions">•••</span></div>
+        <div class="row"><span class="dot wait"></span><span>Needs approval</span><span class="actions">•••</span></div>
+        <div class="row"><span class="dot"></span><span>Archived note</span><span class="actions">•••</span></div>
+      </div>
+      <div class="foot"><button class="icon" aria-label="Settings">⚙</button></div>
+    </nav>
+    <section class="stage">
+      <button id="outside" class="menu-item" style="border:1px solid var(--line2); background:white;">Toggle sidebar state</button>
+      <div class="card" style="margin-top:24px;">
+        <div class="menu-item"><span>⚙</span><span>Settings</span><small>⌘,</small></div>
+        <div class="menu-item"><span>✓</span><span>Selected model</span><small>check</small></div>
+        <div class="menu-item" style="color:rgb(236,19,19);"><span>!</span><span>Danger action</span></div>
+      </div>
+      <p class="note">This navigation asset preserves the source behavior: expanded wordmark, 38px New Session control, 56px collapsed rail, 36px rail controls, status dots in session rows, and the collapsed logo hover swap into the panel icon.</p>
+    </section>
+  </main>
+  <script>
+    const shell = document.getElementById('shell');
+    const flip = () => shell.classList.toggle('collapsed');
+    document.getElementById('toggle').addEventListener('click', flip);
+    document.getElementById('outside').addEventListener('click', flip);
+  </script>
+</body>
+</html>

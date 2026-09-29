@@ -142,7 +142,7 @@ cross_cutting_tags:
 **Added AC-XCUT:** N 条（见 acceptance.md §横切 AC）
 
 **Next:**
-1. /req-review REQ-xxxx --approve
+1. /req-review REQ-xxxx
 2. 通过后 /req-opsx REQ-xxxx（design.md MUST 引用 knowledge_base_refs）
 3. 纳入 Sprint 前确认 sprint.md §横切预防清单 已覆盖本 REQ
 ```

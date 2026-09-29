@@ -15,6 +15,7 @@ note: API 变更必须同步 docs/03-api-index.md、OpenAPI 来源、客户端�
 - 接口 SHOULD 使用统一版本前缀，例如 `/api/v1`。
 - 路径使用资源名词，避免动词堆叠；批量、导入导出、上传下载等动作可作为子资源或 action。
 - 管理端、公开端、移动端或内部接口必须有清晰权限边界。
+- API 变更若涉及请求日志、行为埋点、Task Trace、Web / 小程序 / App 请求封装或日志审计，MUST 读取 `docs/standards/product-data-collection-observability.md`，声明 `product_data_collection_observability`、`affected_layers`、`reason` 和 `validation`；不适用时写明 N/A 或 `not_applicable` 原因。
 
 ## 2. 响应结构
 

@@ -1,0 +1,112 @@
+{
+  "scheme_id": "deepseek-harness-navigation",
+  "scheme_name": "DeepSeek Harness Collapsible Workbench Navigation",
+  "source_files": [
+    "packages/client/ui-layout/src/client/AppFrame.module.css",
+    "packages/client/ui-sidebar/src/client/SidebarRoot.module.css",
+    "packages/client/ui-workspace/src/client/WorkspaceBrowser.module.css",
+    "packages/client/ui-workspace/src/client/rows/Rows.module.css",
+    "packages/client/runtime/src/client/sessions/lineage.ts",
+    "packages/client/runtime/src/client/sessions/manager.ts"
+  ],
+  "nav_type": "web_collapsible_sidebar_with_workspace_session_tree",
+  "surface": {
+    "web": {
+      "shell": "grid app frame",
+      "columns": ["sidebar", "conversation_center", "details_optional"],
+      "sidebar_expanded_width": "280px inferred from component runtime width contract",
+      "sidebar_collapsed_width": "56px",
+      "sidebar_background": "var(--dsw-specific-sidebar-fill)",
+      "sidebar_border": "1px solid var(--dsw-alias-border-l1)",
+      "height": "100%",
+      "overflow": "hidden"
+    }
+  },
+  "layout": {
+    "root": "vertical flex stack",
+    "expanded_padding": "6px 12px",
+    "collapsed_padding": "18px 10px 6px",
+    "logo_row_expanded": "60px high, right-aligned panel toggle",
+    "logo_row_collapsed": "36px high, 12px bottom rhythm",
+    "rail_geometry": "56px rail with 36x36 controls centered by 10px side padding",
+    "new_session_expanded": "38px, margin 0 2px 8px, elevated fill, 12px radius",
+    "new_session_collapsed": "36x36 transparent icon button, 12px bottom margin",
+    "region_area": "flex 1 session/workspace browser; right negative margin lets scrollbar sit at sidebar edge",
+    "footer": "bottom pinned settings and additive footer actions"
+  },
+  "states": {
+    "expanded": {
+      "brand": "full wordmark in primary ink, clickable, no hover chrome",
+      "icon_buttons": "28x28 circular transparent controls with secondary ink",
+      "new_session": "label visible, border_l2, elevated fill"
+    },
+    "collapsed": {
+      "brand_toggle": "rail brand mark is shown by default; hover swaps to panel icon",
+      "icon_buttons": "36x36 primary ink controls",
+      "labels": "hidden by max-width 0 or unmounted rail layout",
+      "new_session": "plain icon control without border"
+    },
+    "collapsing": {
+      "content": "frozen expanded layout fades out over 150ms",
+      "rail_entry": "upper controls translate in from 49px right edge over 150ms after settle"
+    },
+    "dragging": {
+      "frame_transition": "disabled so drag handles track pointer exactly"
+    }
+  },
+  "behavior": {
+    "collapse_animation": "grid-template-columns over var(--ds-transition-duration-slow) and var(--ds-ease-in-out)",
+    "reduced_motion": "all sidebar and handle animations disabled",
+    "scrollbar_policy": "quietBars sets sidebar scrollbar thumb and hover thumb to transparent without changing gutter",
+    "details_handle": "details resize pill appears only on details column hover, handle hover, or drag"
+  },
+  "workspace_navigation": {
+    "row_heights": {
+      "project": "34px",
+      "session": "32px"
+    },
+    "row_radius": "8px",
+    "indent_step": "22px",
+    "session_cell": "8px padding, 16px status slot, 4px title gap",
+    "status_indicators": ["running", "pending interaction", "finished while not selected"],
+    "hover_behavior": "session time hides while row action buttons appear",
+    "drag_drop": "dropBefore/dropAfter use absolute 2px insertion affordances"
+  },
+  "iconography": {
+    "source": "custom primitive icon set and brand components",
+    "brand": "DeepSeek wordmark plus whale/fish mark",
+    "special_affordance": "collapsed rail logo swaps to panel icon on hover"
+  },
+  "version_display": {
+    "applicable": false,
+    "reason": "No reusable version badge was found in the extracted sidebar/navigation source files."
+  },
+  "user_menu": {
+    "applicable": "partial",
+    "pattern": "Settings and footer action seats are bottom pinned; dropdown behavior should use shared Menu component rather than bespoke menu styling.",
+    "menu_cell": "40px min-height, 10px radius, 14px/22px label, optional leading icon and trailing check"
+  },
+  "permission_filtering": {
+    "inferred": true,
+    "notes": "Navigation rows are runtime slot/session driven. No static role-permission menu table was identified in the extracted files."
+  },
+  "persistence": {
+    "inferred": true,
+    "notes": "Layout state is handled by ui-layout runtime stores; no literal localStorage key was identified in the CSS/source subset read for this extraction."
+  },
+  "accessibility": {
+    "rules": [
+      "Use buttons for logo/new-session/toggle controls, not plain clickable divs.",
+      "Preserve focus-visible states on menu and card controls.",
+      "Honor prefers-reduced-motion by disabling rail, fade, and handle transitions.",
+      "Keep icon-only rail controls named with aria-label or tooltip text in implementation."
+    ]
+  },
+  "integration_notes": [
+    "Treat the sidebar as an app shell column, not a floating card.",
+    "Keep the collapsed rail at 56px with 36px controls; widening it changes the source project feel.",
+    "Do not replace the slide/fade collapse with instant label hiding.",
+    "Use shared menu geometry for user/settings/catalog menus."
+  ],
+  "inferred": false
+}

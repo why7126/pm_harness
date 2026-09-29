@@ -1,0 +1,77 @@
+# purpose: ProjectPmHarness OpenSpec 配置
+# content: 当前脚手架工程自身的 OpenSpec 目录、命名、校验和归档策略
+# source: ProjectPmHarness root governance
+# update_method: 当前脚手架工程自身 OpenSpec 流程变化时更新；不得同步进 pm-harness 模板
+
+project: "project-pm-harness"
+project_name: "ProjectPmHarness"
+enabled: true
+
+spec_dir: "openspec/specs"
+change_dir: "openspec/changes"
+archive_dir: "openspec/archive"
+project_doc: "openspec/project.md"
+testing_mapping: "openspec/testing-mapping.md"
+
+language: "zh-CN"
+default_locale: "zh-CN"
+documentation_language: "zh-CN"
+
+change:
+  id_pattern: "add-*|change-*|fix-*|refactor-*|remove-*"
+  allowed_prefixes:
+    - add
+    - change
+    - fix
+    - refactor
+    - remove
+  required_files:
+    - proposal.md
+    - design.md
+    - tasks.md
+  spec_delta_dir: specs
+  status_flow:
+    - draft
+    - proposed
+    - approved
+    - implemented
+    - archived
+
+spec:
+  modules:
+    - scaffold-template
+    - agent-skills
+    - governance-scripts
+    - project-governance
+  require_scenarios: true
+  require_acceptance: true
+  require_traceability: true
+  allow_unimplemented_in_specs: false
+
+commands:
+  validate: "openspec validate <change-id>"
+  propose: "/opsx-propose <target>"
+  apply: "/opsx-apply <target>"
+  archive: "/opsx-archive <target>"
+  test_mapping_validate: "python pm-harness/scripts/validate-openspec-language.py"
+
+archive:
+  require_completed_tasks: true
+  require_tests_recorded: true
+  require_docs_synced: true
+  require_specs_updated: true
+
+ai_guardrails:
+  must_read:
+    - README.md
+    - docs/00-project-governance.md
+    - openspec/project.md
+  must_sync_when_changed:
+    - README.md
+    - docs/README.md
+    - docs/00-project-governance.md
+    - docs/spec-logs/
+  forbidden:
+    - "do_not_write_project_runtime_data_into_pm_harness_template"
+    - "do_not_sync_root_issues_iterations_openspec_into_template"
+    - "do_not_restore_multi_agent_entry_dirs"
