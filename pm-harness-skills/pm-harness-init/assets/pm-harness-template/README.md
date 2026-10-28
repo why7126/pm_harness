@@ -4,7 +4,7 @@ content: 产品简介、用户角色、核心能力、技术栈、快速启动�
 source: Harness README.md 抽象模板，初始化时基于用户输入生成
 update_method: 项目定位、技术栈、启动命令、部署方式、目录结构、端口策略或核心能力变化时同步更新
 created_at: 2026-06-27 08:44:18
-updated_at: 2026-06-27 08:44:18
+updated_at: 2026-10-28 11:25:49
 owner: {PROJECT_OWNER}
 note: 适用于 {PRODUCT_NAME} 项目；本文档是工程根入口，详细规则见 AGENTS.md、rules/ 与 docs/
 ---
@@ -289,3 +289,5 @@ AI Agent 修改本项目时必须：
 - 启动命令、测试命令、验证命令、Docker/部署命令变化。
 - 端口策略、环境变量、对象存储、模型文件、运行时数据或安全策略变化。
 - AI 协作规则、命令体系、目录治理或文档导航变化。
+
+Git 安全检查使用 `/git-check`；按交付范围提交与同步使用 `/git-sync`。范围与验证见 [Git 交付安全](docs/standards/git-delivery-safety.md)。

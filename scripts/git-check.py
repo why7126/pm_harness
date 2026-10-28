@@ -1,227 +1,263 @@
 #!/usr/bin/env python3
-"""Pre-push safety checks for ProjectPmHarness Git content."""
-
+"""Read-only Git safety checks: index blobs, tracked worktree and optional history."""
 from __future__ import annotations
 
 import argparse
-import fnmatch
+import hashlib
+import importlib.util
 import os
+from pathlib import Path
 import re
+import stat
 import subprocess
 import sys
 from dataclasses import dataclass
-from pathlib import Path
-
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_MAX_FILE_SIZE_MB = 10
-TEXT_READ_LIMIT_BYTES = 1024 * 1024
-
-SAFE_PATH_PATTERNS = [
-    ".env.example",
-    "**/.env.example",
-    "deploy/**/*.env.example",
-    "scripts/*.env.example",
+TEXT_LIMIT = 1024 * 1024
+BINARY = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.pdf', '.zip', '.gz', '.tar', '.tgz', '.db', '.sqlite', '.sqlite3'}
+RUNTIME = {'node_modules', '.venv', '__pycache__', '.pytest_cache', '.vite', 'dist', 'build', 'coverage'}
+DATA_RUNTIME = {'runtime', 'sqlite', 'uploads', 'processed', 'tmp', 'minio', 's3', 'mysql'}
+PLACEHOLDERS = {'change-me', 'change-me-in-local-env', 'example', 'example.com', 'localhost', '127.0.0.1', 'CHANGE_ME', 'replace-with-access-key', 'replace-with-secret-key'}
+# Match actual usernames, not regex syntax or a whole source line exemption.
+HOME_PATH = re.compile(r'(?<![\w.-])(?:/' + r'Users/|/' + r'home/|[A-Za-z]:\\+Users\\+)([\w.-]+)(?=[/\\\s\"\x27`]|$)')
+SECRET_PATTERNS = [
+    ('authorization', re.compile(r'\bAuthorization\s*:\s*Bearer\s+([^\s\"\x27`]+)', re.I), 'error'),
+    ('cookie', re.compile(r'\bCookie\s*:\s*([^\r\n]+)', re.I), 'error'),
+    ('assigned-secret', re.compile(r'''(?<!\$\{)\b(?:api[_-]?key|access[_-]?key|secret[_-]?key|secret|token|password|(?:MINIO|S3|OBJECT_STORAGE)_[A-Z0-9_]*(?:KEY|SECRET|TOKEN|PASSWORD))\b\s*[:=]\s*(?:"([^"\r\n]+)"|'([^'\r\n]+)'|([^\s,;`]+))''', re.I), 'error'),
+    ('database-url', re.compile(r'\b(?:mysql|postgresql|postgres)://[^\s\"\x27`]+', re.I), 'error'),
+    ('private-key', re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'), 'error'),
+    ('local-absolute-path', HOME_PATH, 'error'),
+    ('privacy-email', re.compile(r'\b[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]{2,})\b'), 'warning'),
+    ('privacy-phone', re.compile(r'(?<![A-Za-z0-9])1[3-9]\d{9}(?![A-Za-z0-9])'), 'warning'),
 ]
-
-FORBIDDEN_PATH_PATTERNS = [
-    ".env",
-    ".env.*",
-    "deploy/**/*.env",
-    "scripts/*.env",
-    "*.sqlite",
-    "*.sqlite3",
-    "*.db",
-    "data/runtime/**",
-    "data/uploads/**",
-    "data/tmp/**",
-    "data/minio/**",
-    "data/s3/**",
-    "node_modules/**",
-    "dist/**",
-    "build/**",
-    "coverage/**",
-    ".pytest_cache/**",
-    "__pycache__/**",
-    "*.pyc",
-    ".DS_Store",
-    "*.zip",
-]
-
-BINARY_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".zip", ".gz", ".tar", ".tgz", ".sqlite", ".sqlite3", ".db"}
-
-PLACEHOLDERS = {
-    "<access_token>",
-    "<token>",
-    "<secret>",
-    "<password>",
-    "<api_key>",
-    "change-me",
-    "change-me-in-local-env",
-    "example",
-    "example.com",
-    "localhost",
-    "127.0.0.1",
-}
-
-SECRET_PATTERNS: list[tuple[str, re.Pattern[str], str]] = [
-    ("authorization-header", re.compile(r"\bAuthorization\s*:\s*Bearer\s+([A-Za-z0-9._~+/=-]{16,})", re.I), "error"),
-    ("cookie-header", re.compile(r"\bCookie\s*:\s*([^;\s=]+=[^;\s]{12,})", re.I), "error"),
-    ("assigned-secret", re.compile(r"\b(api[_-]?key|access[_-]?key|secret[_-]?key|secret|token|password)\b\s*[:=]\s*[\"']([^\"']{12,})[\"']", re.I), "error"),
-    ("database-url", re.compile(r"\b(?:mysql|postgresql|postgres):\/\/[^\s\"']{12,}", re.I), "error"),
-    ("local-absolute-path", re.compile(r"(?:/Users/[^/\s]+|/home/[^/\s]+|C:\\\\Users\\\\[^\\\\\s]+)"), "error"),
-]
-
-SAFE_LITERAL_SNIPPETS = [
-    "/home/claude/output",
-    "/mnt/user-data/outputs",
-    're.compile(r"/Users/',
-    're.compile(r"(/Users/',
-    'ABS_PATH_RE = re.compile',
-    're.search(r"/Users/',
-]
-
 
 @dataclass(frozen=True)
 class Finding:
     severity: str
     rule: str
     path: str
-    line: int | None
-    message: str
-    snippet: str | None = None
+    source: str
+    line: int | None = None
+
+class ScanError(Exception):
+    """Only fixed diagnostic codes may be exposed."""
 
 
-def run_git(args: list[str]) -> list[str]:
-    result = subprocess.run(["git", *args], cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
-    if result.returncode not in (0, 1):
-        raise RuntimeError(result.stderr.strip() or f"git {' '.join(args)} failed")
-    return [line.strip() for line in result.stdout.splitlines() if line.strip()]
+def git(root: Path, *args: str) -> bytes:
+    proc = subprocess.run(['git', '--no-optional-locks', *args], cwd=root,
+                          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if proc.returncode:
+        raise ScanError('git-read-failed')
+    return proc.stdout
 
 
-def path_matches(path: str, pattern: str) -> bool:
-    if pattern.endswith("/**"):
-        prefix = pattern[:-3]
-        return path == prefix or path.startswith(f"{prefix}/")
-    return fnmatch.fnmatch(path, pattern)
+def placeholder(value: str) -> bool:
+    value = value.strip()
+    fallback = re.fullmatch(r'\$\{[A-Z_][A-Z0-9_]*:-([^$]+)\}', value)
+    if fallback:
+        return placeholder(fallback.group(1))
+    return (value in PLACEHOLDERS
+            or bool(re.fullmatch(r'<[a-z][a-z0-9_-]*>', value))
+            or bool(re.fullmatch(r'\{[A-Z_][A-Z0-9_]*\}', value))
+            or bool(re.fullmatch(r'\$\{[A-Z_][A-Z0-9_]*\}', value)))
 
 
-def is_forbidden_path(path: str) -> str | None:
-    if any(path_matches(path, pattern) for pattern in SAFE_PATH_PATTERNS):
-        return None
-    for pattern in FORBIDDEN_PATH_PATTERNS:
-        if path_matches(path, pattern):
-            return pattern
-    return None
-
-
-def collect_files(scan_all: bool) -> tuple[str, set[str]]:
-    if scan_all:
-        files = set()
-        for path in ROOT.rglob("*"):
-            if path.is_file():
-                rel = path.relative_to(ROOT).as_posix()
-                if not rel.startswith(".git/") and "/.git/" not in rel:
-                    files.add(rel)
-        return "all", files
-    staged = set(run_git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"]))
-    tracked = set(run_git(["ls-files"]))
-    return "staged+tracked", staged | tracked
-
-
-def redact(value: str) -> str:
-    text = re.sub(r"/Users/[^/\s]+", "<user-home>", value)
-    text = re.sub(r"/home/[^/\s]+", "<user-home>", text)
-    text = re.sub(r"C:\\\\Users\\\\[^\\\\\s]+", "<user-home>", text)
-    if len(text) > 120:
-        text = f"{text[:80]}..."
-    return text
-
-
-def is_placeholder(value: str) -> bool:
-    normalized = value.strip().strip("\"'").lower()
-    return normalized in PLACEHOLDERS or normalized.startswith("<") and normalized.endswith(">")
-
-
-def is_safe_literal_line(line: str) -> bool:
-    return any(snippet in line for snippet in SAFE_LITERAL_SNIPPETS)
-
-
-def scan_paths(paths: set[str], max_file_size_mb: int) -> list[Finding]:
-    findings: list[Finding] = []
-    max_bytes = max_file_size_mb * 1024 * 1024
-    for path in sorted(paths):
-        forbidden = is_forbidden_path(path)
-        if forbidden:
-            findings.append(Finding("error", "forbidden-path", path, None, f"路径匹配禁止提交规则: {forbidden}"))
-        full = ROOT / path
-        if full.exists() and full.is_file():
-            size = full.stat().st_size
-            if size > max_bytes:
-                severity = "error" if full.suffix.lower() in BINARY_EXTENSIONS else "warning"
-                findings.append(Finding(severity, "large-file", path, None, f"文件超过阈值 {max_file_size_mb}MB"))
-    return findings
-
-
-def should_scan_text(path: str) -> bool:
-    suffix = Path(path).suffix.lower()
-    return suffix not in BINARY_EXTENSIONS
-
-
-def scan_content(paths: set[str]) -> list[Finding]:
-    findings: list[Finding] = []
-    for path in sorted(paths):
-        full = ROOT / path
-        if not full.exists() or not full.is_file() or not should_scan_text(path):
-            continue
+def safe_match(rule: str, match: re.Match) -> bool:
+    value = next((v for v in reversed(match.groups()) if v is not None), match.group())
+    if rule == 'database-url':
         try:
-            raw = full.read_bytes()[:TEXT_READ_LIMIT_BYTES]
-            text = raw.decode("utf-8")
-        except UnicodeDecodeError:
+            parsed = urlsplit(match.group())
+            # Hostnames and query strings never exempt actual credentials.
+            return (parsed.username is not None and parsed.password is not None
+                    and placeholder(unquote(parsed.username)) and placeholder(unquote(parsed.password))
+                    and not parsed.query and not parsed.fragment)
+        except ValueError:
+            return False
+    if rule == 'privacy-email':
+        return value.lower() in {'example.com', 'example.org', 'example.test'}
+    if rule == 'local-absolute-path':
+        return value == 'example'
+    if rule in {'cookie', 'private-key'}:
+        return placeholder(match.group(1)) if rule == 'cookie' else False
+    return placeholder(value)
+
+
+def scan_text(path: str, text: str, source: str) -> list[Finding]:
+    result = []
+    for number, line in enumerate(text.splitlines(), 1):
+        for rule, pattern, severity in SECRET_PATTERNS:
+            if any(not safe_match(rule, m) for m in pattern.finditer(line)):
+                result.append(Finding(severity, rule, path, source, number))
+    return result
+
+
+def real_env(path: str) -> bool:
+    name = Path(path).name
+    return not name.endswith('.example') and (name == '.env' or name.startswith('.env.') or name.endswith('.env'))
+
+
+def forbidden(path: str) -> bool:
+    parts = Path(path).parts
+    return (real_env(path) or bool(set(parts) & RUNTIME)
+            or Path(path).suffix in {'.db', '.sqlite', '.sqlite3', '.pyc', '.zip'}
+            or Path(path).name == '.DS_Store'
+            or any(parts[i] == 'data' and parts[i+1] in DATA_RUNTIME for i in range(len(parts)-1)))
+
+
+def scan_bytes(path: str, data: bytes, source: str, max_mb: int, *, size: int | None = None) -> list[Finding]:
+    findings = [Finding('error', 'forbidden-path', path, source)] if forbidden(path) else []
+    if (len(data) if size is None else size) > max_mb * 1024 * 1024:
+        findings.append(Finding('error', 'large-file', path, source))
+    if Path(path).suffix.lower() in BINARY or b'\0' in data[:8192]:
+        return findings  # Content of binary formats is explicitly outside coverage.
+    if len(data) > TEXT_LIMIT:
+        return findings + [Finding('error', 'text-limit-unscanned', path, source)]
+    try:
+        text = data.decode('utf-8')
+    except UnicodeDecodeError:
+        return findings + [Finding('error', 'encoding-unscanned', path, source)]
+    return findings + scan_text(path, text, source)
+
+
+def blob(root: Path, oid: str) -> bytes:
+    size = int(git(root, 'cat-file', '-s', oid))
+    if size > TEXT_LIMIT:
+        # Caller records an explicit incomplete scan; avoid loading unbounded objects.
+        raise ScanError('object-limit-unscanned')
+    return git(root, 'cat-file', 'blob', oid)
+
+
+def safe_worktree_bytes(root: Path, path: str) -> tuple[bytes, int] | None:
+    # Open each component without following symlinks, including directory links.
+    parts = Path(path).parts
+    if not parts or any(p in {'..', '/'} for p in parts):
+        raise ScanError('unsafe-path')
+    fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        for part in parts[:-1]:
+            new = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            os.close(fd)
+            fd = new
+        leaf = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=fd)
+        with os.fdopen(leaf, 'rb') as stream:
+            metadata = os.fstat(stream.fileno())
+            if not stat.S_ISREG(metadata.st_mode):
+                raise ScanError('special-file-unscanned')
+            return stream.read(TEXT_LIMIT + 1), metadata.st_size
+    except FileNotFoundError:
+        return None  # Deleted worktree file; index object is still inspected.
+    finally:
+        os.close(fd)
+
+
+def scan_repository(root: Path, *, scan_all=False, base=None, history=False, max_mb=10):
+    findings: list[Finding] = []
+    seen = set()
+    count = 0
+
+    def inspect_object(path, oid, mode, source):
+        nonlocal count
+        key = (path, oid, mode, source.split(':')[0])
+        if key in seen:
+            return
+        seen.add(key)
+        count += 1
+        if mode not in {'100644', '100755'}:
+            findings.append(Finding('error', 'link-or-submodule-unscanned', path, source))
+            return
+        try:
+            findings.extend(scan_bytes(path, blob(root, oid), source, max_mb))
+        except (ScanError, ValueError):
+            findings.append(Finding('error', 'object-read-incomplete', path, source))
+
+    paths = set()
+    index_before = git(root, 'ls-files', '--stage', '-z')
+    for record in index_before.split(b'\0'):
+        if not record:
             continue
-        for lineno, line in enumerate(text.splitlines(), start=1):
-            if is_safe_literal_line(line):
-                continue
-            for rule, pattern, severity in SECRET_PATTERNS:
-                match = pattern.search(line)
-                if not match:
+        meta, raw_path = record.split(b'\t', 1)
+        mode, oid, stage = meta.decode('ascii').split()
+        path = os.fsdecode(raw_path)
+        paths.add(path)
+        if stage != '0':
+            findings.append(Finding('error', 'unmerged-index', path, 'index'))
+        inspect_object(path, oid, mode, 'index')
+    if scan_all:
+        paths.update(os.fsdecode(p) for p in git(root, 'ls-files', '--others', '--exclude-standard', '-z').split(b'\0') if p)
+    for path in sorted(paths):
+        count += 1
+        try:
+            data = safe_worktree_bytes(root, path)
+            if data is not None:
+                findings.extend(scan_bytes(path, data[0], 'worktree', max_mb, size=data[1]))
+        except (OSError, ScanError):
+            findings.append(Finding('error', 'worktree-read-incomplete', path, 'worktree'))
+    if base is not None or history:
+        if git(root, 'rev-parse', '--is-shallow-repository').strip() == b'true':
+            raise ScanError('shallow-history-incomplete')
+        head = git(root, 'rev-parse', '--verify', 'HEAD^{commit}').decode().strip()
+        if base is not None:
+            base_oid = git(root, 'rev-parse', '--verify', '--end-of-options', base + '^{commit}').decode().strip()
+            commits = git(root, 'rev-list', f'{base_oid}..{head}').decode().splitlines()
+        else:
+            commits = git(root, 'rev-list', head).decode().splitlines()
+        for commit in commits:
+            source = 'history:' + commit[:12]
+            message = git(root, 'show', '-s', '--format=%B', commit).decode('utf-8', errors='replace')
+            findings.extend(scan_text('COMMIT_MESSAGE', message, source))
+            for rec in git(root, 'ls-tree', '-r', '-z', commit).split(b'\0'):
+                if not rec:
                     continue
-                candidate = match.group(match.lastindex or 0)
-                if is_placeholder(candidate):
-                    continue
-                findings.append(Finding(severity, rule, path, lineno, "疑似敏感内容或本机路径", redact(line.strip())))
-    return findings
+                meta, raw_path = rec.split(b'\t', 1)
+                mode, kind, oid = meta.decode('ascii').split()
+                inspect_object(os.fsdecode(raw_path), oid, mode, source)
+        if git(root, 'rev-parse', '--verify', 'HEAD^{commit}').decode().strip() != head:
+            findings.append(Finding('error', 'head-changed-during-scan', 'HEAD', 'history'))
+    if git(root, 'ls-files', '--stage', '-z') != index_before:
+        findings.append(Finding('error', 'index-changed-during-scan', 'INDEX', 'index'))
+    return findings, count
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--all", action="store_true", help="scan all files under the repository")
-    parser.add_argument("--max-file-size-mb", type=int, default=DEFAULT_MAX_FILE_SIZE_MB)
-    args = parser.parse_args()
-
-    scope, files = collect_files(args.all)
-    findings = scan_paths(files, args.max_file_size_mb) + scan_content(files)
-    errors = [item for item in findings if item.severity == "error"]
-    warnings = [item for item in findings if item.severity == "warning"]
-
-    print(f"Git safety check scope: {scope}")
-    print(f"Scanned files: {len(files)}")
-    print(f"Errors: {len(errors)}")
-    for item in errors:
-        loc = f"{item.path}:{item.line}" if item.line else item.path
-        print(f"- [error] {item.rule} {loc} - {item.message}")
-        if item.snippet:
-            print(f"  snippet: {item.snippet}")
-    print(f"Warnings: {len(warnings)}")
-    for item in warnings:
-        loc = f"{item.path}:{item.line}" if item.line else item.path
-        print(f"- [warning] {item.rule} {loc} - {item.message}")
-    if errors:
-        print("Suggestion: remove secrets/runtime artifacts from Git tracking or replace them with safe examples.")
-        return 1
-    print("Git safety check passed.")
-    return 0
+def display_path(path: str) -> str:
+    # No content excerpts. Suspicious filenames are identified by a stable digest.
+    if (any(ord(c) < 32 or ord(c) > 126 for c in path)
+            or scan_text('', path, '') or re.search(r'[:=@?\\]', path)):
+        return 'path-sha256:' + hashlib.sha256(os.fsencode(path)).hexdigest()[:16]
+    return path
 
 
-if __name__ == "__main__":
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--all', action='store_true', help='also scan non-ignored untracked files; never Git history')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--base', help='also inspect every commit tree and message in BASE..HEAD')
+    group.add_argument('--history', action='store_true', help='also inspect all history reachable from HEAD (first push)')
+    parser.add_argument('--max-file-size-mb', type=int, default=10)
+    args = parser.parse_args(argv)
+    if args.max_file_size_mb < 1:
+        parser.error('--max-file-size-mb must be positive')
+    try:
+        findings, count = scan_repository(ROOT, scan_all=args.all, base=args.base, history=args.history, max_mb=args.max_file_size_mb)
+        spec = importlib.util.spec_from_file_location('env_ignore_policy', ROOT / 'scripts/validate-env-ignore-policy.py')
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        findings.extend(Finding('error', code, path, 'env-policy') for code, path in module.validate(ROOT))
+    except ScanError as exc:
+        print('Git safety check blocked: ' + str(exc))
+        return 2
+    except (OSError, ValueError, ImportError):
+        print('Git safety check blocked: repository or policy read failed; no raw diagnostic emitted.')
+        return 2
+    print(f'Git safety check: index + worktree; inspected {count} entries')
+    print('History: ' + ('selected' if args.base is not None or args.history else 'not scanned'))
+    print('Coverage: heuristic UTF-8 text <= 1 MiB; binary content excluded; ignored untracked files excluded.')
+    for f in findings:
+        print(f'[{f.severity}] {f.source} {display_path(f.path)}:{f.line or 0} {f.rule}')
+    errors = sum(f.severity == 'error' for f in findings)
+    print(f'Errors: {errors}; warnings: {len(findings)-errors}. Review warnings individually; no automatic cleanup.')
+    return int(errors > 0)
+
+if __name__ == '__main__':
     sys.exit(main())

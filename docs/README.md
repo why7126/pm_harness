@@ -1,6 +1,6 @@
 ---
 created_at: 2026-08-07 13:13:52
-updated_at: 2026-08-07 13:13:52
+updated_at: 2026-10-28 11:25:49
 ---
 
 # ProjectPmHarness Docs
@@ -33,3 +33,5 @@ updated_at: 2026-08-07 13:13:52
 - 当前项目 spec 学习、治理优化和规范迭代日志放入 `docs/spec-logs/`。
 - `pm-harness/docs/` 是生成新项目时携带的模板文档目录，不承载当前 ProjectPmHarness 的实际项目数据。
 - `pm-harness/docs/spec-logs/` 是生成新项目时携带的空日志目录，只保留 `.gitkeep`。
+
+Git 交付治理：[扫描边界、脱敏、忽略与同步](standards/git-delivery-safety.md)。

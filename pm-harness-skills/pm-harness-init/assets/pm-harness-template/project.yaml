@@ -222,6 +222,9 @@ ai:
   agent_tools:
     agents_skills: true
   default_commands:
+    git:
+      - /git-check
+      - /git-sync
     intake:
       - /capture
     requirements:

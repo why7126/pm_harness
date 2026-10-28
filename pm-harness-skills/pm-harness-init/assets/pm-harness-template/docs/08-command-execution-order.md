@@ -2,7 +2,7 @@
 purpose: 命令执行顺序速查
 content: ProjectPmHarness REQ/BUG、Sprint、OpenSpec、发布、镜像、产品手册与治理命令的推荐顺序
 created_at: 2026-08-10 23:19:03
-updated_at: 2026-08-27 01:02:22
+updated_at: 2026-10-28 11:25:49
 ---
 
 # 命令执行顺序速查
@@ -90,3 +90,7 @@ updated_at: 2026-08-27 01:02:22
 `正常` 只能用于必需校验、Workflow Sync 与 AI Usage hook 通过，或该命令明确不适用对应 hook 的情况。`warning` 用于非阻塞问题、可选 hook 跳过、局部校验未覆盖或发现可优化规范点。`blocked` 用于必需门禁失败、缺少补证导致无法定根因或验收、或脚本显示事实源不一致。
 
 默认不自动创建 follow-up Issue/Change；如需沉淀新问题，只输出建议命令或 capture 文案，等待用户明确授权。
+
+## Git 交付同步
+
+仅检查使用 /git-check；已授权提交同步使用 /git-sync：范围确认 → 精确暂存 → index/worktree 与 env 检查 → 提交 → fetch/整合验证 → 待推送历史检查 → 快进推送与远端核对。正式标签单独核验发布事实及授权；不自动触发归档或发布。

@@ -500,3 +500,5 @@ Project PM Harness 适合以下团队或项目：
 - 产品原型资产应和需求一起版本化，避免视觉、交互和实现上下文丢失。
 - 可复用设计资产应进入 `design-schemes/`，并同时提供结构化 JSON 和可直接打开的 HTML Demo。
 - 状态变化必须回写到追踪文档，保证人、脚本和 AI Agent 读取到同一事实。
+
+Git 安全检查使用 `/git-check`；按交付范围提交与同步使用 `/git-sync`。范围与验证见 [Git 交付安全](docs/standards/git-delivery-safety.md)。

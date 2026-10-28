@@ -1,6 +1,6 @@
 ---
 created_at: 2026-08-07 13:56:18
-updated_at: 2026-08-07 13:56:18
+updated_at: 2026-10-28 11:46:43
 ---
 
 # ProjectPmHarness 测试映射
@@ -27,4 +27,4 @@ updated_at: 2026-08-07 13:56:18
 
 ## 当前映射
 
-暂无 active Change。
+`add-moonbox-git-governance`：`PYTHONDONTWRITEBYTECODE=1 python scripts/test_git_check.py`；治理与模板验证结果见 `docs/spec-logs/20261028113427-study-moonbox-git-governance.md`。

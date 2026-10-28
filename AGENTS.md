@@ -4,7 +4,7 @@ content: ProjectPmHarness 脚手架工程自身的规则加载路由、治理边
 source: /spec-opt add-root-agents-entrypoint
 update_method: 当前脚手架工程自身治理流程、模板同步规则或技能入口变化时更新
 created_at: 2026-08-07 15:23:44
-updated_at: 2026-08-07 15:23:44
+updated_at: 2026-10-28 11:25:49
 note: 适用于 ProjectPmHarness 仓库根目录；不得与 pm-harness/ 模板入口混用
 ---
 
@@ -63,7 +63,7 @@ openspec/project.md
 |---|---|
 | 跨项目学习 | `/spec-study` |
 | 治理优化 | `/spec-opt` |
-| Git 安全 | `/git-check` |
+| Git 安全与同步 | `/git-check`、`/git-sync` |
 
 ## 4. 目录边界
 
@@ -111,7 +111,7 @@ openspec/project.md
 - `pm-harness/`
 - `pm-harness-skills/pm-harness-init/assets/pm-harness-template/`
 - 必要时更新 `pm-harness-skills/pm-harness-init/references/`
-- 本机安装版 `/Users/why7126/.codex/skills/pm-harness-init`
+- 本机安装版 `<user-home>/.codex/skills/pm-harness-init`（先发现实际安装位置；缺失时记录未安装，不创建猜测路径）
 
 同步后运行：
 
@@ -143,3 +143,5 @@ python pm-harness/scripts/validate-agent-context-budget.py
 待用户决策/处理：
 - <需要用户选择、确认、补充或处理的事项；若没有则写“无”>
 ```
+
+Git 同步按 `.agents/skills/git-sync/SKILL.md` 执行：保护既有暂存内容、扫描实际 index 与待推送历史、核实远端结果；不得强制推送或覆盖标签。

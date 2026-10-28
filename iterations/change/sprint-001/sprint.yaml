@@ -18,3 +18,13 @@ changes:
   - add-tilesfst-data-observability-governance
   - add-tilesfst-sprint-md-governance
   - add-tilesfst-ai-usage-session-discovery
+  - add-moonbox-git-governance
+scope_estimates:
+  - id: add-moonbox-git-governance
+    change: add-moonbox-git-governance
+    size: M
+    story_points: 1
+    estimated_person_days: 2
+    rationale: 用户确认 MoonBox Git G1–G4；补齐提交安全与模板同步
+estimated_story_points: 1
+estimated_person_days: 2

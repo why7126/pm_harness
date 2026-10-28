@@ -1,6 +1,6 @@
 ---
 created_at: 2026-08-08 20:56:51
-updated_at: 2026-08-31 09:13:31
+updated_at: 2026-10-28 11:53:52
 ---
 
 # 规范工程变更历史
@@ -20,6 +20,7 @@ updated_at: 2026-08-31 09:13:31
 
 | 时间 | 类型 | 摘要 | 影响范围 | 其他项目落地提示词 | 关联日志 | 关联 Change / Sprint | 验证 |
 |---|---|---|---|---|---|---|---|
+| 2026-10-28 11:34:27 | 学习应用 | MoonBox Git G1–G4 与扫描修正 | 根技能、扫描器、模板及 init 包 | `请适配 Git 范围同步、index 与历史扫描、无内容诊断及精确占位符，并同步模板，保留既有安全阻断。` | `20261028113427-study-moonbox-git-governance.md` | `add-moonbox-git-governance` / `sprint-001` | 15项回归和治理校验通过；17项阻断处置见关联报告 |
 | 2026-08-31 09:13:31 | 学习应用 | 从 TilesFST 应用 AI Usage session 默认自动发现、脱敏事实源边界和 compact hook 输出口径 | 根项目治理脚本、Workflow Sync/Sprint 技能、上下文预算规则、模板资产 | `请只读学习参考项目的 AI Usage session 自动发现治理：让 workflow hook 按显式 session、环境变量、AI_USAGE_SESSIONS_DIR 和本机默认 Codex sessions 目录自动发现；输出 compact summary，不持久化原始 session、本机路径、prompt、密钥或完整工具输出。` | `20260831091331-study-tilesfst-ai-usage-session-discovery.md` | `add-tilesfst-ai-usage-session-discovery` / `sprint-001` | 通过 |
 | 2026-08-27 01:02:22 | 学习应用 | 从 TilesFST 应用 sprint.md Scope 合同、Scope 校验、追加范围脚本、Workflow Sync 派生刷新、归档 readiness 和 Fact Sheet read-first 复盘入口 | 根项目治理规则、Sprint 文档、Workflow Sync 脚本、技能、模板资产 | `请只读学习参考项目的 sprint.md Scope 合同、Sprint scope 校验、范围追加脚本、Workflow Sync 派生刷新、Sprint 归档 stale readiness 和 Fact Sheet read-first 复盘入口，并通过 active Change/Sprint 将适合本项目的治理能力改写落地；不得复制参考项目业务 Sprint 内容或修改学习对象。` | `20260827010222-study-tilesfst-sprint-md-governance.md` | `add-tilesfst-sprint-md-governance` / `sprint-001` | 通过 |
 | 2026-08-27 00:26:26 | 学习应用 | 从 TilesFST 应用产品数据采集与链路观测标准、硬门禁脚本和工作流 Skill 数据采集声明门禁 | 根项目治理规则、脚本、技能、模板资产 | `请只读学习参考项目的产品数据采集与链路观测标准、硬门禁脚本和 REQ/OpenSpec/Sprint 工作流数据采集声明门禁，并通过 active Change/Sprint 将适合本项目的治理能力改写落地；不得复制参考项目业务表、接口路径、运行日志或端侧实现细节。` | `20260827002626-study-tilesfst-data-observability.md` | `add-tilesfst-data-observability-governance` / `sprint-001` | 通过 |

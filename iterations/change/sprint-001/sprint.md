@@ -1,7 +1,7 @@
 ---
 created_at: 2026-08-07 15:23:44
-updated_at: 2026-08-31 09:17:28
-note: workflow-sync — workflow-sync 自动同步 — 4/11 Change archived；7 applied；Sprint `planning`
+updated_at: 2026-10-28 11:46:07
+note: workflow-sync — workflow-sync 自动同步 — 5/12 Change archived；7 applied；Sprint `planning`
 ---
 
 # sprint-001 ProjectPmHarness 根级治理入口
@@ -83,6 +83,7 @@ Sprint 目标编号列表：
 | Change | add-tilesfst-data-observability-governance | TilesFST data observability governance | applied | - | 已应用数据采集观测治理 |
 | Change | add-tilesfst-sprint-md-governance | TilesFST sprint.md governance | archived | - | 已归档 Sprint 文档治理 |
 | Change | add-tilesfst-ai-usage-session-discovery | TilesFST AI Usage session discovery | applied | - | 已应用 AI Usage session 自动发现治理 |
+| Change | add-moonbox-git-governance | Git 交付安全与同步 | archived | 2 人天 | 用户确认 G1–G4，模板同步 |
 
 REQ：无正式范围；BUG：无正式范围；当前 Sprint 仅承载 ProjectPmHarness 根级治理 Change。
 
@@ -118,6 +119,7 @@ Change：已纳入 10 个纯治理 Change；执行开发与归档时以 Scope �
 | `add-tilesfst-data-observability-governance` | — | applied | apply 8/8；待 archive `add-tilesfst-data-observability-governance` |
 | `add-tilesfst-sprint-md-governance` | — | archived | archived `add-tilesfst-sprint-md-governance`（2026-08-31 23:59:59） |
 | `add-tilesfst-ai-usage-session-discovery` | — | applied | apply 6/6；待 archive `add-tilesfst-ai-usage-session-discovery` |
+| `add-moonbox-git-governance` | — | archived | archived `add-moonbox-git-governance`（2026-10-28 23:59:59） |
 <!-- workflow-sync:scope-changes:end -->
 
 ## 3. 验收

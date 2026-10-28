@@ -1,6 +1,7 @@
 ---
 name: pm-harness-init
 description: 初始化 AI Coding 项目的 harness 工程结构。凡用户要创建、生成、优化或打包 pm-harness / OpenSpec + AI Agent 规范编程项目骨架时必须使用；输出前必须执行项目化渲染、能力裁剪、模板痕迹清理和交付质量校验，避免把 `[通用]`、`[个性化]`、`[条件启用]`、生成参数、初始化说明或散落的 `待确认` 交付给实际项目。
+updated_at: 2026-10-28 11:52:44
 ---
 
 # PM Harness 工程初始化技能
@@ -94,8 +95,10 @@ python scripts/validate-generated-docs.py --strict
 
 ### 6. 打包输出
 
+将 `HARNESS_OUTPUT_DIR` 设置为本次生成项目的父目录，再执行打包。
+
 ```bash
-cd /home/claude/output
+cd "${HARNESS_OUTPUT_DIR:?请设置生成项目的父目录}"
 zip -r {PRODUCT_CODE}-harness.zip {PRODUCT_CODE}/ \
   --exclude "*/.DS_Store" \
   --exclude "*/__pycache__/*" \

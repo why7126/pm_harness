@@ -4,7 +4,7 @@ content: AI 开发流程入口、规则加载路由、OpenSpec 红线、目录�
 source: Harness AGENTS.md Token 优化模板
 update_method: 项目初始化时由用户输入参数生成；初始化后由项目团队确认；后续由 AI 辅助更新并经人工 Review
 created_at: 2026-06-27 08:44:18
-updated_at: 2026-07-14 00:00:00
+updated_at: 2026-10-28 11:25:49
 note: 适用于 {PRODUCT_NAME} 项目；AI 执行任何任务前必须优先阅读本文档
 template_scope: 可作为工程初始化时的 AGENTS.md 模块
 ---
@@ -95,7 +95,7 @@ idea / bug / change
 | Change | `/opsx-propose`、`/opsx-explore`、`/opsx-apply`、`/opsx-archive` |
 | Sprint | `/sprint-propose`、`/sprint-explore`、`/sprint-apply`、`/sprint-archive`、`/sprint-exps` |
 | 通用探索 / 治理优化 | `/explore`、`/spec-opt`、`/spec-study` |
-| Git 安全 | `/git-check` |
+| Git 安全与同步 | `/git-check`、`/git-sync` |
 | MiniApp | `/miniapp-env`、`/miniapp-check`、`/miniapp-prepare`、`/miniapp-confirm`、`/miniapp-restore` |
 | Image | `/image-prepare <version>`、`/image-build <version>` |
 | Usage Docs | `/usage-docs-generate <version>`、`/usage-docs-update <version>`、`/usage-docs-validate <version>` |
@@ -188,3 +188,5 @@ python scripts/add-sprint-scope-item.py --sprint sprint-xxx --change <change-id>
 □ 是否遵守目录结构与禁止目录
 □ 是否完成必要校验：目录结构、OpenSpec、Agent 上下文预算、测试、Docker（按需）
 ```
+
+Git 同步按 `.agents/skills/git-sync/SKILL.md` 执行：保护既有暂存内容、扫描实际 index 与待推送历史、核实远端结果；不得强制推送或覆盖标签。

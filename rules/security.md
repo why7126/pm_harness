@@ -2,7 +2,7 @@
 purpose: 安全治理规范
 content: 敏感信息、真实环境文件、运行时数据、Git 安全检测和公开输出边界
 created_at: 2026-08-10 23:19:03
-updated_at: 2026-08-10 23:19:03
+updated_at: 2026-10-28 11:25:49
 ---
 
 # 安全治理规范
@@ -38,3 +38,9 @@ python scripts/git-check.py --all
 ## AI 禁止行为
 
 AI 不得自动删除本地文件、自动 unstage、自动修改 `.gitignore` 来掩盖风险，也不得把真实 env 内容写入 OpenSpec、Sprint、release、学习报告或最终回复。
+
+## Git 交付检查与同步契约
+
+提交与推送遵循 [Git 交付安全](../docs/standards/git-delivery-safety.md)。默认检查 index blob 与工作区，历史用 --base 或 --history 单独检查；--all 仅增加未忽略的未跟踪文件。输出不包含命中行，error 与覆盖不完整阻断，warning 逐项复核。环境忽略使用双向校验，禁止以宽泛占位符或整行豁免掩盖风险。
+
+用户授权的 /git-sync 按交付范围选择性暂存，保护既有 staged 内容，检查待推送历史后快进推送并核实远端。正式 tag 依据发布事实与授权，不强制推送或覆盖标签。Git ignore 不处理已跟踪或历史风险，不自动删除本地数据。

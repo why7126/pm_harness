@@ -1,7 +1,7 @@
 ---
-note: workflow-sync — 4/11 Change 已 archive；7 applied；待人工 sign-off
+note: workflow-sync — 5/12 Change 已 archive；7 applied；待人工 sign-off
 created_at: 2026-08-07 15:23:44
-updated_at: 2026-08-31 09:17:28
+updated_at: 2026-10-28 11:46:07
 ---
 
 # Acceptance Report
@@ -130,3 +130,7 @@ updated_at: 2026-08-31 09:17:28
 - `python pm-harness/scripts/validate-skill-package.py`：通过。
 - `python pm-harness/scripts/validate-agent-context-budget.py`：通过。
 - Workflow Sync 与 AI Usage hook：通过。
+
+## Git 治理学习应用
+
+`add-moonbox-git-governance`：15项临时仓库回归及模板、目录、技能、语言、上下文和 OpenSpec 校验通过；全仓既有 Git 安全命中保留，未授权提交推送。详情见 `docs/spec-logs/20261028113427-study-moonbox-git-governance.md`。

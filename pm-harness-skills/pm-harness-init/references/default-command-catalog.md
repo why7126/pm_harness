@@ -54,3 +54,7 @@ python scripts/promote-issue-stage.py --to archive [--change change-id] [--sprin
 - `/opsx-apply`、`/sprint-apply`：实现前输出 Knowledge Gate，列出已读取条目、适用约束和不适用原因。
 
 新增或修改命令技能时，必须在 `.agents/skills/<command-name>/SKILL.md` 中同步 knowledge-base gate。
+
+## Git 安全与同步
+
+默认提供 `/git-check` 与 `/git-sync`；安装扫描器、env 忽略校验、临时仓库回归和 Git 交付标准。具体契约由模板技能维护。

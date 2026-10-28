@@ -28,3 +28,11 @@ data/minio/**
 !**/.gitkeep
 !data/README.md
 !data/samples/**
+
+# Environment policy: real files local, examples trackable
+.env
+.env.*
+*.env
+!.env.example
+!.env.*.example
+!*.env.example

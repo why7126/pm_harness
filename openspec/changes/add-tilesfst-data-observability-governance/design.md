@@ -1,6 +1,6 @@
 ---
 created_at: 2026-08-27 00:26:26
-updated_at: 2026-08-27 00:26:26
+updated_at: 2026-10-28 11:52:44
 ---
 
 # Design
@@ -19,7 +19,7 @@ updated_at: 2026-08-27 00:26:26
 
 - `pm-harness/`
 - `pm-harness-skills/pm-harness-init/assets/pm-harness-template/`
-- 本机安装版 `/Users/why7126/.codex/skills/pm-harness-init`
+- 本机安装版 `<user-home>/.codex/skills/pm-harness-init`
 
 ## 风险与取舍
 

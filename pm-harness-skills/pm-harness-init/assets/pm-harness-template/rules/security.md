@@ -4,7 +4,7 @@ content: 认证授权、文件上传、对象存储、输入校验、环境变�
 source: Harness Token 优化模板
 update_method: 新增认证、上传、对象存储、权限、外部访问能力时更新
 created_at: 2026-06-13 00:00:00
-updated_at: 2026-07-14 00:00:00
+updated_at: 2026-10-28 11:25:49
 note: AI 不得放宽本规范
 ---
 
@@ -60,3 +60,9 @@ python scripts/git-check.py
 ```
 
 `/git-check` 默认扫描 staged + tracked 文件。真实 env、运行时数据、数据库文件、密钥、Token、连接串、本机绝对路径和大型本地产物出现 error 时不得继续提交；报告必须脱敏。
+
+## Git 交付检查与同步契约
+
+提交与推送遵循 [Git 交付安全](../docs/standards/git-delivery-safety.md)。默认检查 index blob 与工作区，历史用 --base 或 --history 单独检查；--all 仅增加未忽略的未跟踪文件。输出不包含命中行，error 与覆盖不完整阻断，warning 逐项复核。环境忽略使用双向校验，禁止以宽泛占位符或整行豁免掩盖风险。
+
+用户授权的 /git-sync 按交付范围选择性暂存，保护既有 staged 内容，检查待推送历史后快进推送并核实远端。正式 tag 依据发布事实与授权，不强制推送或覆盖标签。Git ignore 不处理已跟踪或历史风险，不自动删除本地数据。
